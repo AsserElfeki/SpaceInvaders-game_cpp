@@ -36,6 +36,9 @@
     <ClCompile Include="Game.ixx">
       <Filter>Modules</Filter>
     </ClCompile>
+    <ClCompile Include="GameUnits_Interface.ixx">
+      <Filter>Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="olcPixelGameEngine.h">

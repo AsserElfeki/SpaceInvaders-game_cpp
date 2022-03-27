@@ -13,7 +13,7 @@ import Player;
 int main()
 {
 	SpaceInvaders demo;
-	if (demo.Construct(512, 480, 2, 2))  
+	if (demo.Construct(800, 800, 1, 1))  
 		demo.Start();
 
 	return 0;
