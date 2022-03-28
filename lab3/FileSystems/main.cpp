@@ -50,7 +50,7 @@ int main() {
 
     std::cout << "### Task 6 ###\n";
     fs::path tasks = fs::current_path();
-    tasks /= "../tasks/subdir1/shrek.txt";
+    tasks /= "../filesystem/subdir1/shrek.txt";
 //    auto cftime = std::chrono::system_clock::to_time_t(
 //            std::chrono::file_clock::to_sys(fs::last_write_time(tasks)));
     std::cout << "info about " << tasks << " : " << std::endl
@@ -66,11 +66,11 @@ int main() {
     //<< "Last write Time: " << std::asctime(std::localtime(&cftime));
 
     std::cout << "### Task 7 ###\n";
-    fs::copy(tasks, tasks.parent_path() /= "shrek2.txt", fs::copy_options::update_existing);
+    fs::copy(tasks, tasks.parent_path() / "shrek2.txt", fs::copy_options::update_existing);
 
     std::cout << "### Task 8 ###\n";
     fs::path task_8 = fs::current_path();
-    task_8 /= "../tasks/subdir2";
+    task_8 /= "../filesystem/subdir2";
     std::cout << "info about " << task_8 << " : " << std::endl
               << "Is empty: " << is_empty(task_8) << std::endl
               << "Is Dierectory: " << is_directory(task_8) << std::endl;
