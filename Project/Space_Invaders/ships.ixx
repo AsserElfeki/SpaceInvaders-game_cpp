@@ -22,7 +22,6 @@ public:
 			ships_pos.push_back({ (i * this->get_Width() * 22 / 5) , 240.0f });
 			ships_pos.push_back({ (i * this->get_Width() * 22 / 5) , 310.0f });
 			ships_pos.push_back({ (i * this->get_Width() * 22 / 5) , 380.0f });
-
 		}
 	}
 	
@@ -33,7 +32,7 @@ public:
 	void DrawSelf(olc::PixelGameEngine* pge)
 	{
 		for (auto a : ships_pos) {
-			pge->FillCircle(a, this->get_Width() , olc::RED); // to define a 3px radius
+			pge->FillCircle(a, this->get_Width() , olc::RED); 
 
 		}
 	}

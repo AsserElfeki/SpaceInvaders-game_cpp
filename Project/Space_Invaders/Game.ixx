@@ -41,9 +41,9 @@ public:
 		/*################ Place Holders ################*/
 
 		// Draw Boundary
-		DrawLine(10, 10, ScreenWidth() - 10, 10, olc::BLUE); //upper HZ line
-		DrawLine(10, 10, 10, ScreenHeight() - 10, olc::BLUE); // left V line 
-		DrawLine(ScreenWidth() - 10, 10, ScreenWidth() - 10, ScreenHeight() - 10, olc::BLUE); // right V line 
+		DrawLine(10, 50, ScreenWidth() - 10, 50, olc::BLUE); //upper HZ line
+		DrawLine(10, 50, 10, ScreenHeight() - 10, olc::BLUE); // left V line 
+		DrawLine(ScreenWidth() - 10, 50, ScreenWidth() - 10, ScreenHeight() - 10, olc::BLUE); // right V line 
 		//DrawLine(10, ScreenHeight() - 10, ScreenWidth() - 10, ScreenHeight() - 10, olc::BLUE); // bottom HZ line
 
 		// placeholder for the player (top left x & y co-ord. , width, height) 
@@ -54,6 +54,9 @@ public:
 			FillCircle(a, m_ships.get_Width(), olc::RED);
 		}*/
 		m_ships.DrawSelf(this);
+
+		DrawString(10.0f, 10.0f , "Score: 0000", olc::WHITE, 2);
+		DrawString(ScreenWidth()-120, 10.0f, "Level 1", olc::WHITE, 2);
 
 		/*################ User Input ################*/
 
@@ -67,3 +70,16 @@ protected:
 	Alien_ships m_ships;
 	Player m_Player; 
 };
+
+/*
+1- Level should have : 
+	different vector<bool> 
+	different speed 
+	different bps 
+
+2- fix the set ship pos 
+3- make it "ship" and it stores info about one ship 
+4- in Level : draw ships & setshipspos 
+5- 
+
+*/
