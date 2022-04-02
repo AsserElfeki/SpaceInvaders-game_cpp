@@ -1,3 +1,7 @@
+module;
+
+
+
 export module Bullets;
 
-export void MyFunc();
+

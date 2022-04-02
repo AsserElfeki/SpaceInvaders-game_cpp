@@ -5,7 +5,7 @@ import Game;
 import Level; 
 import Score;
 import Bullets;
-import Ships;
+import Ship;
 import Player; 
 
 

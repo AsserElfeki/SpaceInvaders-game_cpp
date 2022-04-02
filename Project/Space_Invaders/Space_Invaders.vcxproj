@@ -154,7 +154,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.ixx" />
     <ClCompile Include="Score.ixx" />
-    <ClCompile Include="Ships.ixx" />
+    <ClCompile Include="Ship.ixx" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="olcPixelGameEngine.h" />

@@ -1,6 +1,7 @@
 module;
+#include "olcPixelGameEngine.h"
 
-import GameUnits_Interface;
+export import GameUnits_Interface;
 
 export module Player;
 
@@ -11,7 +12,18 @@ private:
 
 
 public:
+
+	Player() {
+		
+	}
+
 	
+
+	void DrawSelf(olc::PixelGameEngine* pge)
+	{
+			pge->FillRect(float(get_Pos().x), float (get_Pos().y), get_Size().x, get_Size().y, olc::GREEN);
+
+	}
 
 
 };

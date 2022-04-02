@@ -6,26 +6,32 @@ module;
 
 export module GameUnits_Interface;
 
-
 export class Units_Interface {
 
 private:
 	float Width;
-	float Pos; 
+	olc::vf2d Pos;
 	olc::vf2d Size;
-	//olc::vf2d DisplaySize;
+	
 
 public:
+	Units_Interface(){
+	}
 
-	virtual void set_Width(float width) {
-		Width = width;
+
+	virtual void set_Width(float _width) {
+		Width = _width;
 	}
 
 	float get_Width() {
 		return Width;
 	}
 
-	float get_Pos() {
+	void set_Pos(float _posx, float _posy) {
+		Pos = { _posx / 2 - Size.x/2 , _posy - float(1.5*Size.y) } ;
+	}
+
+	olc::vf2d  get_Pos() {
 		return Pos; 
 	}
 
@@ -37,13 +43,7 @@ public:
 		return Size;
 	}
 
-	//void set_DisplaySize(float w, float h) {
-	//	DisplaySize = { w , h };
-	//	//set_Width(DisplaySize.x);
-	//}
-
-	//olc::vf2d get_DisplaySize() {
-	//	return DisplaySize;
-	//}
+	
 
 };
+

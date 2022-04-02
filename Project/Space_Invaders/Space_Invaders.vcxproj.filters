@@ -30,7 +30,7 @@
     <ClCompile Include="Score.ixx">
       <Filter>Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Ships.ixx">
+    <ClCompile Include="Ship.ixx">
       <Filter>Modules</Filter>
     </ClCompile>
     <ClCompile Include="Game.ixx">
