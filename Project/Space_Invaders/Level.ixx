@@ -14,7 +14,7 @@ private:
 	int32_t ScreenHeight;
 
 	std::vector<Alien_Ship> ships; 
-	std::vector<std::vector<olc::vf2d>> ships_pos;
+	std::vector<std::vector<olc::vi2d>> ships_pos;
 	std::vector<std::vector<bool>> ships_pos_level_1 =
 	{
 		{1,1,1,1},
@@ -42,9 +42,7 @@ private:
 		{0,0,0,0}
 	};
 
-	/****************************************************
-	*                  Place Holders                    *
-	*****************************************************/
+
 
 
 public: 
@@ -73,23 +71,17 @@ public:
 		for (int i = 0; i < 5; i++) 
 		{
 			for (int j = 0; j < 4; j++) {
-				ships_pos[i].push_back({ float( (j+1) * (ScreenWidth / 5) ), 
-					float( (i + 1) * (ScreenHeight / 7) )});
+				ships_pos[i].push_back({  (j+1) * (ScreenWidth / 5) , 
+					 (i + 1) * (ScreenHeight / 7) });
 			}
 		}
 	}
 
-	std::vector<std::vector<olc::vf2d>> get_ships_pos_vec() {
+	/*std::vector<std::vector<olc::vf2d>> get_ships_pos_vec() {
 		return ships_pos;
-	}
+	}*/
 
 
-
-	void DrawPlayer(olc::PixelGameEngine* pge)
-	{
-		pge->FillRect(float(m_player.get_Size().x), float(m_player.get_Size().y), m_player.get_Size().x, m_player.get_Size().y, olc::GREEN);
-
-	}
 
 	void LoadLevel(olc::PixelGameEngine* pge, int level) {
 		
@@ -103,7 +95,7 @@ public:
 		//pge->DrawLine(10, ScreenHeight() - 10, ScreenWidth() - 10, ScreenHeight() - 10, olc::BLUE); // bottom HZ line
 		
 		/*Score*/
-		pge->DrawString(ScreenWidth - 180.0f, 10.0f, "Score: 0000", olc::WHITE, 2);
+		pge->DrawString(ScreenWidth - 180, 10, "Score: 0000", olc::WHITE, 2);
 
 		set_ShipsPos();
 		m_player.DrawSelf(pge);
@@ -126,7 +118,7 @@ public:
 					}
 				}
 			}
-			pge->DrawString(10.0f, 10.0f, "Level 1", olc::WHITE, 2);
+			pge->DrawString(10, 10, "Level 1", olc::WHITE, 2);
 		
 
 		

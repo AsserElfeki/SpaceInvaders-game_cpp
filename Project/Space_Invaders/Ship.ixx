@@ -17,7 +17,7 @@ public:
 	
 	}
 
-	void DrawSelf(olc::PixelGameEngine* pge, olc::vf2d ships_pos) {
+	void DrawSelf(olc::PixelGameEngine* pge, olc::vi2d ships_pos) {
 		pge->FillCircle(ships_pos, get_Width(), olc::YELLOW);	
 	}
 
