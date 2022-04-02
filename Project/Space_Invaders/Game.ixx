@@ -48,10 +48,10 @@ public:
 	*                  User Input                       *
 	****************************************************/
 		if (GetKey(olc::Key::LEFT).bHeld) 
-			m_level1->get_Player().move_left();
+			m_level1->get_Player().move_left(fElapsedTime);
 
 		if (GetKey(olc::Key::RIGHT).bHeld) 
-			m_level1->get_Player().move_right();
+			m_level1->get_Player().move_right(fElapsedTime);
 
 		if (m_level1->get_Player().get_Pos().x < 11) 
 			m_level1->get_Player().Pos_left();
@@ -60,8 +60,6 @@ public:
 			m_level1->get_Player().Pos_right();
 
 
-		/*if (fBatPos < 11.0f) fBatPos = 11.0f;
-		if (fBatPos + fBatWidth > float(ScreenWidth()) - 10.0f) fBatPos = float(ScreenWidth()) - 10.0f - fBatWidth;*/
 		
 		return true;
 	}

@@ -7,7 +7,7 @@ export module Ship;
 export class Alien_Ship : public Units_Interface {
 
 private: 
-
+	float speed = 1.0f; 
 
 public: 
 

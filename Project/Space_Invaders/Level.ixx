@@ -61,6 +61,7 @@ public:
 	void set_Scale(int32_t w, int32_t h) {
 		m_player.set_Screen(w, h);
 		m_ship.set_Screen(w, h);
+		m_player.set_Speed(500);
 		m_player.set_Size(w / 10, h / 10);
 		m_player.set_Pos(w, h);
 		m_ship.set_Width(w / 25);

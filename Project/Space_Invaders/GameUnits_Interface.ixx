@@ -11,11 +11,16 @@ export class Units_Interface {
 private:
 	int element_Width, element_Height, 
 		pos_x, pos_y, ScreenWidth, ScreenHeight;
+	float speed; 
 	
 	 
 
 public:
 	Units_Interface(){
+	}
+
+	void set_Speed(float s) {
+		speed = s;
 	}
 
 	void set_Screen(int w, int h) {
@@ -49,7 +54,7 @@ public:
 	}*/
 
 	void set_Pos(int w, int h) {
-		pos_x = w / 2 - element_Width;
+		pos_x = w / 2 - element_Width/2;
 		pos_y = h - 1.5 * element_Height;
 	}
 
@@ -61,12 +66,12 @@ public:
 		pos_x = ScreenWidth-element_Width-10;
 	}
 
-	void move_left() {
-		pos_x -= 2; 
+	void move_left(float ElapsedTime) {
+		pos_x -= (speed * ElapsedTime); 
 	}
 
-	void move_right() {
-		pos_x += 2;
+	void move_right(float ElapsedTime) {
+		pos_x += (speed * ElapsedTime);
 
 	}
 
