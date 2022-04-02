@@ -53,9 +53,15 @@ public:
 		return Size;
 	}*/
 
-	void set_Pos(int w, int h) {
+	void set_Player_Pos(int w, int h) {
 		pos_x = w / 2 - element_Width/2;
 		pos_y = h - 1.5 * element_Height;
+	}
+
+	void set_Ship_Pos(int w, int h)
+	{
+		pos_x = w ;
+		pos_y = h ;
 	}
 
 	void Pos_left() {
