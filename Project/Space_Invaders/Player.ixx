@@ -21,7 +21,7 @@ public:
 
 	void DrawSelf(olc::PixelGameEngine* pge)
 	{
-			pge->FillRect((get_Pos().x),  (get_Pos().y), get_Size().x, get_Size().y, olc::GREEN);
+			pge->FillRect(float(get_Pos().x), float (get_Pos().y), get_Width(), get_Height(), olc::GREEN);
 
 	}
 

@@ -59,6 +59,8 @@ public:
 	}
 
 	void set_Scale(int32_t w, int32_t h) {
+		m_player.set_Screen(w, h);
+		m_ship.set_Screen(w, h);
 		m_player.set_Size(w / 10, h / 10);
 		m_player.set_Pos(w, h);
 		m_ship.set_Width(w / 25);
@@ -77,14 +79,10 @@ public:
 		}
 	}
 
-	/*std::vector<std::vector<olc::vf2d>> get_ships_pos_vec() {
-		return ships_pos;
-	}*/
-
-
-
 	void LoadLevel(olc::PixelGameEngine* pge, int level) {
-		
+		/*m_player.set_Screen(w, h);
+		m_ship.set_Screen(w, h);*/
+
 		// Erase previous frame
 		pge->Clear(olc::BLACK);
 
@@ -119,9 +117,10 @@ public:
 				}
 			}
 			pge->DrawString(10, 10, "Level 1", olc::WHITE, 2);
-		
+	}
 
-		
+	Player& get_Player() {
+		return m_player; 
 	}
 
 protected: 
