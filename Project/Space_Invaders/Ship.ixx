@@ -1,30 +1,63 @@
 module;
 
 #include "olcPixelGameEngine.h"
-export import Player; 
 export module Ship; 
  
 export class Alien_Ship {
 
 private: 
 	int element_Width, element_Height,
-		pos_x, pos_y, ScreenWidth, ScreenHeight;
-	float speed;
+		pos_x, pos_y, 
+		ScreenWidth, ScreenHeight,
+		move_right_limit,
+		move_left_limit;
+	float vel_dir = 1; 
+
+	bool exist = false; 
+	float speed = 0.01f;
 
 public: 
 
-	Alien_Ship(){}
+	Alien_Ship() = delete; 
 
-	Alien_Ship(olc::vi2d pos, int w, int h ) 
+	Alien_Ship(olc::vi2d pos, int w, int h, bool _exist) 
 	{
 		pos_x = pos.x;
 		pos_y = pos.y;
 		ScreenWidth = w; 
 		ScreenHeight = h; 
 		element_Width = w / 25; 
+		move_right_limit = 5; 
+		move_left_limit = 5;
+		if (_exist)
+			exist = true; 
+
+	}
+
+	/*int get_limit() {
+		return move_limit;
+	}*/
+
+	void flip_dir() {
+		vel_dir *= -1; 
+	}
+
+	void Move() {
+		pos_x *= 5 * vel_dir; 
+	}
+
+	void Move_right (float time ) {
+		pos_x += 1 ;
+	}
+
+	void Move_left(float time  )
+	{
+		pos_x -= 1 ;
+		//move_limit += 2;
 	}
 
 	void DrawSelf(olc::PixelGameEngine* pge) {
+		if (exist)
 		pge->FillCircle(get_Pos(), get_Width(), olc::YELLOW);
 	}
 

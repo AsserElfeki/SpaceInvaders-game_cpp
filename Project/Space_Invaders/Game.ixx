@@ -2,7 +2,6 @@ module;
 
 #include "olcPixelGameEngine.h"
 
-import Ship;
 
 import Level; 
 
@@ -28,6 +27,7 @@ public:
 
 		m_level1 = std::make_unique<Level>();
 		m_level1->set_Scale(ScreenWidth(), ScreenHeight());
+		m_level1->Create_Ships(1);
 
 
 		return true;
@@ -41,8 +41,9 @@ public:
 	*                  Level Loading                    *
 	****************************************************/
 
-		m_level1->LoadLevel(this, 2);
-
+		m_level1->LoadLevel(this, 2, fElapsedTime);
+		m_level1->Move_Ships(fElapsedTime, this);
+	
 
 	/****************************************************
 	*                  User Input                       *
@@ -59,6 +60,7 @@ public:
 		if ((m_level1->get_Player().get_Pos().x + ScreenWidth() /10) > (ScreenWidth() - 11))
 			m_level1->get_Player().Pos_right();
 
+		
 
 		
 		return true;

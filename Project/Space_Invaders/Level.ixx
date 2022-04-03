@@ -2,8 +2,8 @@ module;
 
 #include "olcPixelGameEngine.h"
 
-import Ship;
-import Player; 
+export import Ship;
+export import Player; 
 
 export module Level;
 
@@ -12,6 +12,8 @@ export class Level {
 private: 
 	int32_t ScreenWidth;
 	int32_t ScreenHeight;
+	bool drawn = false;
+
 
 	std::vector<std::vector<Alien_Ship>> ships;
 	std::vector<std::vector<bool>> ships_pos_level_1 =
@@ -57,7 +59,7 @@ public:
 		return ships_pos_level_3;
 	}
 
-
+	
 
 	void set_Scale(int32_t w, int32_t h) {
 		m_player.set_Screen(w, h);
@@ -68,7 +70,17 @@ public:
 		ScreenHeight = h;
 	}
 
-	void set_ShipsPos() {
+	void Create_Ships(int level) 
+	{
+		std::vector<std::vector<bool>> booltmp;
+
+		if (level == 1)
+			booltmp = ships_pos_level_1;
+		else if (level == 2)
+			booltmp = ships_pos_level_2;
+		else if (level == 3)
+			booltmp = ships_pos_level_3;
+
 
 		for (int i = 0; i < 5; i++) 
 		{
@@ -76,14 +88,122 @@ public:
 			for (int j = 0; j < 4; j++) {
 				olc::vi2d tmp_pos = { (j + 1) * (ScreenWidth / 5) ,
 					 (i + 1) * (ScreenHeight / 7) };
-				tmp.emplace_back(tmp_pos, ScreenWidth, ScreenHeight);
+				tmp.emplace_back(tmp_pos, ScreenWidth, ScreenHeight, booltmp[i][j]);
 			}
 			ships.push_back(tmp);
 		}
 	}
 
 
-	void LoadLevel(olc::PixelGameEngine* pge, int level) {
+
+
+
+	void Move_Ships(float time, olc::PixelGameEngine* pge) {
+
+
+		//if (ships[0][3].get_Pos().x + ships[0][3].get_Width() <= ScreenWidth - 10)
+		//{
+		//	for (auto shipvec : ships)
+		//	{
+		//		for (auto ship : shipvec)
+		//		{
+		//			ship.set_Ship_Pos(ship.get_Pos().x+20, ship.get_Pos().y);
+		//			
+		//		}
+		//	}
+
+		//	/*for (auto shipvec : ships)
+		//	{
+		//		for (auto ship : shipvec)
+		//		{
+		//			ship.flip_dir();
+		//		}
+		//	}*/
+		//}
+
+
+		//if (ships[0][0].get_Pos().x + ships[0][0].get_Width() >= 0)
+		//{
+		//	for (auto shipvec : ships)
+		//	{
+		//		for (auto ship : shipvec)
+		//		{
+		//			ship.set_Ship_Pos(ship.get_Pos().x - 20, ship.get_Pos().y);
+		//		}
+		//	}
+
+		//	/*for (auto shipvec : ships)
+		//	{
+		//		for (auto ship : shipvec)
+		//		{
+		//			ship.flip_dir();
+		//		}
+		//	}*/
+		//}
+
+		bool last_move = true; 
+
+		if (last_move) 
+		{
+			for (int i = 0; i < 5; i++)
+			{
+				for (int j = 0; j < 4; j++)
+					{
+						ships[i][j].Move_right(time);
+						ships[i][j].DrawSelf(pge);
+					}
+			}
+			if (ships[0][3].get_Pos().x + ships[0][3].get_Width() >= ScreenWidth)
+			{
+				last_move = false;
+			}
+		}
+
+		if (!last_move)
+		{
+			for (int i = 0; i < 5; i++)
+			{
+				for (int j = 0; j < 4; j++)
+				{
+					ships[i][j].Move_left(time);
+					ships[i][j].DrawSelf(pge);
+
+					
+				}
+			}
+			if (ships[0][0].get_Pos().x - ships[0][0].get_Width() <= 50)
+			{
+				last_move = true;
+				
+			}
+		}
+
+		
+
+		//for (int i = 0; i < 5; i++)
+		//{
+		//	for (int j = 0; j < 4; j++)
+		//	{
+		//		if (ships[i][3].get_Pos().x + ships[i][3].get_Width() >= 770)
+		//		{
+		//			ships[i][j].Move_left();
+		//			ships[i][j].Move_left();
+		//			ships[i][j].Move_left();
+		//			ships[i][j].Move_left();
+		//			ships[i][j].Move_left();
+		//			ships[i][j].Move_left();
+		//			ships[i][j].Move_left();
+		//			ships[i][j].Move_left();
+		//			ships[i][j].Move_left();
+		//			ships[i][j].Move_left();
+		//		}
+		//	}
+		//}
+
+		
+	}
+
+	void LoadLevel(olc::PixelGameEngine* pge, int level, float time) {
 		/*m_player.set_Screen(w, h);
 		m_ship.set_Screen(w, h);*/
 
@@ -99,8 +219,8 @@ public:
 		/*Score*/
 		pge->DrawString(ScreenWidth - 180, 10, "Score: 0000", olc::WHITE, 2);
 
-		set_ShipsPos();
 		m_player.DrawSelf(pge);
+		//
 
 		std::vector<std::vector<bool>> tmp;
 		if (level == 1)
@@ -110,6 +230,9 @@ public:
 		else if (level == 3)
 			tmp = ships_pos_level_3;
 
+
+		if (!drawn) 
+		{
 			for (int i = 0; i < 5; i++)
 			{
 				for (int j = 0; j < 4; j++)
@@ -120,7 +243,10 @@ public:
 					}
 				}
 			}
-		
+			drawn = true; 
+		}
+			
+			
 			pge->DrawString(10, 10, "Level 1", olc::WHITE, 2);
 	}
 
