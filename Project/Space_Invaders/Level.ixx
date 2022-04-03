@@ -13,6 +13,7 @@ private:
 	int32_t ScreenWidth;
 	int32_t ScreenHeight;
 	bool drawn = false;
+	bool last_move = true;
 
 
 	std::vector<std::vector<Alien_Ship>> ships;
@@ -95,67 +96,26 @@ public:
 	}
 
 
-
-
-
 	void Move_Ships(float time, olc::PixelGameEngine* pge) {
 
 
-		//if (ships[0][3].get_Pos().x + ships[0][3].get_Width() <= ScreenWidth - 10)
-		//{
-		//	for (auto shipvec : ships)
-		//	{
-		//		for (auto ship : shipvec)
-		//		{
-		//			ship.set_Ship_Pos(ship.get_Pos().x+20, ship.get_Pos().y);
-		//			
-		//		}
-		//	}
-
-		//	/*for (auto shipvec : ships)
-		//	{
-		//		for (auto ship : shipvec)
-		//		{
-		//			ship.flip_dir();
-		//		}
-		//	}*/
-		//}
-
-
-		//if (ships[0][0].get_Pos().x + ships[0][0].get_Width() >= 0)
-		//{
-		//	for (auto shipvec : ships)
-		//	{
-		//		for (auto ship : shipvec)
-		//		{
-		//			ship.set_Ship_Pos(ship.get_Pos().x - 20, ship.get_Pos().y);
-		//		}
-		//	}
-
-		//	/*for (auto shipvec : ships)
-		//	{
-		//		for (auto ship : shipvec)
-		//		{
-		//			ship.flip_dir();
-		//		}
-		//	}*/
-		//}
-
-		bool last_move = true; 
-
-		if (last_move) 
+		if (last_move)
 		{
 			for (int i = 0; i < 5; i++)
 			{
 				for (int j = 0; j < 4; j++)
+				{
+					if (ships[4][3].get_Pos().x + ships[4][3].get_Width() >= ScreenWidth - 20)
+					{
+						last_move = false;
+						break;
+					}
+					else
 					{
 						ships[i][j].Move_right(time);
 						ships[i][j].DrawSelf(pge);
 					}
-			}
-			if (ships[0][3].get_Pos().x + ships[0][3].get_Width() >= ScreenWidth)
-			{
-				last_move = false;
+				}
 			}
 		}
 
@@ -165,47 +125,24 @@ public:
 			{
 				for (int j = 0; j < 4; j++)
 				{
-					ships[i][j].Move_left(time);
-					ships[i][j].DrawSelf(pge);
-
-					
+					if (ships[4][0].get_Pos().x - ships[4][0].get_Width() <= 50)
+					{
+						last_move = true;
+						break;
+					}
+					else 
+					{
+						ships[i][j].Move_left(time);
+						ships[i][j].DrawSelf(pge);
+					}	
 				}
-			}
-			if (ships[0][0].get_Pos().x - ships[0][0].get_Width() <= 50)
-			{
-				last_move = true;
-				
 			}
 		}
 
-		
-
-		//for (int i = 0; i < 5; i++)
-		//{
-		//	for (int j = 0; j < 4; j++)
-		//	{
-		//		if (ships[i][3].get_Pos().x + ships[i][3].get_Width() >= 770)
-		//		{
-		//			ships[i][j].Move_left();
-		//			ships[i][j].Move_left();
-		//			ships[i][j].Move_left();
-		//			ships[i][j].Move_left();
-		//			ships[i][j].Move_left();
-		//			ships[i][j].Move_left();
-		//			ships[i][j].Move_left();
-		//			ships[i][j].Move_left();
-		//			ships[i][j].Move_left();
-		//			ships[i][j].Move_left();
-		//		}
-		//	}
-		//}
-
-		
 	}
 
 	void LoadLevel(olc::PixelGameEngine* pge, int level, float time) {
-		/*m_player.set_Screen(w, h);
-		m_ship.set_Screen(w, h);*/
+
 
 		// Erase previous frame
 		pge->Clear(olc::BLACK);
@@ -220,9 +157,8 @@ public:
 		pge->DrawString(ScreenWidth - 180, 10, "Score: 0000", olc::WHITE, 2);
 
 		m_player.DrawSelf(pge);
-		//
 
-		std::vector<std::vector<bool>> tmp;
+		/*std::vector<std::vector<bool>> tmp;
 		if (level == 1)
 			tmp = ships_pos_level_1; 
 		else if (level ==2)
@@ -244,7 +180,7 @@ public:
 				}
 			}
 			drawn = true; 
-		}
+		}*/
 			
 			
 			pge->DrawString(10, 10, "Level 1", olc::WHITE, 2);

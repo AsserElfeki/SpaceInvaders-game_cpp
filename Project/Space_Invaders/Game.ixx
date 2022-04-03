@@ -27,7 +27,7 @@ public:
 
 		m_level1 = std::make_unique<Level>();
 		m_level1->set_Scale(ScreenWidth(), ScreenHeight());
-		m_level1->Create_Ships(1);
+		m_level1->Create_Ships(2);
 
 
 		return true;
