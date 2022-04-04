@@ -135,10 +135,5 @@ int main() {
 
     return 0;
 }
-/*
-
-
-13.Familiarize with (filesystem/subdir3) directory, make it so that the files with "jpg" extension are moved to the (filesystem/
-subdir3/ilovejpg) directory and files with "png" extension are moved to the (filesystem/subdir3/ilovepng) directory. */
 
 
