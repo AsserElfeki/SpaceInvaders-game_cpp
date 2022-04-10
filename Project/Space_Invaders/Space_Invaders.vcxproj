@@ -149,7 +149,7 @@
   <ItemGroup>
     <ClCompile Include="Bullets.ixx" />
     <ClCompile Include="Game.ixx" />
-    <ClCompile Include="GameUnits_Interface.ixx" />
+    <ClCompile Include="Entity.ixx" />
     <ClCompile Include="Level.ixx" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.ixx" />

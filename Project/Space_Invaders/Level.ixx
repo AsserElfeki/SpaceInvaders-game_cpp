@@ -1,6 +1,7 @@
 module;
 
 #include "olcPixelGameEngine.h"
+extern std::string player_name;
 
 export import Ship;
 export import Player; 
@@ -12,7 +13,7 @@ export class Level {
 private: 
 	int32_t ScreenWidth;
 	int32_t ScreenHeight;
-	bool drawn = false;
+	//bool drawn = false;
 	bool last_move = true;
 
 
@@ -62,11 +63,8 @@ public:
 
 	
 
-	void set_Scale(int32_t w, int32_t h) {
-		m_player.set_Screen(w, h);
-		m_player.set_Speed(500);
-		m_player.set_Size(w / 10, h / 10);
-		m_player.set_Player_Pos(w, h);
+	void set_Scale(int32_t w, int32_t h) 
+	{
 		ScreenWidth = w; 
 		ScreenHeight = h;
 	}
@@ -86,7 +84,8 @@ public:
 		for (int i = 0; i < 5; i++) 
 		{
 			std::vector<Alien_Ship> tmp; 
-			for (int j = 0; j < 4; j++) {
+			for (int j = 0; j < 4; j++) 
+			{
 				olc::vi2d tmp_pos = { (j + 1) * (ScreenWidth / 5) ,
 					 (i + 1) * (ScreenHeight / 7) };
 				tmp.emplace_back(tmp_pos, ScreenWidth, ScreenHeight, booltmp[i][j]);
@@ -103,18 +102,15 @@ public:
 		{
 			for (int i = 0; i < 5; i++)
 			{
-				for (int j = 0; j < 4; j++)
+				if (ships[i][3].get_Pos().x + ships[i][3].get_Width() >= ScreenWidth - 20)
 				{
-					if (ships[4][3].get_Pos().x + ships[4][3].get_Width() >= ScreenWidth - 20)
-					{
-						last_move = false;
-						break;
-					}
-					else
-					{
-						ships[i][j].Move_right(time);
+					last_move = false;
+					continue;
+				}
+				for (int j = 0; j < 4; j++)
+				{	
+						ships[i][j].move_right(time);
 						ships[i][j].DrawSelf(pge);
-					}
 				}
 			}
 		}
@@ -123,25 +119,23 @@ public:
 		{
 			for (int i = 0; i < 5; i++)
 			{
+				if (ships[i][0].get_Pos().x - ships[i][0].get_Width() <= 20)
+				{
+					last_move = true;
+					continue;
+				}
 				for (int j = 0; j < 4; j++)
 				{
-					if (ships[4][0].get_Pos().x - ships[4][0].get_Width() <= 50)
-					{
-						last_move = true;
-						break;
-					}
-					else 
-					{
-						ships[i][j].Move_left(time);
-						ships[i][j].DrawSelf(pge);
-					}	
+						ships[i][j].move_left(time);
+						ships[i][j].DrawSelf(pge);			
 				}
 			}
 		}
 
 	}
 
-	void LoadLevel(olc::PixelGameEngine* pge, int level, float time) {
+	void LoadLevel(olc::PixelGameEngine* pge, int level, float time) 
+	{
 
 
 		// Erase previous frame
@@ -153,44 +147,20 @@ public:
 		pge->DrawLine(ScreenWidth - 10, 50, ScreenWidth - 10, ScreenHeight - 10, olc::BLUE); // right V line 
 		//pge->DrawLine(10, ScreenHeight() - 10, ScreenWidth() - 10, ScreenHeight() - 10, olc::BLUE); // bottom HZ line
 		
-		/*Score*/
+		/*Score and player*/
 		pge->DrawString(ScreenWidth - 180, 10, "Score: 0000", olc::WHITE, 2);
-
-		m_player.DrawSelf(pge);
-
-		/*std::vector<std::vector<bool>> tmp;
-		if (level == 1)
-			tmp = ships_pos_level_1; 
-		else if (level ==2)
-			tmp = ships_pos_level_2;
-		else if (level == 3)
-			tmp = ships_pos_level_3;
+		pge->DrawString(10, 10, "Level 1", olc::WHITE, 2);
+		pge->DrawString(200, 10, player_name, olc::WHITE, 2);
 
 
-		if (!drawn) 
-		{
-			for (int i = 0; i < 5; i++)
-			{
-				for (int j = 0; j < 4; j++)
-				{
-					if (tmp[i][j])
-					{
-						ships[i][j].DrawSelf(pge);
-					}
-				}
-			}
-			drawn = true; 
-		}*/
-			
-			
-			pge->DrawString(10, 10, "Level 1", olc::WHITE, 2);
+
 	}
 
-	Player& get_Player() {
-		return m_player; 
-	}
+	//Player& get_Player() {
+	//	return m_player; 
+	//}
 
 protected: 
-	Player m_player;
+	//Player m_player;
 
 };
