@@ -3,8 +3,6 @@
 
 import Game;
 import Level; 
-//import Score;
-import Bullets;
 import Ship;
 import Player; 
 

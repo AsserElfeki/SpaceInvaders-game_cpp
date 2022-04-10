@@ -18,9 +18,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Bullets.ixx">
-      <Filter>Modules</Filter>
-    </ClCompile>
     <ClCompile Include="Level.ixx">
       <Filter>Modules</Filter>
     </ClCompile>

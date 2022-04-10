@@ -14,9 +14,6 @@ private:
 	std::unique_ptr <Player> m_player;
 	std::list<Bullet> m_bullets;
 
-	//std::unique_ptr <Bullet> m_bullet;
-
-
 public:
 	SpaceInvaders()
 	{
@@ -36,7 +33,6 @@ public:
 		m_level1->Create_Ships(1);
 
 		m_player->set_Scale(ScreenWidth(), ScreenHeight());
-		//m_bullet = std::make_unique<Bullet>(this, m_player->get_Pos().x + m_player->get_Width() / 2, m_player->get_Pos().y);
 
 
 		return true;
@@ -72,10 +68,8 @@ public:
 			m_player->Pos_right();
 
 		if (GetKey(olc::Key::SPACE).bPressed)
-		{ 
 			m_bullets.emplace_back(this, m_player->get_Pos().x + m_player->get_Width() / 2, m_player->get_Pos().y);
-			//m_bullet->DrawSelf(this);
-		}
+
 
 		auto Itr = m_bullets.begin(); 
 
@@ -100,17 +94,10 @@ public:
 
 		for (auto& bullet : m_bullets)
 		{
-			if (bullet.get_Pos().y < 50)
+			if (bullet.get_Pos().y < 60)
 				m_bullets.pop_front();
 		}
 
-		//if (m_bullet)
-		//{
-		//	m_bullet->move_Bullet(fElapsedTime, this);
-
-		//	//if (m_bullet->get_Pos().y < 50)
-		//		//delete m_bullet;
-		//}
 
 		return true;
 	}
