@@ -38,5 +38,7 @@ public:
 		pos_y = h;
 	}
 
-	
+	bool& is_exist() {
+		return exist;
+	}
 };

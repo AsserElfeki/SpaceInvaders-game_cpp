@@ -59,5 +59,10 @@ public:
 		return { pos_x, pos_y };
 	}
 
+	void Kill()
+	{
+		exist = false;
+	}
+
 };
 

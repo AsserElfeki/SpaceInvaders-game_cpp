@@ -147,13 +147,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Bullet.ixx" />
     <ClCompile Include="Bullets.ixx" />
+    <ClCompile Include="FileHandler.ixx" />
     <ClCompile Include="Game.ixx" />
     <ClCompile Include="Entity.ixx" />
     <ClCompile Include="Level.ixx" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.ixx" />
-    <ClCompile Include="Score.ixx" />
     <ClCompile Include="Ship.ixx" />
   </ItemGroup>
   <ItemGroup>

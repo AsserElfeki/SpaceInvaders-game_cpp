@@ -3,7 +3,7 @@
 
 import Game;
 import Level; 
-import Score;
+//import Score;
 import Bullets;
 import Ship;
 import Player; 
@@ -12,16 +12,16 @@ std::string player_name;
 
 int main()
 {
-	int w, h; 
+	/*int w, h; 
 	std::cout << "Please Enter your name:\n";
 	std::cin >> player_name;
 	std::cout << "please provide game window width:\n";
 	std::cin >> w; 
 	std::cout << "please provide game window height:\n";
-	std::cin >> h;
+	std::cin >> h;*/
 
 	SpaceInvaders demo;
-	if (demo.Construct(w, h, 1, 1, false, true))  
+	if (demo.Construct(800, 800, 1, 1, false, true))  
 		demo.Start();
 
 	return 0;
