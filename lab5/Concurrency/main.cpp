@@ -15,7 +15,7 @@ int rand_num() {
 };
 
 
-int log(std::string msg) {
+void log(std::string msg) {
     std::cout << msg << std::endl;
 }
 
@@ -85,23 +85,51 @@ int main() {
         }
     };
 
-    auto f2 = std::async(std::launch::async, asyncAssign);
-    auto f1 = std::async(std::launch::async, seqAssign);
 
-    for (int i = 0; i < ARR_SZ; i++) {
-        //log("abc");
-        std::cout << arr1[i] << " , " << arr2[2] << std::endl;
-    }
+//    f1.get();
+//    f2.get();
+//
+
     log("");
 
 
-    log("Task4: ");
+    log("Task4,6,7: ");
     std::future_status seqAssignStatus;
     auto seqAssignStartTime = std::chrono::system_clock::now();
-    
+    auto f1 = std::async(std::launch::async, seqAssign);
 
+    while (true)
+    {
+        //std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        seqAssignStatus = f1.wait_for(std::chrono::microseconds (1));
+        if(seqAssignStatus == std::future_status::ready)
+        {
+            auto seqAssignFinishTime = std::chrono::system_clock::now() - seqAssignStartTime;
+            std::cout << "seqAssign finished in " << std::chrono::duration <float>(seqAssignFinishTime).count() << std::endl;
+            break;
+        }
+    }
+
+    std::future_status asyncAssignStatus;
+    auto asyncAssignStartTime = std::chrono::system_clock::now();
+    auto f2 = std::async(std::launch::async, asyncAssign);
+
+    while (true)
+    {
+       // std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        asyncAssignStatus = f2.wait_for(std::chrono::microseconds (1));
+        if(asyncAssignStatus == std::future_status::ready)
+        {
+            auto asyncAssignFinishTime = std::chrono::system_clock::now() - asyncAssignStartTime;
+            std::cout << "asyncAssign finished in " << std::chrono::duration <float>(asyncAssignFinishTime).count() << std::endl;
+            break;
+        }
+    }
     log("");
-
+//    for (int i = 0; i < ARR_SZ; i++) {
+//        //log("abc");
+//        std::cout << arr1[i] << " , " << arr2[i] << std::endl;
+//    }
 
     return 0;
 }
