@@ -44,6 +44,15 @@ private:
 	};
 
 public: 
+
+	Level() {}
+
+	Level(int _level, int32_t w, int32_t h) {
+		set_Scale(w, h);
+		Create_Ships(_level);
+	}
+
+
 	std::vector<std::vector<bool>> get_level1() {
 		return ships_pos_level_1; 
 	}
@@ -123,7 +132,7 @@ public:
 		}
 	}
 
-	void LoadLevel(olc::PixelGameEngine* pge, int level, float time) 
+	void LoadLevel(olc::PixelGameEngine* pge, float time) 
 	{
 		// Erase previous frame
 		pge->Clear(olc::BLACK);
