@@ -14,9 +14,9 @@ public:
 
 	Alien_Ship() = delete; 
 
-	Alien_Ship(olc::vi2d pos, int w, int h, bool _exist) 
+	Alien_Ship(olc::vi2d pos, int w, int h, bool _exist, float _speed) 
 	{
-		speed = 500.0f;
+		speed = _speed;
 		pos_x = pos.x;
 		pos_y = pos.y;
 		ScreenWidth = w; 

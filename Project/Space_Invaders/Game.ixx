@@ -70,45 +70,7 @@ public:
 			m_player->DrawSelf(this);
 
 			m_level1->Move_Ships(fElapsedTime, this);
-		}
 
-		else if (currentLevel == 2)
-		{
-			m_level2->LoadLevel(this, fElapsedTime);
-			m_player->DrawSelf(this);
-
-			m_level2->Move_Ships(fElapsedTime, this);
-		}
-
-		else if (currentLevel == 3)
-		{
-			m_level3->LoadLevel(this, fElapsedTime);
-			m_player->DrawSelf(this);
-
-			m_level3->Move_Ships(fElapsedTime, this);
-		}
-
-	/****************************************************
-	*                  User Input                       *
-	****************************************************/
-		if (GetKey(olc::Key::LEFT).bHeld) 
-			m_player->move_left(fElapsedTime);
-
-		if (GetKey(olc::Key::RIGHT).bHeld) 
-			m_player->move_right(fElapsedTime);
-
-		if (m_player->get_Pos().x < 11) 
-			m_player->Pos_left();
-
-		if ((m_player->get_Pos().x + m_player->get_Width()) > (ScreenWidth() - 11))
-			m_player->Pos_right();
-
-		if (GetKey(olc::Key::SPACE).bPressed) 
-			m_bullets.emplace_back(this, m_player->get_Pos().x + m_player->get_Width() / 2, m_player->get_Pos().y);
-
-
-		if (currentLevel == 1) 
-		{
 			//collision detection between a bullet and a ship and killing in case of collision
 			for (auto& bullet : m_bullets)
 			{
@@ -129,18 +91,20 @@ public:
 				Itr++;
 			}
 
-			//if bullet goes out of screen
-			for (auto& bullet : m_bullets)
-			{
-				if (bullet.get_Pos().y < 60)
-					m_bullets.pop_front();
-			}
 			if (m_level1->is_finished())
+			{
 				currentLevel = 2;
+				m_level1->interLevelScreen(this);
+			}
 		}
 
 		else if (currentLevel == 2)
 		{
+			m_level2->LoadLevel(this, fElapsedTime);
+			m_player->DrawSelf(this);
+
+			m_level2->Move_Ships(fElapsedTime, this);
+
 			//collision detection between a bullet and a ship and killing in case of collision
 			for (auto& bullet : m_bullets)
 			{
@@ -160,19 +124,21 @@ public:
 					}
 				Itr++;
 			}
-
-			//if bullet goes out of screen
-			for (auto& bullet : m_bullets)
-			{
-				if (bullet.get_Pos().y < 60)
-					m_bullets.pop_front();
-			}
 			if (m_level2->is_finished())
+			{
 				currentLevel = 3;
+				m_level2->interLevelScreen(this);
+
+			}
 		}
 
 		else if (currentLevel == 3)
 		{
+			m_level3->LoadLevel(this, fElapsedTime);
+			m_player->DrawSelf(this);
+
+			m_level3->Move_Ships(fElapsedTime, this);
+
 			//collision detection between a bullet and a ship and killing in case of collision
 			for (auto& bullet : m_bullets)
 			{
@@ -192,26 +158,37 @@ public:
 					}
 				Itr++;
 			}
-
-			//if bullet goes out of screen
-			for (auto& bullet : m_bullets)
-			{
-				if (bullet.get_Pos().y < 60)
-					m_bullets.pop_front();
-			}
 		}
+
+
+		//if bullet goes out of screen
+		for (auto& bullet : m_bullets)
+		{
+			if (bullet.get_Pos().y < 60)
+				m_bullets.pop_front();
+		}
+	/****************************************************
+	*                  User Input                       *
+	****************************************************/
+		if (GetKey(olc::Key::LEFT).bHeld) 
+			m_player->move_left(fElapsedTime);
+
+		if (GetKey(olc::Key::RIGHT).bHeld) 
+			m_player->move_right(fElapsedTime);
+
+		if (m_player->get_Pos().x < 11) 
+			m_player->Pos_left();
+
+		if ((m_player->get_Pos().x + m_player->get_Width()) > (ScreenWidth() - 11))
+			m_player->Pos_right();
+
+		if (GetKey(olc::Key::SPACE).bPressed) 
+			m_bullets.emplace_back(this, m_player->get_Pos().x + m_player->get_Width() / 2, m_player->get_Pos().y);
+
+
 		
 
-		/*if (currentLevel == 1)
-		{
-			if (m_level1->is_finished())
-			currentLevel = 2;
-		}
-		else if (currentLevel == 2 && m_level2->is_finished())
-			currentLevel = 3;*/
-
-		/*if (currentLevel == 1 && m_level1->get_Ships().size() == 0)
-			currentLevel = 2;*/
+	
 		return true;
 	}
 
@@ -221,7 +198,7 @@ public:
 
 
 /*
-1- level instatitiation 
+1- screen between levels
 2- sprites 
 3- score calculation  
 4- score sheet 
