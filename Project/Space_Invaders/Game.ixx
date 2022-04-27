@@ -13,10 +13,13 @@ private:
 	std::unique_ptr <Level> m_level1;
 	std::unique_ptr <Level> m_level2;
 	std::unique_ptr <Level> m_level3;
+	std::unique_ptr <Level> m_currentLevel;
+
 	std::unique_ptr <Player> m_player;
 	std::list<Bullet> m_bullets;
+	 
 
-	int currentLevel = 2;
+	int currentLevel = 1;
 
 public:
 	SpaceInvaders()
@@ -43,7 +46,7 @@ public:
 
 		//m_level1->set_Scale(ScreenWidth(), ScreenHeight());
 		m_player->set_Scale(ScreenWidth(), ScreenHeight());
-		m_level1->Create_Ships(2);
+		//m_level1->Create_Ships(2);
 
 
 		return true;
@@ -59,6 +62,8 @@ public:
 	/****************************************************
 	*                  Level Loading                    *
 	****************************************************/
+		auto Itr = m_bullets.begin();
+
 		if (currentLevel == 1) 
 		{
 			m_level1->LoadLevel(this, fElapsedTime);
@@ -82,8 +87,6 @@ public:
 
 			m_level3->Move_Ships(fElapsedTime, this);
 		}
-		
-	
 
 	/****************************************************
 	*                  User Input                       *
@@ -104,36 +107,111 @@ public:
 			m_bullets.emplace_back(this, m_player->get_Pos().x + m_player->get_Width() / 2, m_player->get_Pos().y);
 
 
-		auto Itr = m_bullets.begin(); 
-
-		//collision detection between a bullet and a ship and killing in case of collision
-		for (auto& bullet : m_bullets)
+		if (currentLevel == 1) 
 		{
-			bullet.move_Bullet(fElapsedTime, this);
-			for (int i = 0; i<5; i++)
-				for (int j = 0; j < 4; j++)
-				{
-					if (m_level1->get_Ships()[i][j].is_exist()) //circle collision
-						if ( ( (m_level1->get_Ships()[i][j].get_Pos().x - bullet.get_Pos().x)  * (m_level1->get_Ships()[i][j].get_Pos().x - bullet.get_Pos().x) ) 
-							+ ((m_level1->get_Ships()[i][j].get_Pos().y - bullet.get_Pos().y) * (m_level1->get_Ships()[i][j].get_Pos().y - bullet.get_Pos().y)) <= 
-							 ( (m_level1->get_Ships()[i][j].get_Width()) * (m_level1->get_Ships()[i][j].get_Width()) ))
-						{
-							bullet.Kill(); 
-							m_bullets.erase(Itr);
-							m_level1->get_Ships()[i][j].Kill();
-						}
-				}
-			Itr++;
+			//collision detection between a bullet and a ship and killing in case of collision
+			for (auto& bullet : m_bullets)
+			{
+				bullet.move_Bullet(fElapsedTime, this);
+				for (int i = 0; i < 5; i++)
+					for (int j = 0; j < 4; j++)
+					{
+						if (m_level1->get_Ships()[i][j].is_exist()) //circle collision
+							if (((m_level1->get_Ships()[i][j].get_Pos().x - bullet.get_Pos().x) * (m_level1->get_Ships()[i][j].get_Pos().x - bullet.get_Pos().x))
+								+ ((m_level1->get_Ships()[i][j].get_Pos().y - bullet.get_Pos().y) * (m_level1->get_Ships()[i][j].get_Pos().y - bullet.get_Pos().y)) <=
+								((m_level1->get_Ships()[i][j].get_Width()) * (m_level1->get_Ships()[i][j].get_Width())))
+							{
+								bullet.Kill();
+								m_bullets.erase(Itr);
+								m_level1->get_Ships()[i][j].Kill();
+							}
+					}
+				Itr++;
+			}
+
+			//if bullet goes out of screen
+			for (auto& bullet : m_bullets)
+			{
+				if (bullet.get_Pos().y < 60)
+					m_bullets.pop_front();
+			}
+			if (m_level1->is_finished())
+				currentLevel = 2;
 		}
 
-		//if bullet goes out of screen
-		for (auto& bullet : m_bullets)
+		else if (currentLevel == 2)
 		{
-			if (bullet.get_Pos().y < 60)
-				m_bullets.pop_front();
+			//collision detection between a bullet and a ship and killing in case of collision
+			for (auto& bullet : m_bullets)
+			{
+				bullet.move_Bullet(fElapsedTime, this);
+				for (int i = 0; i < 5; i++)
+					for (int j = 0; j < 4; j++)
+					{
+						if (m_level2->get_Ships()[i][j].is_exist()) //circle collision
+							if (((m_level2->get_Ships()[i][j].get_Pos().x - bullet.get_Pos().x) * (m_level2->get_Ships()[i][j].get_Pos().x - bullet.get_Pos().x))
+								+ ((m_level2->get_Ships()[i][j].get_Pos().y - bullet.get_Pos().y) * (m_level2->get_Ships()[i][j].get_Pos().y - bullet.get_Pos().y)) <=
+								((m_level2->get_Ships()[i][j].get_Width()) * (m_level2->get_Ships()[i][j].get_Width())))
+							{
+								bullet.Kill();
+								m_bullets.erase(Itr);
+								m_level2->get_Ships()[i][j].Kill();
+							}
+					}
+				Itr++;
+			}
+
+			//if bullet goes out of screen
+			for (auto& bullet : m_bullets)
+			{
+				if (bullet.get_Pos().y < 60)
+					m_bullets.pop_front();
+			}
+			if (m_level2->is_finished())
+				currentLevel = 3;
 		}
 
+		else if (currentLevel == 3)
+		{
+			//collision detection between a bullet and a ship and killing in case of collision
+			for (auto& bullet : m_bullets)
+			{
+				bullet.move_Bullet(fElapsedTime, this);
+				for (int i = 0; i < 5; i++)
+					for (int j = 0; j < 4; j++)
+					{
+						if (m_level3->get_Ships()[i][j].is_exist()) //circle collision
+							if (((m_level3->get_Ships()[i][j].get_Pos().x - bullet.get_Pos().x) * (m_level3->get_Ships()[i][j].get_Pos().x - bullet.get_Pos().x))
+								+ ((m_level3->get_Ships()[i][j].get_Pos().y - bullet.get_Pos().y) * (m_level3->get_Ships()[i][j].get_Pos().y - bullet.get_Pos().y)) <=
+								((m_level3->get_Ships()[i][j].get_Width()) * (m_level3->get_Ships()[i][j].get_Width())))
+							{
+								bullet.Kill();
+								m_bullets.erase(Itr);
+								m_level3->get_Ships()[i][j].Kill();
+							}
+					}
+				Itr++;
+			}
 
+			//if bullet goes out of screen
+			for (auto& bullet : m_bullets)
+			{
+				if (bullet.get_Pos().y < 60)
+					m_bullets.pop_front();
+			}
+		}
+		
+
+		/*if (currentLevel == 1)
+		{
+			if (m_level1->is_finished())
+			currentLevel = 2;
+		}
+		else if (currentLevel == 2 && m_level2->is_finished())
+			currentLevel = 3;*/
+
+		/*if (currentLevel == 1 && m_level1->get_Ships().size() == 0)
+			currentLevel = 2;*/
 		return true;
 	}
 

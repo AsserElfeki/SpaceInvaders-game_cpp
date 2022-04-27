@@ -52,6 +52,17 @@ public:
 		Create_Ships(_level);
 	}
 
+	bool is_finished() {
+		for (auto shiprow : ships)
+		{
+			for (auto ship : shiprow)
+			{
+				if ( ship.is_exist() )
+					return false; 
+			}
+		}
+		return true;
+	}
 
 	std::vector<std::vector<bool>> get_level1() {
 		return ships_pos_level_1; 
