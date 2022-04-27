@@ -16,7 +16,7 @@ public:
 
 	Alien_Ship(olc::vi2d pos, int w, int h, bool _exist) 
 	{
-		speed = 250.0f;
+		speed = 500.0f;
 		pos_x = pos.x;
 		pos_y = pos.y;
 		ScreenWidth = w; 

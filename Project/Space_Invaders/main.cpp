@@ -10,16 +10,16 @@ std::string player_name;
 
 int main()
 {
-	/*int w, h; 
-	std::cout << "Please Enter your name:\n";
+	int w, h; 
+	std::cout << "please enter your name:\n";
 	std::cin >> player_name;
-	std::cout << "please provide game window width:\n";
+	/*std::cout << "please provide game window width:\n";
 	std::cin >> w; 
 	std::cout << "please provide game window height:\n";
 	std::cin >> h;*/
 
 	SpaceInvaders demo;
-	if (demo.Construct(800, 800, 1, 1, false, true))  
+	if (demo.Construct(800, 800, 2, 2, true, true))  
 		demo.Start();
 
 	return 0;

@@ -27,10 +27,10 @@ private:
 	
 	std::vector<std::vector<bool>> ships_pos_level_2 =
 	{
-		{1,1,1,1},
 		{1,0,0,1},
-		{1,1,1,1},
-		{0,0,0,0},
+		{0,1,1,0},
+		{0,1,1,0},
+		{1,0,0,1},
 		{0,0,0,0}
 	}; 
 	
@@ -86,9 +86,8 @@ public:
 		}
 	}
 
-	void Move_Ships(float time, olc::PixelGameEngine* pge) {
-
-
+	void Move_Ships(float time, olc::PixelGameEngine* pge) 
+	{
 		if (last_move)
 		{
 			for (int i = 0; i < 5; i++)

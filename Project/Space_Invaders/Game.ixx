@@ -30,14 +30,17 @@ public:
 		m_player = std::make_unique<Player>();
 
 		m_level1->set_Scale(ScreenWidth(), ScreenHeight());
-		m_level1->Create_Ships(1);
+		m_level1->Create_Ships(2);
 
 		m_player->set_Scale(ScreenWidth(), ScreenHeight());
 
 
 		return true;
 	}
-
+	/* 
+	list <level> contianing all levels 
+	once all ships in a level are destroyed, destry the level 
+	*/
 
 	bool OnUserUpdate(float fElapsedTime) override
 	{
