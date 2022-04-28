@@ -13,13 +13,14 @@ private:
 	std::unique_ptr <Level> m_level1;
 	std::unique_ptr <Level> m_level2;
 	std::unique_ptr <Level> m_level3;
-	std::unique_ptr <Level> m_currentLevel;
+	//std::unique_ptr <Level> m_currentLevel;
 
 	std::unique_ptr <Player> m_player;
 	std::list<Bullet> m_bullets;
 	 
-
 	int currentLevel = 1;
+
+	std::unique_ptr<olc::Sprite> alien;
 
 public:
 	SpaceInvaders()
@@ -44,10 +45,11 @@ public:
 		m_level3 = std::make_unique<Level>(3, ScreenWidth(), ScreenHeight());
 		m_player = std::make_unique<Player>();
 
-		//m_level1->set_Scale(ScreenWidth(), ScreenHeight());
+	
 		m_player->set_Scale(ScreenWidth(), ScreenHeight());
-		//m_level1->Create_Ships(2);
+	
 
+		alien = std::make_unique<olc::Sprite>("./sprites/aliens_1.png");
 
 		return true;
 	}
@@ -63,6 +65,8 @@ public:
 	*                  Level Loading                    *
 	****************************************************/
 		auto Itr = m_bullets.begin();
+
+		DrawSprite(olc::vi2d(100,100), alien.get());
 
 		if (currentLevel == 1) 
 		{
@@ -198,7 +202,8 @@ public:
 
 
 /*
-1- screen between levels
+* threads ???? 
+1- screen between levels ???
 2- sprites 
 3- score calculation  
 4- score sheet 
