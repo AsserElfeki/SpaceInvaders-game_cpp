@@ -130,6 +130,8 @@ public:
 
 	void Move_Ships(float time, olc::PixelGameEngine* pge) 
 	{
+
+		//shoot()
 		if (last_move)
 		{
 			for (int i = 0; i < 5; i++)

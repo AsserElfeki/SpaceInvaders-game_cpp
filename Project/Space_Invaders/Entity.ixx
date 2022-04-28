@@ -55,6 +55,12 @@ public:
 
 	}
 
+	 void set_Pos(int32_t h, int32_t w)
+	 {
+		 pos_x = w; 
+		 pos_y = h; 
+	 }
+
 	olc::vi2d  get_Pos() {
 		return { pos_x, pos_y };
 	}

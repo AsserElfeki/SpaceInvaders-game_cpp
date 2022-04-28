@@ -6,8 +6,9 @@ export module Bullet;
 
 export class Bullet : public Entity {
 
+
 private: 
-	
+
 	bool drawn;
 
 public: 
@@ -19,23 +20,27 @@ public:
 		pos_y = posy;
 		element_Height = 10;
 		speed = 300.0f;
-		drawn = false;
+		DrawSelf(pge);
 	}
 
 	~Bullet(){}
 
 	void DrawSelf(olc::PixelGameEngine* pge)
 	{
-		
-			pge->DrawLine(get_Pos().x, get_Pos().y, get_Pos().x, get_Pos().y - element_Height, olc::RED);
-			drawn = true; 
+			pge->DrawLine(get_Pos().x, get_Pos().y, get_Pos().x, get_Pos().y - element_Height, olc::RED);	 
 	}
 
-	void move_Bullet(float time, olc::PixelGameEngine* pge) 
+	void move_PlayerBullet(float time, olc::PixelGameEngine* pge) 
 	{
 			pos_y -= (time * speed);
 			DrawSelf(pge);
 	}
 
+	void move_AlienBullet(float time, olc::PixelGameEngine* pge)
+	{
+		pos_y += (time * speed);
+		DrawSelf(pge);
+
+	}
 
 };

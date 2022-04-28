@@ -19,7 +19,7 @@ private:
 
 	std::unique_ptr <Player> m_player;
 	std::list<Bullet> m_bullets;
-	 
+	std::list<Bullet> m_alienBullets;
 
 	std::string current_state = "intro"; 
 	// other states : "level", "interlevelscreen" , "game over" 
@@ -118,6 +118,15 @@ public:
 			}
 		}
 
+		else if (current_state == "gameover")
+		{
+
+		}
+
+		else if (current_state == "won")
+		{
+
+		}
 		
 	
 	return true;
@@ -135,11 +144,21 @@ public:
 		m_player->DrawSelf(this);
 
 		level->Move_Ships(fElapsedTime, this);
+		
+		for (auto& shipsrow : level->get_Ships())
+		{
+			for (auto& ship : shipsrow)
+			{
+				ship.shoot(this);
+				ship.move_AlienBullet(fElapsedTime, this);	  
+			}
+		}
+
 
 		//collision detection between a bullet and a ship and killing in case of collision
 		for (auto& bullet : m_bullets)
 		{
-			bullet.move_Bullet(fElapsedTime, this);
+			bullet.move_PlayerBullet(fElapsedTime, this);
 			for (int i = 0; i < 5; i++)
 				for (int j = 0; j < 4; j++)
 				{
@@ -163,10 +182,14 @@ public:
 				m_bullets.pop_front();
 		}
 
+
+
 		if (level->is_finished())
 		{
+			m_player->set_Player_Pos(ScreenWidth(), ScreenHeight());
 			m_bullets.clear(); 
 			current_state = "interLevelScreen";
+			
 		}
 
 		/****************************************************
