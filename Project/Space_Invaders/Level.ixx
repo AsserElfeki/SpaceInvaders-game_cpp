@@ -185,22 +185,23 @@ public:
 		return ships;
 	}
 
-	void interLevelScreen(olc::PixelGameEngine* pge)
-	{
-		using namespace std::this_thread;     // sleep_for, sleep_until
-		using namespace std::chrono_literals; // ns, us, ms, s, h, etc.
-		using std::chrono::system_clock;
-		int starttime = 0;
-		int endntime = 18000;
+	//void interLevelScreen(olc::PixelGameEngine* pge)
+	//{
+	//	using namespace std::this_thread;     // sleep_for, sleep_until
+	//	using namespace std::chrono_literals; // ns, us, ms, s, h, etc.
+	//	using std::chrono::system_clock;
+	//	int starttime = 0;
+	//	int endtime = 18000;
 
-		//while (starttime != endntime)
-		{
-			pge->Clear(olc::WHITE);
-			pge->DrawString(ScreenWidth / 2, 50, "Congrats, " + name + "passed", olc::RED); 
-			starttime += 1; 
-		}
-		
-		/*sleep_for((3s));
-		sleep_until(system_clock::now() + (1s));*/
-	}
+	//	while (starttime < endtime)
+	//	{
+	//		std::cout << starttime << std::endl; 
+	//		pge->Clear(olc::WHITE);
+	//		pge->DrawString(ScreenWidth / 2, 50, "Congrats, " + name + " passed", olc::RED); 
+	//		starttime += 1; 
+	//	}
+	//	
+	//	/*sleep_for((3s));
+	//	sleep_until(system_clock::now() + (1s));*/
+	//}
 };
