@@ -18,7 +18,7 @@ public:
 
 	Alien_Ship() = delete; 
 
-	Alien_Ship(olc::vi2d pos, int w, int h, bool _exist, float _speed) 
+	Alien_Ship(olc::vi2d pos, int w, int h, bool _exist, float _speed, int _health) 
 	{
 		speed = _speed;
 		pos_x = pos.x;
@@ -26,7 +26,7 @@ public:
 		ScreenWidth = w; 
 		ScreenHeight = h; 
 		element_Width = w / 25; 
-		
+		health = _health;
 		exist = _exist;
 
 	}
@@ -70,7 +70,16 @@ public:
 
 	void DrawSelf(olc::PixelGameEngine* pge) {
 		if (exist)
-		pge->FillCircle(get_Pos(), get_Width(), olc::YELLOW);
+		{
+			if (health == 3)
+				pge->FillCircle(get_Pos(), get_Width(), olc::YELLOW);
+			
+			else if (health == 2)
+				pge->FillCircle(get_Pos(), get_Width(), olc::DARK_YELLOW);
+
+			else if (health ==1)
+				pge->FillCircle(get_Pos(), get_Width(), olc::VERY_DARK_YELLOW);
+		}
 	}
 
 	void set_Ship_Pos(int w, int h)
@@ -79,7 +88,5 @@ public:
 		pos_y = h;
 	}
 
-	bool& is_exist() {
-		return exist;
-	}
+	
 };

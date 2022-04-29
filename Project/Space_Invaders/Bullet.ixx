@@ -6,16 +6,17 @@ export module Bullet;
 
 export class Bullet : public Entity {
 
-
 private: 
 
-	bool drawn;
-
+	//bool m_checked; 
 public: 
 	Bullet() = delete; 
 
 	Bullet(olc::PixelGameEngine* pge, float posx, float posy)
 	{
+		exist = true;
+		//m_checked = false;
+		health = 1;
 		pos_x = posx;
 		pos_y = posy;
 		element_Height = 10;
@@ -27,6 +28,7 @@ public:
 
 	void DrawSelf(olc::PixelGameEngine* pge)
 	{
+		if (exist)
 			pge->DrawLine(get_Pos().x, get_Pos().y, get_Pos().x, get_Pos().y - element_Height, olc::RED);	 
 	}
 
@@ -43,6 +45,11 @@ public:
 
 	}
 
-	
+	/*bool checked() {
+		return m_checked; 
+	}
 
+	void set_Checked() {
+		m_checked = true;
+	}*/
 };

@@ -2,22 +2,23 @@ module;
 
 #include "olcPixelGameEngine.h"
 
-
+//import Bullet;
 
 export module Entity;
 
 export class Entity {
 
 protected:
-	int element_Width, element_Height, 
-		pos_x, pos_y, ScreenWidth, ScreenHeight;
-	float speed; 
+	int element_Width, element_Height,
+		pos_x, pos_y, ScreenWidth, ScreenHeight,
+		health;
+	float speed;
 	bool exist;
 
-	 
+
 
 public:
-	Entity(){
+	Entity() {
 	}
 
 	void set_Screen(int w, int h) {
@@ -46,36 +47,45 @@ public:
 		element_Height = h;
 	}
 
-	 void move_left(float ElapsedTime) {
+	void move_left(float ElapsedTime) {
 		pos_x -= (ElapsedTime * speed);
 	}
 
-	 void move_right(float ElapsedTime) {
+	void move_right(float ElapsedTime) {
 		pos_x += (ElapsedTime * speed);
 
 	}
 
-	 void set_Pos(int32_t h, int32_t w)
-	 {
-		 pos_x = w; 
-		 pos_y = h; 
-	 }
+	void set_Pos(int32_t h, int32_t w)
+	{
+		pos_x = w;
+		pos_y = h;
+	}
 
 	olc::vi2d  get_Pos() {
 		return { pos_x, pos_y };
 	}
 
-	void Kill()
+	void gotHit()
 	{
+		std::cout << "health before: " << health << std::endl;
+		health--;
+		std::cout << "health after: " << health << std::endl;
+		if (health == 0)
+			Kill();
+	}
+
+	void Kill()  {
 		exist = false;
 	}
 
-	bool exists()
-	{
+	bool& is_exist() {
 		return exist;
 	}
 
-	
+	int get_Health() {
+		return health; 
+	}
 
 };
 

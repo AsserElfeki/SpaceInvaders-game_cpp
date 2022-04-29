@@ -19,7 +19,7 @@ private:
 
 	std::unique_ptr <Player> m_player;
 	std::list<Bullet> m_bullets;
-	std::list<Bullet> m_alienBullets;
+	
 
 	std::string current_state = "intro"; 
 	// other states : "level", "interlevelscreen" , "game over" 
@@ -87,19 +87,6 @@ public:
 				current_state = "level";
 		}
 
-		else if (current_state == "interLevelScreen")
-		{
-			Clear(olc::WHITE);
-			DrawString(ScreenWidth() / 5, 100, "congrats", olc::RED, 3);
-			DrawString(ScreenWidth() / 5, 300, "Press Enter to start next level", olc::RED, 3);
-
-			if (GetKey(olc::Key::ENTER).bHeld)
-			{
-				current_state = "level";
-				currentLevel += 1;
-			}
-		}
-
 		else if (current_state == "level")
 		{
 			if (currentLevel == 1)
@@ -118,9 +105,35 @@ public:
 			}
 		}
 
+		else if (current_state == "won")
+		{
+			if (currentLevel != 3)
+				current_state = "interLevelScreen";
+			else
+				current_state = "finished";
+		}
+
+		else if (current_state == "interLevelScreen")
+		{
+			//m_alienBullets.clear();
+			Clear(olc::WHITE);
+			DrawString(ScreenWidth() / 5, 100, "congrats", olc::RED, 3);
+			DrawString(ScreenWidth() / 5, 300, "Press Enter to start next level", olc::RED, 3);
+
+			if (GetKey(olc::Key::ENTER).bHeld)
+			{
+				currentLevel += 1;
+				current_state = "level";
+			}
+		}
+
+		else if (current_state == "finished")
+		{
+			return false;
+		}
+
 		else if (current_state == "gameover")
 		{
-
 			Clear(olc::WHITE);
 			DrawString(ScreenWidth() / 5, 100, "GAME OVER", olc::RED, 3);
 			DrawString(ScreenWidth() / 5, 300, "Press Enter to start again", olc::RED, 3);
@@ -128,11 +141,27 @@ public:
 
 			if (GetKey(olc::Key::ENTER).bHeld)
 			{
-				current_state = "level";
-				currentLevel = 1;
-				m_level1->Create_Ships(1,250.0f);
-				m_player->reload();
+				//currentLevel = 1;
+				if (currentLevel == 1)
+				{
+					m_level1->Create_Ships(1, 250.0f);
+					m_player->reload();
+					current_state = "level";
+				}
 
+				else if (currentLevel == 2)
+				{
+					m_level2->Create_Ships(2, 350.0f);
+					m_player->reload();
+					current_state = "level";
+				}
+				
+				else
+				{
+					m_level3->Create_Ships(3, 450.0f);
+					m_player->reload();
+					current_state = "level";
+				}
 			}
 
 			if (GetKey(olc::Key::Q).bHeld)
@@ -142,11 +171,6 @@ public:
 			}
 		}
 
-		else if (current_state == "won")
-		{
-
-		}
-
 		else if (current_state == "quit")
 			return false; 
 		
@@ -154,12 +178,10 @@ public:
 	return true;
 	}
 
-	//reset player pos
-
-
 	
 	void play(std::unique_ptr<Level>& level, float fElapsedTime)
 	{
+		//level->Create_Ships();
 		auto Itr = m_bullets.begin();
 
 		level->LoadLevel(this, fElapsedTime);
@@ -173,23 +195,30 @@ public:
 			for (auto& ship : shipsrow)
 			{
 				ship.shoot(this);
-				ship.move_AlienBullet(fElapsedTime, this);	
-
+				ship.move_AlienBullet(fElapsedTime, this);
+				auto ITR = ship.get_AlienBullets().begin();
 				for (auto A_bullet : ship.get_AlienBullets())
 				{
-					if (A_bullet.get_Pos().y + 10 >= m_player->get_Pos().y )
+					if (A_bullet.get_Pos().y + 10 >= m_player->get_Pos().y)
 					{
 						if (A_bullet.get_Pos().x >= m_player->get_Pos().x && A_bullet.get_Pos().x <= (m_player->get_Pos().x + m_player->get_Width()))
 						{
+							std::cout << A_bullet.is_exist() << std::endl;
 							A_bullet.Kill();
-							m_bullets.clear();
-							m_player->Kill();
+							ship.get_AlienBullets().erase(ITR);
+							m_player->gotHit();
+							std::cout << A_bullet.is_exist() << std::endl;
 
-							current_state = "gameover";
+							if (!m_player->is_exist())
+							{
+								m_bullets.clear();
+								current_state = "gameover";
+							}
 						}
-							
+						
 					}
 				}
+				ITR++;
 			}
 		}
 
@@ -208,7 +237,7 @@ public:
 						{
 							bullet.Kill();
 							m_bullets.erase(Itr);
-							level->get_Ships()[i][j].Kill();
+							level->get_Ships()[i][j].gotHit();
 						}
 				}
 			Itr++;
@@ -225,8 +254,9 @@ public:
 
 		if (level->is_finished())
 		{
+			m_bullets.clear();
+			level->clearAlienBullets();
 			m_player->set_Player_Pos(ScreenWidth(), ScreenHeight());
-			m_bullets.clear(); 
 			current_state = "interLevelScreen";
 			
 		}
@@ -248,7 +278,7 @@ public:
 
 		if (GetKey(olc::Key::SPACE).bPressed)
 		{
-			if (m_player->exists())
+			if (m_player->is_exist())
 			m_bullets.emplace_back(this, m_player->get_Pos().x + m_player->get_Width() / 2, m_player->get_Pos().y);
 		}
 	}

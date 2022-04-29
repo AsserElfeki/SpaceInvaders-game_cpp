@@ -107,14 +107,24 @@ public:
 
 	void Create_Ships(int level, float _speed) 
 	{
-		std::vector<std::vector<bool>> booltmp;
 		ships.clear();
+		int tmp_health;
+		std::vector<std::vector<bool>> booltmp;
 		if (level == 1)
+		{
 			booltmp = ships_pos_level_1;
+			tmp_health = 1;
+		}
 		else if (level == 2)
+		{
 			booltmp = ships_pos_level_2;
+			tmp_health = 2;
+		}
 		else if (level == 3)
+		{
 			booltmp = ships_pos_level_3;
+			tmp_health = 3;
+		}
 
 		for (int i = 0; i < 5; i++) 
 		{
@@ -123,16 +133,20 @@ public:
 			{
 				olc::vi2d tmp_pos = { (j + 1) * (ScreenWidth / 5) ,
 					 (i + 1) * (ScreenHeight / 7) };
-				tmp.emplace_back(tmp_pos, ScreenWidth, ScreenHeight, booltmp[i][j], _speed);
+				tmp.emplace_back(tmp_pos, ScreenWidth, ScreenHeight, booltmp[i][j], _speed, tmp_health);
 			}
 			ships.push_back(tmp);
 		}
 	}
 
+	void clearAlienBullets() {
+		for (auto shipsrow : ships)
+			for (auto ship : shipsrow)
+				ship.get_AlienBullets().clear(); 
+	}
+
 	void Move_Ships(float time, olc::PixelGameEngine* pge) 
 	{
-
-		//shoot()
 		if (last_move)
 		{
 			for (int i = 0; i < 5; i++)
