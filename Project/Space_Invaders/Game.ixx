@@ -77,14 +77,14 @@ public:
 
 		//DrawSprite(olc::vi2d(100,100), alien.get());
 
-		if (current_state == "intro") 
+		if (current_state == "intro")
 		{
 			Clear(olc::WHITE);
-			DrawString(ScreenWidth() / 5, 100, "Welcome to Space Invaders", olc::RED,3);
+			DrawString(ScreenWidth() / 5, 100, "Welcome to Space Invaders", olc::RED, 3);
 			DrawString(ScreenWidth() / 5, 300, "Press Enter to start", olc::RED, 3);
 
 			if (GetKey(olc::Key::ENTER).bHeld)
-			current_state = "level";
+				current_state = "level";
 		}
 
 		else if (current_state == "interLevelScreen")
@@ -102,17 +102,17 @@ public:
 
 		else if (current_state == "level")
 		{
-			if ( currentLevel == 1)
+			if (currentLevel == 1)
 			{
 				play(m_level1, fElapsedTime);
 			}
 
-			else if ( currentLevel == 2)
+			else if (currentLevel == 2)
 			{
 				play(m_level2, fElapsedTime);
 			}
 
-			else if ( currentLevel == 3)
+			else if (currentLevel == 3)
 			{
 				play(m_level3, fElapsedTime);
 			}
@@ -121,12 +121,34 @@ public:
 		else if (current_state == "gameover")
 		{
 
+			Clear(olc::WHITE);
+			DrawString(ScreenWidth() / 5, 100, "GAME OVER", olc::RED, 3);
+			DrawString(ScreenWidth() / 5, 300, "Press Enter to start again", olc::RED, 3);
+			DrawString(ScreenWidth() / 5, 500, "Press 'q' to quit", olc::RED, 3);
+
+			if (GetKey(olc::Key::ENTER).bHeld)
+			{
+				current_state = "level";
+				currentLevel = 1;
+				m_level1->Create_Ships(1,250.0f);
+				m_player->reload();
+
+			}
+
+			if (GetKey(olc::Key::Q).bHeld)
+			{
+				current_state = "quit";
+				//currentLevel = 1;
+			}
 		}
 
 		else if (current_state == "won")
 		{
 
 		}
+
+		else if (current_state == "quit")
+			return false; 
 		
 	
 	return true;
@@ -145,12 +167,29 @@ public:
 
 		level->Move_Ships(fElapsedTime, this);
 		
+		//collision detection between player and aliens bullets
 		for (auto& shipsrow : level->get_Ships())
 		{
 			for (auto& ship : shipsrow)
 			{
 				ship.shoot(this);
-				ship.move_AlienBullet(fElapsedTime, this);	  
+				ship.move_AlienBullet(fElapsedTime, this);	
+
+				for (auto A_bullet : ship.get_AlienBullets())
+				{
+					if (A_bullet.get_Pos().y + 10 >= m_player->get_Pos().y )
+					{
+						if (A_bullet.get_Pos().x >= m_player->get_Pos().x && A_bullet.get_Pos().x <= (m_player->get_Pos().x + m_player->get_Width()))
+						{
+							A_bullet.Kill();
+							m_bullets.clear();
+							m_player->Kill();
+
+							current_state = "gameover";
+						}
+							
+					}
+				}
 			}
 		}
 
@@ -208,7 +247,10 @@ public:
 			m_player->Pos_right();
 
 		if (GetKey(olc::Key::SPACE).bPressed)
+		{
+			if (m_player->exists())
 			m_bullets.emplace_back(this, m_player->get_Pos().x + m_player->get_Width() / 2, m_player->get_Pos().y);
+		}
 	}
 
 };

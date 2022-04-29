@@ -17,6 +17,12 @@ public:
 		exist = true;
 	}
 
+	void reload()
+	{
+		set_Player_Pos(ScreenWidth, ScreenHeight); 
+		exist = true;
+	}
+
 	void DrawSelf(olc::PixelGameEngine* pge)
 	{
 		if (exist)

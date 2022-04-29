@@ -55,37 +55,18 @@ public:
 		for (auto& bullet : m_alienBullets)
 		{
 			bullet.move_AlienBullet(time, pge);
-			if (bullet.get_Pos().y > ScreenHeight - 60)
+			if (bullet.get_Pos().y >= ScreenHeight - 20)
 				m_alienBullets.pop_front();
 		}
 		
 	}
 
-	//void update(float fElapsedTime, olc::PixelGameEngine* pge)
-	//{
-	//	for (auto& bullet : m_alienBullets)
-	//	{
-	//		bullet.move_Bullet_down(fElapsedTime, pge);
-	//		
-	//				 //circle collision
-	//					if (((level->get_Ships()[i][j].get_Pos().x - bullet.get_Pos().x) * (level->get_Ships()[i][j].get_Pos().x - bullet.get_Pos().x))
-	//						+ ((level->get_Ships()[i][j].get_Pos().y - bullet.get_Pos().y) * (level->get_Ships()[i][j].get_Pos().y - bullet.get_Pos().y)) <=
-	//						((level->get_Ships()[i][j].get_Width()) * (level->get_Ships()[i][j].get_Width())))
-	//					{
-	//						bullet.Kill();
-	//						m_bullets.erase(Itr);
-	//						level->get_Ships()[i][j].Kill();
-	//					}
-	//		Itr++;
-	//	}
+	void erase_bullet() {
+		auto Itr = m_alienBullets.begin();
+		m_alienBullets.erase(Itr);
+		Itr++; 
 
-	//	//if bullet goes out of screen
-	//	for (auto& bullet : m_bullets)
-	//	{
-	//		if (bullet.get_Pos().y < 60)
-	//			m_bullets.pop_front();
-	//	}
-	//}
+	}
 
 	void DrawSelf(olc::PixelGameEngine* pge) {
 		if (exist)

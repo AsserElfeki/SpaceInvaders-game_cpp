@@ -70,5 +70,12 @@ public:
 		exist = false;
 	}
 
+	bool exists()
+	{
+		return exist;
+	}
+
+	
+
 };
 

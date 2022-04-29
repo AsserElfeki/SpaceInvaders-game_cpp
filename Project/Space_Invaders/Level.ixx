@@ -74,6 +74,7 @@ public:
 		}
 	}
 
+
 	bool is_finished() {
 		for (auto shiprow : ships)
 		{
@@ -107,7 +108,7 @@ public:
 	void Create_Ships(int level, float _speed) 
 	{
 		std::vector<std::vector<bool>> booltmp;
-
+		ships.clear();
 		if (level == 1)
 			booltmp = ships_pos_level_1;
 		else if (level == 2)
