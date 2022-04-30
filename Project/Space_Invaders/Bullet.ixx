@@ -20,7 +20,7 @@ public:
 		pos_x = posx;
 		pos_y = posy;
 		element_Height = 10;
-		speed = 300.0f;
+		speed = 500.0f;
 		DrawSelf(pge);
 	}
 

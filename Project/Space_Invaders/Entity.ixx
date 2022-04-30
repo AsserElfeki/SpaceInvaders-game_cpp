@@ -68,9 +68,7 @@ public:
 
 	void gotHit()
 	{
-		std::cout << "health before: " << health << std::endl;
 		health--;
-		std::cout << "health after: " << health << std::endl;
 		if (health == 0)
 			Kill();
 	}

@@ -15,19 +15,17 @@ private:
 	std::unique_ptr <Level> m_level1;
 	std::unique_ptr <Level> m_level2;
 	std::unique_ptr <Level> m_level3;
-	//std::unique_ptr <Level> m_currentLevel;
+
+	std::unique_ptr <olc::Sprite> intro;
 
 	std::unique_ptr <Player> m_player;
 	std::list<Bullet> m_bullets;
 	
-
 	std::string current_state = "intro"; 
-	// other states : "level", "interlevelscreen" , "game over" 
-	
 
 	int currentLevel = 1;
+	std::string player_name;
 
-	std::unique_ptr<olc::Sprite> alien;
 
 public:
 	SpaceInvaders()
@@ -50,10 +48,11 @@ public:
 		m_level1 = std::make_unique<Level>(1, ScreenWidth(), ScreenHeight());
 		m_level2 = std::make_unique<Level>(2, ScreenWidth(), ScreenHeight());
 		m_level3 = std::make_unique<Level>(3, ScreenWidth(), ScreenHeight());
-		m_player = std::make_unique<Player>();
+		m_player = std::make_unique<Player>(ScreenWidth(), ScreenHeight());
+		intro = std::make_unique<olc::Sprite>("./sprites/intro.png");
 
 	
-		m_player->set_Scale(ScreenWidth(), ScreenHeight());
+		//m_player->set_Scale(ScreenWidth(), ScreenHeight());
 	
 
 		//alien = std::make_unique<olc::Sprite>("./sprites/aliens_1.png");
@@ -71,6 +70,8 @@ public:
 
 	bool OnUserUpdate(float fElapsedTime) override
 	{ 
+		SetPixelMode(olc::Pixel::MASK);
+
 	/****************************************************
 	*                  Level Loading                    *
 	****************************************************/
@@ -80,11 +81,26 @@ public:
 		if (current_state == "intro")
 		{
 			Clear(olc::WHITE);
-			DrawString(ScreenWidth() / 5, 100, "Welcome to Space Invaders", olc::RED, 3);
-			DrawString(ScreenWidth() / 5, 300, "Press Enter to start", olc::RED, 3);
+			DrawSprite(0, 0, intro.get());
+			DrawString(ScreenWidth() / 8, 450, "Please Enter your name", olc::RED, 3);
+			DrawString(ScreenWidth() / 8, 700, "Press Enter to start", olc::BLACK, 2);
 
 			if (GetKey(olc::Key::ENTER).bHeld)
 				current_state = "level";
+
+			for (int i = 0; i <25; i++)
+			{
+				int x = int (olc::Key::A + i);
+				if (GetKey(olc::Key(x)).bPressed)
+					player_name += x + 64;
+			}
+			DrawString(ScreenWidth() / 5, 500, player_name, olc::BLUE, 2);
+
+			//if (GetKey(olc::Key::A).bHeld)
+			//{
+			//	//display and save
+			//}
+			////repeat for all letters 
 		}
 
 		else if (current_state == "level")
@@ -174,7 +190,8 @@ public:
 		else if (current_state == "quit")
 			return false; 
 		
-	
+		//SetPixelMode(olc::Pixel::NORMAL);
+
 	return true;
 	}
 
@@ -214,31 +231,49 @@ public:
 								m_bullets.clear();
 								current_state = "gameover";
 							}
-						}
-						
+						}	
 					}
+					ITR++;
 				}
-				ITR++;
+				
 			}
 		}
 
 
-		//collision detection between a bullet and a ship and killing in case of collision
+		//collision detection between a bullet and alien ship and killing in case of collision
 		for (auto& bullet : m_bullets)
 		{
 			bullet.move_PlayerBullet(fElapsedTime, this);
 			for (int i = 0; i < 5; i++)
 				for (int j = 0; j < 4; j++)
 				{
+					/*std::cout << "position of ship " << i << " , " << j << " is: {" << level->get_Ships()[i][j].get_Pos().x << " , " << level->get_Ships()[i][j].get_Pos().y << " }\n";
+					std::cout << "center of ship is: {" << std::to_string(level->get_Ships()[i][j].get_Center().x) << " , " << std::to_string(level->get_Ships()[i][j].get_Center().y) << " }\n";
+					std::cout << "distance of ship to bullet is: "
+						<< std::to_string(((level->get_Ships()[i][j].get_Center().x - bullet.get_Pos().x) *
+							(level->get_Ships()[i][j].get_Center().x - bullet.get_Pos().x))
+							+ ((level->get_Ships()[i][j].get_Center().y - bullet.get_Pos().y) *
+								(level->get_Ships()[i][j].get_Center().y - bullet.get_Pos().y))) << std::endl;*/
+					
+					//std::cout << "radius is: " << std::to_string((level->get_Ships()[i][j].get_Width() / 2) * (level->get_Ships()[i][j].get_Width() / 2)) << std::endl;
+
 					if (level->get_Ships()[i][j].is_exist()) //circle collision
-						if (((level->get_Ships()[i][j].get_Pos().x - bullet.get_Pos().x) * (level->get_Ships()[i][j].get_Pos().x - bullet.get_Pos().x))
-							+ ((level->get_Ships()[i][j].get_Pos().y - bullet.get_Pos().y) * (level->get_Ships()[i][j].get_Pos().y - bullet.get_Pos().y)) <=
-							((level->get_Ships()[i][j].get_Width()) * (level->get_Ships()[i][j].get_Width())))
+						if (((level->get_Ships()[i][j].get_Center().x - bullet.get_Pos().x) * 
+							(level->get_Ships()[i][j].get_Center().x - bullet.get_Pos().x)) + 
+							((level->get_Ships()[i][j].get_Center().y - bullet.get_Pos().y) * 
+								(level->get_Ships()[i][j].get_Center().y - bullet.get_Pos().y)) <=
+							 level->get_Ships()[i][j].get_Width() /2 * level->get_Ships()[i][j].get_Width() /2)
 						{
-							bullet.Kill();
+  							bullet.Kill();
 							m_bullets.erase(Itr);
 							level->get_Ships()[i][j].gotHit();
 						}
+					//for some reason it doesnt work
+					//if (level->get_Ships()[i][j].is_exist()) //rectangle collision 
+					//	if (bullet.get_Pos().y <= level->get_Ships()[i][j].get_Pos().y + 50)
+					//		if (bullet.get_Pos().x >= level->get_Ships()[i][j].get_Pos().x
+					//			&& bullet.get_Pos().x <= level->get_Ships()[i][j].get_Pos().x + 60)
+						
 				}
 			Itr++;
 		}

@@ -18,7 +18,7 @@ private:
 	int32_t ScreenHeight;
 	bool last_move = true;
 	std::string name; 
-
+	
 
 	std::vector<std::vector<Alien_Ship>> ships;
 	std::vector<std::vector<bool>> ships_pos_level_3 =
@@ -58,27 +58,25 @@ public:
 		if (_level == 1)
 		{
 			name = "Level 1";
-			Create_Ships(_level, 250.0f);
-
+			Create_Ships(_level, 100.0f);
 		}
 		else if (_level == 2)
 		{
 			name = "Level 2";
-			Create_Ships(_level, 350.0f);
-
+			Create_Ships(_level, 200.0f);
 		}
 		else if (_level == 3)
 		{
 			name = "Level 3";
-			Create_Ships(_level, 500.0f);
+			Create_Ships(_level, 300.0f);
 		}
 	}
 
 
 	bool is_finished() {
-		for (auto shiprow : ships)
+		for (auto& shiprow : ships)
 		{
-			for (auto ship : shiprow)
+			for (auto& ship : shiprow)
 			{
 				if ( ship.is_exist() )
 					return false; 
@@ -140,8 +138,8 @@ public:
 	}
 
 	void clearAlienBullets() {
-		for (auto shipsrow : ships)
-			for (auto ship : shipsrow)
+		for (auto& shipsrow : ships)
+			for (auto& ship : shipsrow)
 				ship.get_AlienBullets().clear(); 
 	}
 
@@ -168,7 +166,7 @@ public:
 		{
 			for (int i = 0; i < 5; i++)
 			{
-				if (ships[i][0].get_Pos().x - ships[i][0].get_Width() <= 20)
+				if (ships[i][0].get_Pos().x <= 20)
 				{
 					last_move = true;
 					continue;
@@ -202,23 +200,4 @@ public:
 		return ships;
 	}
 
-	//void interLevelScreen(olc::PixelGameEngine* pge)
-	//{
-	//	using namespace std::this_thread;     // sleep_for, sleep_until
-	//	using namespace std::chrono_literals; // ns, us, ms, s, h, etc.
-	//	using std::chrono::system_clock;
-	//	int starttime = 0;
-	//	int endtime = 18000;
-
-	//	while (starttime < endtime)
-	//	{
-	//		std::cout << starttime << std::endl; 
-	//		pge->Clear(olc::WHITE);
-	//		pge->DrawString(ScreenWidth / 2, 50, "Congrats, " + name + " passed", olc::RED); 
-	//		starttime += 1; 
-	//	}
-	//	
-	//	/*sleep_for((3s));
-	//	sleep_until(system_clock::now() + (1s));*/
-	//}
 };
