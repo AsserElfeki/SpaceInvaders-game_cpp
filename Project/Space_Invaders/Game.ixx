@@ -13,45 +13,57 @@ export class SpaceInvaders : public olc::PixelGameEngine
 {
 private:
 
-//levels
+	//levels
 	std::unique_ptr <Level> m_level1;
 	std::unique_ptr <Level> m_level2;
 	std::unique_ptr <Level> m_level3;
 	std::unique_ptr <Level> m_level4;
 
 
-//sprites
+	//sprites
 	std::unique_ptr <olc::Sprite> m_intro;
 	std::unique_ptr <olc::Sprite> m_instructions;
 	std::unique_ptr <olc::Sprite> m_instructions2;
+	std::unique_ptr <olc::Sprite> m_credits1;
+	std::unique_ptr <olc::Sprite> m_credits2;
+	std::unique_ptr <olc::Sprite> m_credits3;
+	std::unique_ptr <olc::Sprite> m_credits4;
+	std::unique_ptr <olc::Sprite> m_credits5;
+	std::unique_ptr <olc::Sprite> m_credits6;
+	std::unique_ptr <olc::Sprite> m_credits7;
+	std::unique_ptr <olc::Sprite> m_congrats;
+	std::unique_ptr <olc::Sprite> m_next;
 
-	/*std::unique_ptr <olc::Sprite> m_intro;
-	std::unique_ptr <olc::Sprite> m_intro;
-	std::unique_ptr <olc::Sprite> m_intro;
-	std::unique_ptr <olc::Sprite> m_intro;*/
 
 
 
-//entities
+	std::unique_ptr <olc::Sprite> m_gameOver;
+	std::unique_ptr <olc::Sprite> m_startAgain;
+	//std::unique_ptr <olc::Sprite> m_intro;
+	//std::unique_ptr <olc::Sprite> m_intro;
+
+
+
+	//entities
 	std::unique_ptr <Player> m_player;
 	std::list<Bullet> m_bullets;
 
 
-std::string player_name;
+	std::string player_name;
 
-enum gameState {
-	intro = 1,
-	level,  //2 ... 
-	won, //3
-	interLevelScreen, //4
-	finished, //5
-	gameOver, //6
-	quit, //7
-	credits //8
-};
+	enum gameState {
+		intro = 1,
+		level,  //2 ... 
+		won, //3
+		interLevelScreen, //4
+		finished, //5
+		gameOver, //6
+		quit, //7
+		credits //8
+	};
 
-int current_state = intro;
-int currentLevel = 1;
+	int current_state = intro;
+	int currentLevel = 1;
 
 public:
 	SpaceInvaders()
@@ -71,15 +83,31 @@ public:
 		4- creating ships
 		*/
 
+		//entities
 		m_level1 = std::make_unique<Level>(1, ScreenWidth(), ScreenHeight());
 		m_level2 = std::make_unique<Level>(2, ScreenWidth(), ScreenHeight());
 		m_level3 = std::make_unique<Level>(3, ScreenWidth(), ScreenHeight());
 		m_level4 = std::make_unique<Level>(4, ScreenWidth(), ScreenHeight());
 
 		m_player = std::make_unique<Player>(ScreenWidth(), ScreenHeight());
+
+		//sprites
 		m_intro = std::make_unique<olc::Sprite>("./sprites/intro.png");
 		m_instructions = std::make_unique<olc::Sprite>("./sprites/text_sprites/texts/instructions.png");
 		m_instructions2 = std::make_unique<olc::Sprite>("./sprites/text_sprites/texts/instructions2.png");
+		m_credits1 = std::make_unique<olc::Sprite>("./sprites/text_sprites/credits/01_original.png");
+		m_credits2 = std::make_unique<olc::Sprite>("./sprites/text_sprites/credits/02_mockup.png");
+		m_credits3 = std::make_unique<olc::Sprite>("./sprites/text_sprites/credits/03_GUI.png");
+		m_credits4 = std::make_unique<olc::Sprite>("./sprites/text_sprites/credits/04_link.png");
+		m_credits5 = std::make_unique<olc::Sprite>("./sprites/text_sprites/credits/05_thanks.png");
+		m_credits6 = std::make_unique<olc::Sprite>("./sprites/text_sprites/credits/06_michal.png");
+		//m_credits7 = std::make_unique<olc::Sprite>("./sprites/text_sprites/credits/01_original.png");
+		m_gameOver = std::make_unique<olc::Sprite>("./sprites/text_sprites/texts/game_over.png");
+		m_startAgain = std::make_unique<olc::Sprite>("./sprites/text_sprites/texts/start_again.png");
+		m_congrats = std::make_unique<olc::Sprite>("./sprites/text_sprites/texts/congrats.png");
+		m_next = std::make_unique<olc::Sprite>("./sprites/text_sprites/texts/next.png");
+
+
 
 		return true;
 	}
@@ -129,7 +157,10 @@ public:
 			}
 
 			if (GetKey(olc::Key::Q).bHeld)
-				return false; 
+				return false;
+
+			if (GetKey(olc::Key::C).bHeld)
+				current_state = credits;
 
 			/*DrawString(20, 450, "Please Enter your name", olc::RED, 2);
 			DrawString(ScreenWidth() / 2 - 150, 700, "Press Enter to start", olc::BLACK, 2);*/
@@ -137,15 +168,15 @@ public:
 
 
 			//std::string tmp;
-			for (int i = 0; i < 25; i++)
-			{
-				int x = int(olc::Key::A + i);
-				if (GetKey(olc::Key(x)).bPressed)
-					player_name += x + 64;
-				/*if (GetKey(olc::Key::BACK).bPressed)
-					player_name -= x + 64; */
-			}
-			DrawString(ScreenWidth() / 4, 500, player_name, olc::BLUE, 2);
+			//for (int i = 0; i < 25; i++)
+			//{
+			//	int x = int(olc::Key::A + i);
+			//	if (GetKey(olc::Key(x)).bPressed)
+			//		player_name += x + 64;
+			//	/*if (GetKey(olc::Key::BACK).bPressed)
+			//		player_name -= x + 64; */
+			//}
+			//DrawString(ScreenWidth() / 4, 500, player_name, olc::BLUE, 2);
 
 			if (GetKey(olc::Key::ENTER).bHeld)
 			{
@@ -190,8 +221,10 @@ public:
 			if (currentLevel < 4)
 			{
 				Clear(olc::WHITE);
-				DrawString(ScreenWidth() / 5, 100, "congrats", olc::RED, 3);
-				DrawString(ScreenWidth() / 5, 300, "Press Enter to start next level", olc::RED, 3);
+				DrawSprite(0, 300, m_congrats.get());
+				DrawSprite(0, 500, m_next.get());
+				/*DrawString(ScreenWidth() / 5, 100, "congrats", olc::RED, 3);
+				DrawString(ScreenWidth() / 5, 300, "Press Enter to start next level", olc::RED, 3);*/
 
 				if (GetKey(olc::Key::ENTER).bHeld)
 				{
@@ -212,9 +245,11 @@ public:
 		else if (current_state == gameOver)
 		{
 			Clear(olc::WHITE);
-			DrawString(ScreenWidth() / 8 * 3, ScreenHeight() / 3, "GAME OVER", olc::RED, 3);
+			DrawSprite(0, 200, m_gameOver.get());
+			DrawSprite(0, 400, m_startAgain.get());
+			/*DrawString(ScreenWidth() / 8 * 3, ScreenHeight() / 3, "GAME OVER", olc::RED, 3);
 			DrawString(ScreenWidth() / 4, ScreenHeight() / 8 * 5, "Press Enter to start again", olc::BLACK, 2);
-			DrawString(ScreenWidth() / 4, ScreenHeight() / 8 * 6, "Press 'q' to quit", olc::BLACK, 2);
+			DrawString(ScreenWidth() / 4, ScreenHeight() / 8 * 6, "Press 'q' to quit", olc::BLACK, 2);*/
 
 			if (GetKey(olc::Key::ENTER).bHeld)
 			{
@@ -256,12 +291,26 @@ public:
 
 		else if (current_state == credits)
 		{
-
+		Clear(olc::BLACK);
+		DrawSprite(0, 0, m_credits1.get());
+		DrawSprite(0, 180, m_credits2.get());
+		DrawSprite(0, 330, m_credits3.get());
+		DrawSprite(0, 500, m_credits4.get());
+		DrawSprite(0, 600, m_credits5.get());
+		DrawSprite(0, 700, m_credits6.get());
 		}
 
 		return true;
 	}
 
+
+	void runCredits() {
+		
+		for (int i = 600; i > 300; i--)
+		{
+			
+		}
+	}
 
 	void play(std::unique_ptr<Level>& level, float fElapsedTime)
 	{
@@ -382,7 +431,7 @@ public:
 * threads : score
 * filesystem : score sheet
 * regex : name ?
-2- sprites : bullet + texts + credits + instructions
+2- sprites :  texts + moving credits
 3- score calculation
 4- score sheet
 */
