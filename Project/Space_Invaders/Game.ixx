@@ -48,7 +48,7 @@ private:
 	std::unique_ptr <Player> m_player;
 	std::list<Bullet> m_bullets;
 
-
+	//others
 	std::string player_name;
 
 	enum gameState {
@@ -57,13 +57,15 @@ private:
 		won, //3
 		interLevelScreen, //4
 		finished, //5
-		gameOver, //6
+		lost, //6
 		quit, //7
 		credits //8
 	};
 
+	int current_score = 0000;
 	int current_state = intro;
-	int currentLevel = 1;
+	int current_level = 1;
+	bool score_was_set = false; 
 
 public:
 	SpaceInvaders()
@@ -83,7 +85,7 @@ public:
 		4- creating ships
 		*/
 
-		//entities
+		//levels & player
 		m_level1 = std::make_unique<Level>(1, ScreenWidth(), ScreenHeight());
 		m_level2 = std::make_unique<Level>(2, ScreenWidth(), ScreenHeight());
 		m_level3 = std::make_unique<Level>(3, ScreenWidth(), ScreenHeight());
@@ -134,25 +136,25 @@ public:
 
 			if (GetKey(olc::Key::K1).bHeld || GetKey(olc::Key::NP1).bHeld)
 			{
-				currentLevel = 1;
+				current_level = 1;
 				current_state = level;
 			}
 
 			else if (GetKey(olc::Key::K2).bHeld || GetKey(olc::Key::NP2).bHeld)
 			{
-				currentLevel = 2;
+				current_level = 2;
 				current_state = level;
 			}
 
 			else if (GetKey(olc::Key::K3).bHeld || GetKey(olc::Key::NP3).bHeld)
 			{
-				currentLevel = 3;
+				current_level = 3;
 				current_state = level;
 			}
 
 			else if (GetKey(olc::Key::K4).bHeld || GetKey(olc::Key::NP4).bHeld)
 			{
-				currentLevel = 4;
+				current_level = 4;
 				current_state = level;
 			}
 
@@ -187,38 +189,101 @@ public:
 
 		else if (current_state == level)
 		{
-			if (currentLevel == 1)
+			if (current_level == 1)
 			{
 				play(m_level1, fElapsedTime);
 			}
 
-			else if (currentLevel == 2)
+			else if (current_level == 2)
 			{
+				if (!score_was_set)
+					m_level2->set_Score(current_score);
+					
+				score_was_set = false;
+				
 				play(m_level2, fElapsedTime);
 			}
 
-			else if (currentLevel == 3)
+			else if (current_level == 3)
 			{
+				if (!score_was_set)
+					m_level3->set_Score(current_score);
+				
+				score_was_set = false;
 				play(m_level3, fElapsedTime);
 			}
 
-			else if (currentLevel == 4)
+			else if (current_level == 4)
 			{
+				if (!score_was_set)
+					m_level4->set_Score(current_score);
+
+				score_was_set = false;
 				play(m_level4, fElapsedTime);
 			}
 		}
 
 		else if (current_state == won)
 		{
-			if (currentLevel != 4)
+			if (current_level != 4)
 				current_state = interLevelScreen;
 			else
 				current_state = finished;
 		}
 
+		else if (current_state == lost)
+		{
+		Clear(olc::WHITE);
+		DrawSprite(0, 200, m_gameOver.get());
+		DrawSprite(0, 400, m_startAgain.get());
+		//quit
+
+		if (GetKey(olc::Key::ENTER).bHeld)
+		{
+			if (current_level == 1)
+			{
+				m_level1->set_Score(0000);
+				score_was_set = true;
+				m_level1->Create_Ships(1, m_level1->level1_speed);
+				m_player->reload();
+				current_state = level;
+			}
+
+			else if (current_level == 2)
+			{
+				m_level2->set_Score(m_level1->get_Score());
+				score_was_set = true;
+				m_level2->Create_Ships(2, m_level1->level2_speed);
+				m_player->reload();
+				current_state = level;
+			}
+
+			else if (current_level == 3)
+			{
+				m_level3->set_Score(m_level2->get_Score());
+				score_was_set = true;
+				m_level3->Create_Ships(3, m_level1->level3_speed);
+				m_player->reload();
+				current_state = level;
+			}
+
+			else
+			{
+				m_level4->set_Score(m_level3->get_Score());
+				score_was_set = true;
+				m_level4->Create_Ships(4, m_level1->level4_speed);
+				m_player->reload();
+				current_state = level;
+			}
+		}
+
+		if (GetKey(olc::Key::Q).bHeld)
+			current_state = quit;
+		}
+
 		else if (current_state == interLevelScreen)
 		{
-			if (currentLevel < 4)
+			if (current_level < 4)
 			{
 				Clear(olc::WHITE);
 				DrawSprite(0, 300, m_congrats.get());
@@ -228,7 +293,7 @@ public:
 
 				if (GetKey(olc::Key::ENTER).bHeld)
 				{
-					currentLevel += 1;
+					current_level += 1;
 					current_state = level;
 				}
 			}
@@ -239,51 +304,12 @@ public:
 
 		else if (current_state == finished)
 		{
+		//you finished screen 
+		//thanks for playing
+		//c to credits
+		// q to quit 
+		// 
 			return false;
-		}
-
-		else if (current_state == gameOver)
-		{
-			Clear(olc::WHITE);
-			DrawSprite(0, 200, m_gameOver.get());
-			DrawSprite(0, 400, m_startAgain.get());
-			/*DrawString(ScreenWidth() / 8 * 3, ScreenHeight() / 3, "GAME OVER", olc::RED, 3);
-			DrawString(ScreenWidth() / 4, ScreenHeight() / 8 * 5, "Press Enter to start again", olc::BLACK, 2);
-			DrawString(ScreenWidth() / 4, ScreenHeight() / 8 * 6, "Press 'q' to quit", olc::BLACK, 2);*/
-
-			if (GetKey(olc::Key::ENTER).bHeld)
-			{
-				if (currentLevel == 1)
-				{
-					m_level1->Create_Ships(1, m_level1->level1_speed);
-					m_player->reload();
-					current_state = level;
-				}
-
-				else if (currentLevel == 2)
-				{
-					m_level2->Create_Ships(2, m_level1->level1_speed);
-					m_player->reload();
-					current_state = level;
-				}
-
-				else if (currentLevel == 3)
-				{
-					m_level3->Create_Ships(3, m_level1->level1_speed);
-					m_player->reload();
-					current_state = level;
-				}
-
-				else
-				{
-					m_level4->Create_Ships(4, m_level1->level1_speed);
-					m_player->reload();
-					current_state = level;
-				}
-			}
-
-			if (GetKey(olc::Key::Q).bHeld)
-				current_state = quit;
 		}
 
 		else if (current_state == quit)
@@ -314,6 +340,7 @@ public:
 
 	void play(std::unique_ptr<Level>& level, float fElapsedTime)
 	{
+		level->increase_Score_With_Time(fElapsedTime);
 		auto Itr = m_bullets.begin();
 
 		level->LoadLevel(this, fElapsedTime);
@@ -335,16 +362,15 @@ public:
 					{
 						if (A_bullet.get_Pos().x >= m_player->get_Pos().x && A_bullet.get_Pos().x <= (m_player->get_Pos().x + m_player->get_Width()))
 						{
-							std::cout << A_bullet.is_exist() << std::endl;
 							A_bullet.Kill();
 							ship.get_AlienBullets().erase(ITR);
 							m_player->gotHit();
-							std::cout << A_bullet.is_exist() << std::endl;
+							level->decrease_Score_When_Health_Decreased();
 
 							if (!m_player->is_exist())
 							{
 								m_bullets.clear();
-								current_state = gameOver;
+								current_state = lost;
 							}
 						}
 					}
@@ -353,7 +379,7 @@ public:
 			}
 		}
 
-		//collision detection between a bullet and alien ship and killing in case of collision
+		//collision detection between a player's bullet and alien ship and killing in case of collision
 		for (auto& bullet : m_bullets)
 		{
 			bullet.move_PlayerBullet(fElapsedTime, this);
@@ -370,6 +396,7 @@ public:
 							bullet.Kill();
 							m_bullets.erase(Itr);
 							level->get_Ships()[i][j].gotHit();
+							level->increase_Score_When_Hit_Alien();
 						}
 					//for some reason it doesnt work
 					//if (level->get_Ships()[i][j].is_exist()) //rectangle collision 
@@ -397,6 +424,7 @@ public:
 
 		}
 
+		current_score = level->get_Score(); 
 		/****************************************************
 		*                  User Input                       *
 		****************************************************/
@@ -426,6 +454,13 @@ public:
 
 };
 
+/*
+* scores: 
+* 1- member of Level
+* 2- increase 10 each second 
+* 3- increase 50 for hitting 
+* 4- dcrease 200 for getting hit 
+*/
 
 /*
 * threads : score

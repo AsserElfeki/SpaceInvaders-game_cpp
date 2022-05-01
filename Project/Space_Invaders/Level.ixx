@@ -26,6 +26,7 @@ private:
 	bool last_move = true;
 	std::string name; 
 	
+	int m_score = 0000;
 
 	std::vector<std::vector<Alien_Ship>> ships;
 
@@ -237,7 +238,7 @@ public:
 		//pge->DrawLine(10, ScreenHeight() - 10, ScreenWidth() - 10, ScreenHeight() - 10, olc::BLUE); // bottom HZ line
 		
 		/*Score and player*/
-		pge->DrawString(ScreenWidth - 180, 10, "Score: 0000", olc::WHITE, 2);
+		pge->DrawString(ScreenWidth - 180, 10, "Score: " + std::to_string(m_score), olc::WHITE, 2);
 		pge->DrawString(10, 10, name, olc::WHITE, 2);
 	}
 
@@ -245,4 +246,23 @@ public:
 		return ships;
 	}
 
+	void set_Score(int _score) {
+		m_score = _score;
+	}
+
+	int get_Score() {
+		return m_score;
+	}
+
+	void increase_Score_With_Time(float time) {
+		m_score +=  (time * 60); 
+	}
+
+	void increase_Score_When_Hit_Alien() {
+		m_score += 100;
+	}
+
+	void decrease_Score_When_Health_Decreased() {
+		m_score -= 300;
+	}
 };

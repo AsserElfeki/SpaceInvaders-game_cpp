@@ -8,7 +8,7 @@ export module Player;
 export class Player : public Entity  {
 
 private:
-	int score;
+	//int score;
 	std::shared_ptr<olc::Sprite> player1Spr; //50 * 70
 	std::shared_ptr<olc::Sprite> player2Spr; //50 * 70
 	std::shared_ptr<olc::Sprite> player3Spr; //50 * 70
@@ -40,10 +40,9 @@ public:
 
 	void DrawSelf(olc::PixelGameEngine* pge)
 	{
-		std::string _health = std::to_string(health);
 		if (exist)
 		{
-			pge->DrawString(ScreenWidth - 500, 10, "Health: " + _health, olc::WHITE, 2);
+			pge->DrawString(ScreenWidth - 500, 10, "Health: " + std::to_string(health), olc::WHITE, 2);
 			pge->DrawString(float(get_Pos().x), float(get_Pos().y + get_Height()), player_name, olc::WHITE, 2);
 			if (health == 3)
 				pge->DrawSprite(get_Pos().x, get_Pos().y, player3Spr.get());
