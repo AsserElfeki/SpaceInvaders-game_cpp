@@ -25,9 +25,9 @@ public:
 		speed = 500.0f;
 		exist = true;
 		health = 3;
-		player1Spr = std::make_shared<olc::Sprite>("./sprites/player_1.png");
-		player2Spr = std::make_shared<olc::Sprite>("./sprites/player_2.png");
-		player3Spr = std::make_shared<olc::Sprite>("./sprites/player_3.png");
+		player1Spr = std::make_shared<olc::Sprite>("./sprites/entity/player_1.png");
+		player2Spr = std::make_shared<olc::Sprite>("./sprites/entity/player_2.png");
+		player3Spr = std::make_shared<olc::Sprite>("./sprites/entity/player_3.png");
 
 	}
 

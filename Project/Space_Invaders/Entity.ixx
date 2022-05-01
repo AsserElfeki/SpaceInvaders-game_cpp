@@ -10,7 +10,7 @@ export class Entity {
 
 protected:
 	int element_Width, element_Height,
-		pos_x, pos_y, ScreenWidth, ScreenHeight,
+		pos_x, pos_y, center_x, center_y, ScreenWidth, ScreenHeight,
 		health;
 	float speed;
 	bool exist;
@@ -49,11 +49,12 @@ public:
 
 	void move_left(float ElapsedTime) {
 		pos_x -= (ElapsedTime * speed);
+		center_x -= (ElapsedTime * speed);
 	}
 
 	void move_right(float ElapsedTime) {
 		pos_x += (ElapsedTime * speed);
-
+		center_x += (ElapsedTime * speed);
 	}
 
 	void set_Pos(int32_t h, int32_t w)

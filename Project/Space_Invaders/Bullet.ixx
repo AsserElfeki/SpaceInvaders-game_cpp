@@ -8,12 +8,16 @@ export class Bullet : public Entity {
 
 private: 
 
-	//bool m_checked; 
+	std::shared_ptr<olc::Sprite> bulletSpr; //10 * 15
+
 public: 
 	Bullet() = delete; 
 
 	Bullet(olc::PixelGameEngine* pge, float posx, float posy)
 	{
+		bulletSpr = std::make_shared<olc::Sprite>("./sprites/entity/player_bullet.png");
+	
+
 		exist = true;
 		//m_checked = false;
 		health = 1;
@@ -29,7 +33,7 @@ public:
 	void DrawSelf(olc::PixelGameEngine* pge)
 	{
 		if (exist)
-			pge->DrawLine(get_Pos().x, get_Pos().y, get_Pos().x, get_Pos().y - element_Height, olc::RED);	 
+			pge->DrawSprite(get_Pos().x, get_Pos().y, bulletSpr.get());	 
 	}
 
 	void move_PlayerBullet(float time, olc::PixelGameEngine* pge) 

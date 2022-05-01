@@ -18,7 +18,6 @@ private:
 	std::shared_ptr<olc::Sprite> alien3Spr; //60 * 50
 	std::shared_ptr<olc::Sprite> alienBossSpr; //100 * 100
 
-	int center_x, center_y;
 
 public: 
 
@@ -26,10 +25,10 @@ public:
 
 	Alien_Ship(olc::vi2d pos, int w, int h, bool _exist, float _speed, int _health) 
 	{
-		alien1Spr = std::make_shared<olc::Sprite>("./sprites/alien_1.png");
-		alien2Spr = std::make_shared<olc::Sprite>("./sprites/alien_2.png");
-		alien3Spr = std::make_shared<olc::Sprite>("./sprites/alien_3.png");
-		alienBossSpr = std::make_shared<olc::Sprite>("./sprites/boss.png");
+		alien1Spr = std::make_shared<olc::Sprite>("./sprites/entity/alien_1.png");
+		alien2Spr = std::make_shared<olc::Sprite>("./sprites/entity/alien_2.png");
+		alien3Spr = std::make_shared<olc::Sprite>("./sprites/entity/alien_3.png");
+		alienBossSpr = std::make_shared<olc::Sprite>("./sprites/entity/boss.png");
 
 		ScreenWidth = w;
 		ScreenHeight = h;
@@ -63,13 +62,14 @@ public:
 		return m_alienBullets; 
 	}
 
+
 	void shoot(olc::PixelGameEngine* pge) 
 	{
 		if (exist)
 		{
 			unsigned int seed = std::chrono::system_clock::now().time_since_epoch().count();
 			std::mt19937 generator(seed); 
-			if (generator() < generator.min()+ (100000 * speed) )
+			if (generator() < generator.min()+ (50000 * speed) )
 				m_alienBullets.emplace_back(pge, this->get_Pos().x + this->get_Width()/2, this->get_Pos().y + this->get_Height());
 		}
 	}
@@ -105,7 +105,7 @@ public:
 			else if (health ==3)
 				pge->DrawSprite(get_Pos().x, get_Pos().y, alien3Spr.get());
 
-			else if (health == 10)
+			else 
 				pge->DrawSprite(get_Pos().x, get_Pos().y, alienBossSpr.get());
 
 		}

@@ -5,105 +5,156 @@ using namespace std::this_thread;     // sleep_for, sleep_until
 using namespace std::chrono_literals; // ns, us, ms, s, h, etc.
 using std::chrono::system_clock;
 
-import Level; 
-import Bullet; 
+import Level;
+import Bullet;
 export module Game;
 
 export class SpaceInvaders : public olc::PixelGameEngine
 {
 private:
+
+//levels
 	std::unique_ptr <Level> m_level1;
 	std::unique_ptr <Level> m_level2;
 	std::unique_ptr <Level> m_level3;
+	std::unique_ptr <Level> m_level4;
 
-	std::unique_ptr <olc::Sprite> intro;
 
+//sprites
+	std::unique_ptr <olc::Sprite> m_intro;
+	std::unique_ptr <olc::Sprite> m_instructions;
+	std::unique_ptr <olc::Sprite> m_instructions2;
+
+	/*std::unique_ptr <olc::Sprite> m_intro;
+	std::unique_ptr <olc::Sprite> m_intro;
+	std::unique_ptr <olc::Sprite> m_intro;
+	std::unique_ptr <olc::Sprite> m_intro;*/
+
+
+
+//entities
 	std::unique_ptr <Player> m_player;
 	std::list<Bullet> m_bullets;
-	
-	std::string current_state = "intro"; 
 
-	int currentLevel = 1;
-	std::string player_name;
 
+std::string player_name;
+
+enum gameState {
+	intro = 1,
+	level,  //2 ... 
+	won, //3
+	interLevelScreen, //4
+	finished, //5
+	gameOver, //6
+	quit, //7
+	credits //8
+};
+
+int current_state = intro;
+int currentLevel = 1;
 
 public:
 	SpaceInvaders()
 	{
 		sAppName = "Space Invaders "
-				   " By: Asser Moustafa";
+			" By: Asser Moustafa";
 
 	}
 
 	bool OnUserCreate() override
 	{
 		// Called once at the start
-		/* 
+		/*
 		1- instantiating a player
 		2- instantiating a level and player
-		3- passing screen params to level 
-		4- creating ships 
+		3- passing screen params to level
+		4- creating ships
 		*/
 
 		m_level1 = std::make_unique<Level>(1, ScreenWidth(), ScreenHeight());
 		m_level2 = std::make_unique<Level>(2, ScreenWidth(), ScreenHeight());
 		m_level3 = std::make_unique<Level>(3, ScreenWidth(), ScreenHeight());
+		m_level4 = std::make_unique<Level>(4, ScreenWidth(), ScreenHeight());
+
 		m_player = std::make_unique<Player>(ScreenWidth(), ScreenHeight());
-		intro = std::make_unique<olc::Sprite>("./sprites/intro.png");
-
-	
-		//m_player->set_Scale(ScreenWidth(), ScreenHeight());
-	
-
-		//alien = std::make_unique<olc::Sprite>("./sprites/aliens_1.png");
+		m_intro = std::make_unique<olc::Sprite>("./sprites/intro.png");
+		m_instructions = std::make_unique<olc::Sprite>("./sprites/text_sprites/texts/instructions.png");
+		m_instructions2 = std::make_unique<olc::Sprite>("./sprites/text_sprites/texts/instructions2.png");
 
 		return true;
 	}
-	/* 
-	list <level> contianing all levels 
-	once all ships in a level are destroyed, destry the level 
-	*/
 
 	/*
-	scores can be different thread 
+	scores can be different thread
 	*/
 
 	bool OnUserUpdate(float fElapsedTime) override
-	{ 
+	{
 		SetPixelMode(olc::Pixel::MASK);
 
-	/****************************************************
-	*                  Level Loading                    *
-	****************************************************/
+		/****************************************************
+		*                  Level Loading                    *
+		****************************************************/
 
-		//DrawSprite(olc::vi2d(100,100), alien.get());
-
-		if (current_state == "intro")
+		if (current_state == intro)
 		{
 			Clear(olc::WHITE);
-			DrawSprite(0, 0, intro.get());
-			DrawString(ScreenWidth() / 8, 450, "Please Enter your name", olc::RED, 3);
-			DrawString(ScreenWidth() / 8, 700, "Press Enter to start", olc::BLACK, 2);
+			DrawSprite(0, 50, m_intro.get());
+			DrawSprite(0, 400, m_instructions.get());
+			DrawSprite(0, 500, m_instructions2.get());
 
-			if (GetKey(olc::Key::ENTER).bHeld)
-				current_state = "level";
 
-			for (int i = 0; i <25; i++)
+			if (GetKey(olc::Key::K1).bHeld || GetKey(olc::Key::NP1).bHeld)
 			{
-				int x = int (olc::Key::A + i);
+				currentLevel = 1;
+				current_state = level;
+			}
+
+			else if (GetKey(olc::Key::K2).bHeld || GetKey(olc::Key::NP2).bHeld)
+			{
+				currentLevel = 2;
+				current_state = level;
+			}
+
+			else if (GetKey(olc::Key::K3).bHeld || GetKey(olc::Key::NP3).bHeld)
+			{
+				currentLevel = 3;
+				current_state = level;
+			}
+
+			else if (GetKey(olc::Key::K4).bHeld || GetKey(olc::Key::NP4).bHeld)
+			{
+				currentLevel = 4;
+				current_state = level;
+			}
+
+			if (GetKey(olc::Key::Q).bHeld)
+				return false; 
+
+			/*DrawString(20, 450, "Please Enter your name", olc::RED, 2);
+			DrawString(ScreenWidth() / 2 - 150, 700, "Press Enter to start", olc::BLACK, 2);*/
+
+
+
+			//std::string tmp;
+			for (int i = 0; i < 25; i++)
+			{
+				int x = int(olc::Key::A + i);
 				if (GetKey(olc::Key(x)).bPressed)
 					player_name += x + 64;
+				/*if (GetKey(olc::Key::BACK).bPressed)
+					player_name -= x + 64; */
 			}
-			DrawString(ScreenWidth() / 5, 500, player_name, olc::BLUE, 2);
+			DrawString(ScreenWidth() / 4, 500, player_name, olc::BLUE, 2);
 
-			//if (GetKey(olc::Key::A).bHeld)
-			//{
-			//	//display and save
-			//}
-			////repeat for all letters 
+			if (GetKey(olc::Key::ENTER).bHeld)
+			{
+				current_state = level;
+
+			}
 		}
 
-		else if (current_state == "level")
+		else if (current_state == level)
 		{
 			if (currentLevel == 1)
 			{
@@ -119,93 +170,108 @@ public:
 			{
 				play(m_level3, fElapsedTime);
 			}
-		}
 
-		else if (current_state == "won")
-		{
-			if (currentLevel != 3)
-				current_state = "interLevelScreen";
-			else
-				current_state = "finished";
-		}
-
-		else if (current_state == "interLevelScreen")
-		{
-			//m_alienBullets.clear();
-			Clear(olc::WHITE);
-			DrawString(ScreenWidth() / 5, 100, "congrats", olc::RED, 3);
-			DrawString(ScreenWidth() / 5, 300, "Press Enter to start next level", olc::RED, 3);
-
-			if (GetKey(olc::Key::ENTER).bHeld)
+			else if (currentLevel == 4)
 			{
-				currentLevel += 1;
-				current_state = "level";
+				play(m_level4, fElapsedTime);
 			}
 		}
 
-		else if (current_state == "finished")
+		else if (current_state == won)
+		{
+			if (currentLevel != 4)
+				current_state = interLevelScreen;
+			else
+				current_state = finished;
+		}
+
+		else if (current_state == interLevelScreen)
+		{
+			if (currentLevel < 4)
+			{
+				Clear(olc::WHITE);
+				DrawString(ScreenWidth() / 5, 100, "congrats", olc::RED, 3);
+				DrawString(ScreenWidth() / 5, 300, "Press Enter to start next level", olc::RED, 3);
+
+				if (GetKey(olc::Key::ENTER).bHeld)
+				{
+					currentLevel += 1;
+					current_state = level;
+				}
+			}
+
+			else
+				current_state = credits;
+		}
+
+		else if (current_state == finished)
 		{
 			return false;
 		}
 
-		else if (current_state == "gameover")
+		else if (current_state == gameOver)
 		{
 			Clear(olc::WHITE);
-			DrawString(ScreenWidth() / 5, 100, "GAME OVER", olc::RED, 3);
-			DrawString(ScreenWidth() / 5, 300, "Press Enter to start again", olc::RED, 3);
-			DrawString(ScreenWidth() / 5, 500, "Press 'q' to quit", olc::RED, 3);
+			DrawString(ScreenWidth() / 8 * 3, ScreenHeight() / 3, "GAME OVER", olc::RED, 3);
+			DrawString(ScreenWidth() / 4, ScreenHeight() / 8 * 5, "Press Enter to start again", olc::BLACK, 2);
+			DrawString(ScreenWidth() / 4, ScreenHeight() / 8 * 6, "Press 'q' to quit", olc::BLACK, 2);
 
 			if (GetKey(olc::Key::ENTER).bHeld)
 			{
-				//currentLevel = 1;
 				if (currentLevel == 1)
 				{
-					m_level1->Create_Ships(1, 250.0f);
+					m_level1->Create_Ships(1, m_level1->level1_speed);
 					m_player->reload();
-					current_state = "level";
+					current_state = level;
 				}
 
 				else if (currentLevel == 2)
 				{
-					m_level2->Create_Ships(2, 350.0f);
+					m_level2->Create_Ships(2, m_level1->level1_speed);
 					m_player->reload();
-					current_state = "level";
+					current_state = level;
 				}
-				
+
+				else if (currentLevel == 3)
+				{
+					m_level3->Create_Ships(3, m_level1->level1_speed);
+					m_player->reload();
+					current_state = level;
+				}
+
 				else
 				{
-					m_level3->Create_Ships(3, 450.0f);
+					m_level4->Create_Ships(4, m_level1->level1_speed);
 					m_player->reload();
-					current_state = "level";
+					current_state = level;
 				}
 			}
 
 			if (GetKey(olc::Key::Q).bHeld)
-			{
-				current_state = "quit";
-				//currentLevel = 1;
-			}
+				current_state = quit;
 		}
 
-		else if (current_state == "quit")
-			return false; 
-		
-		//SetPixelMode(olc::Pixel::NORMAL);
+		else if (current_state == quit)
+			return false;
 
-	return true;
+		else if (current_state == credits)
+		{
+
+		}
+
+		return true;
 	}
 
-	
+
 	void play(std::unique_ptr<Level>& level, float fElapsedTime)
 	{
-		//level->Create_Ships();
 		auto Itr = m_bullets.begin();
 
 		level->LoadLevel(this, fElapsedTime);
 		m_player->DrawSelf(this);
 
 		level->Move_Ships(fElapsedTime, this);
-		
+
 		//collision detection between player and aliens bullets
 		for (auto& shipsrow : level->get_Ships())
 		{
@@ -229,16 +295,14 @@ public:
 							if (!m_player->is_exist())
 							{
 								m_bullets.clear();
-								current_state = "gameover";
+								current_state = gameOver;
 							}
-						}	
+						}
 					}
 					ITR++;
 				}
-				
 			}
 		}
-
 
 		//collision detection between a bullet and alien ship and killing in case of collision
 		for (auto& bullet : m_bullets)
@@ -247,24 +311,14 @@ public:
 			for (int i = 0; i < 5; i++)
 				for (int j = 0; j < 4; j++)
 				{
-					/*std::cout << "position of ship " << i << " , " << j << " is: {" << level->get_Ships()[i][j].get_Pos().x << " , " << level->get_Ships()[i][j].get_Pos().y << " }\n";
-					std::cout << "center of ship is: {" << std::to_string(level->get_Ships()[i][j].get_Center().x) << " , " << std::to_string(level->get_Ships()[i][j].get_Center().y) << " }\n";
-					std::cout << "distance of ship to bullet is: "
-						<< std::to_string(((level->get_Ships()[i][j].get_Center().x - bullet.get_Pos().x) *
-							(level->get_Ships()[i][j].get_Center().x - bullet.get_Pos().x))
-							+ ((level->get_Ships()[i][j].get_Center().y - bullet.get_Pos().y) *
-								(level->get_Ships()[i][j].get_Center().y - bullet.get_Pos().y))) << std::endl;*/
-					
-					//std::cout << "radius is: " << std::to_string((level->get_Ships()[i][j].get_Width() / 2) * (level->get_Ships()[i][j].get_Width() / 2)) << std::endl;
-
 					if (level->get_Ships()[i][j].is_exist()) //circle collision
-						if (((level->get_Ships()[i][j].get_Center().x - bullet.get_Pos().x) * 
-							(level->get_Ships()[i][j].get_Center().x - bullet.get_Pos().x)) + 
-							((level->get_Ships()[i][j].get_Center().y - bullet.get_Pos().y) * 
+						if (((level->get_Ships()[i][j].get_Center().x - bullet.get_Pos().x) *
+							(level->get_Ships()[i][j].get_Center().x - bullet.get_Pos().x)) +
+							((level->get_Ships()[i][j].get_Center().y - bullet.get_Pos().y) *
 								(level->get_Ships()[i][j].get_Center().y - bullet.get_Pos().y)) <=
-							 level->get_Ships()[i][j].get_Width() /2 * level->get_Ships()[i][j].get_Width() /2)
+							level->get_Ships()[i][j].get_Width() / 2 * level->get_Ships()[i][j].get_Width() / 2)
 						{
-  							bullet.Kill();
+							bullet.Kill();
 							m_bullets.erase(Itr);
 							level->get_Ships()[i][j].gotHit();
 						}
@@ -273,7 +327,7 @@ public:
 					//	if (bullet.get_Pos().y <= level->get_Ships()[i][j].get_Pos().y + 50)
 					//		if (bullet.get_Pos().x >= level->get_Ships()[i][j].get_Pos().x
 					//			&& bullet.get_Pos().x <= level->get_Ships()[i][j].get_Pos().x + 60)
-						
+
 				}
 			Itr++;
 		}
@@ -285,36 +339,39 @@ public:
 				m_bullets.pop_front();
 		}
 
-
-
 		if (level->is_finished())
 		{
 			m_bullets.clear();
 			level->clearAlienBullets();
 			m_player->set_Player_Pos(ScreenWidth(), ScreenHeight());
-			current_state = "interLevelScreen";
-			
+			current_state = interLevelScreen;
+
 		}
 
 		/****************************************************
 		*                  User Input                       *
 		****************************************************/
-		if (GetKey(olc::Key::LEFT).bHeld)
-			m_player->move_left(fElapsedTime);
 
-		if (GetKey(olc::Key::RIGHT).bHeld)
-			m_player->move_right(fElapsedTime);
-
-		if (m_player->get_Pos().x < 11)
-			m_player->Pos_left();
-
-		if ((m_player->get_Pos().x + m_player->get_Width()) > (ScreenWidth() - 11))
-			m_player->Pos_right();
-
-		if (GetKey(olc::Key::SPACE).bPressed)
 		{
-			if (m_player->is_exist())
-			m_bullets.emplace_back(this, m_player->get_Pos().x + m_player->get_Width() / 2, m_player->get_Pos().y);
+			if (GetKey(olc::Key::LEFT).bHeld)
+				m_player->move_left(fElapsedTime);
+
+			if (GetKey(olc::Key::RIGHT).bHeld)
+				m_player->move_right(fElapsedTime);
+
+			if (m_player->get_Pos().x < 11)
+				m_player->Pos_left();
+
+			if ((m_player->get_Pos().x + m_player->get_Width()) > (ScreenWidth() - 11))
+				m_player->Pos_right();
+
+			if (GetKey(olc::Key::SPACE).bPressed)
+			{
+				if (m_player->is_exist())
+					m_bullets.emplace_back(this, m_player->get_Pos().x + m_player->get_Width() / 2, m_player->get_Pos().y);
+			}
+
+			//quit
 		}
 	}
 
@@ -322,8 +379,10 @@ public:
 
 
 /*
-* threads ???? 
-2- sprites 
-3- score calculation  
-4- score sheet 
+* threads : score
+* filesystem : score sheet
+* regex : name ?
+2- sprites : bullet + texts + credits + instructions
+3- score calculation
+4- score sheet
 */

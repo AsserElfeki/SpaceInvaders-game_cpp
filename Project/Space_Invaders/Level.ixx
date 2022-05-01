@@ -14,6 +14,13 @@ export module Level;
 export class Level {
 	
 private: 
+	enum levelSHipsSpeed {
+		level1_speed = 100, 
+		level2_speed = 150,
+		level3_speed = 200,
+		level4_speed = 300
+	};
+
 	int32_t ScreenWidth;
 	int32_t ScreenHeight;
 	bool last_move = true;
@@ -21,26 +28,15 @@ private:
 	
 
 	std::vector<std::vector<Alien_Ship>> ships;
-	std::vector<std::vector<bool>> ships_pos_level_3 =
-	{
-		{1,1,1,1},
-		{1,1,1,1},
-		{1,1,1,1},
-		{1,1,1,1},
-		{1,1,1,1}
-	};
-	
-	std::vector<std::vector<bool>> ships_pos_level_2 =
-	{
-		{1,0,0,1},
-		{0,1,1,0},
-		{0,1,1,0},
-		{1,0,0,1},
-		{0,0,0,0}
-	}; 
-	
+
 	std::vector<std::vector<bool>> ships_pos_level_1 =
 	{
+		/*{0,0,1,0},
+		{0,0,0,0},
+		{0,0,0,0},
+		{0,0,0,0},
+		{0,0,0,0}*/
+
 		{1,1,1,1},
 		{1,1,1,1},
 		{1,1,1,1},
@@ -48,6 +44,45 @@ private:
 		{0,0,0,0}
 	};
 
+	std::vector<std::vector<bool>> ships_pos_level_2 =
+	{
+		/*{0,0,1,0},
+		{0,0,0,0},
+		{0,0,0,0},
+		{0,0,0,0},
+		{0,0,0,0}*/
+
+		{1,0,0,1},
+		{0,1,1,0},
+		{0,1,1,0},
+		{1,0,0,1},
+		{0,0,0,0}
+	};
+
+	std::vector<std::vector<bool>> ships_pos_level_3 =
+	{
+		/*{0,0,1,0},
+		{0,0,0,0},
+		{0,0,0,0},
+		{0,0,0,0},
+		{0,0,0,0}*/
+
+		{1,1,1,1},
+		{1,1,1,1},
+		{1,1,1,1},
+		{1,1,1,1},
+		{1,1,1,1}
+	};
+	
+	std::vector<std::vector<bool>> ships_pos_level_4 =
+	{
+		{0,1,1,0},
+		{1,0,0,1},
+		{1,0,0,1},
+		{0,1,1,0},
+		{0,0,0,0}
+	};
+	
 public: 
 
 	Level() {}
@@ -58,17 +93,22 @@ public:
 		if (_level == 1)
 		{
 			name = "Level 1";
-			Create_Ships(_level, 100.0f);
+			Create_Ships(_level, level1_speed);
 		}
 		else if (_level == 2)
 		{
 			name = "Level 2";
-			Create_Ships(_level, 200.0f);
+			Create_Ships(_level, level2_speed);
 		}
 		else if (_level == 3)
 		{
 			name = "Level 3";
-			Create_Ships(_level, 300.0f);
+			Create_Ships(_level, level3_speed);
+		}
+		else
+		{
+			name = "Level 4";
+			Create_Ships(_level, level4_speed);
 		}
 	}
 
@@ -85,17 +125,17 @@ public:
 		return true;
 	}
 
-	std::vector<std::vector<bool>> get_level1() {
-		return ships_pos_level_1; 
-	}
+	//std::vector<std::vector<bool>> get_level1() {
+	//	return ships_pos_level_1; 
+	//}
 
-	std::vector<std::vector<bool>> get_level2() {
-		return ships_pos_level_2;
-	}
+	//std::vector<std::vector<bool>> get_level2() {
+	//	return ships_pos_level_2;
+	//}
 
-	std::vector<std::vector<bool>> get_level3() {
-		return ships_pos_level_3;
-	}
+	//std::vector<std::vector<bool>> get_level3() {
+	//	return ships_pos_level_3;
+	//}
 
 	void set_Scale(int32_t w, int32_t h) 
 	{
@@ -122,6 +162,11 @@ public:
 		{
 			booltmp = ships_pos_level_3;
 			tmp_health = 3;
+		}
+		else
+		{
+			booltmp = ships_pos_level_4;
+			tmp_health = 5;
 		}
 
 		for (int i = 0; i < 5; i++) 
