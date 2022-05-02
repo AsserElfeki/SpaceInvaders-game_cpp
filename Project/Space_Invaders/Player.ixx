@@ -1,5 +1,7 @@
 module;
 #include "olcPixelGameEngine.h"
+
+
 extern std::string player_name;
 import Bullet;
 import Entity;
@@ -8,7 +10,11 @@ export module Player;
 export class Player : public Entity  {
 
 private:
+	//paths
+	std::filesystem::path entity_path = "D:/POLSL/Year II/CP4/Repo/Project/Space_Invaders/sprites/entity/";
 
+
+	//sprites
 	std::unique_ptr<olc::Sprite> player1Spr; //50 * 70
 	std::unique_ptr<olc::Sprite> player2Spr; //50 * 70
 	std::unique_ptr<olc::Sprite> player3Spr; //50 * 70
@@ -28,12 +34,12 @@ public:
 		speed = 500.0f;
 		exist = true;
 		health = 3;
-		player1Spr = std::make_unique<olc::Sprite>("./sprites/entity/player_1.png");
-		player2Spr = std::make_unique<olc::Sprite>("./sprites/entity/player_2.png");
-		player3Spr = std::make_unique<olc::Sprite>("./sprites/entity/player_3.png");
-		health1Spr = std::make_unique<olc::Sprite>("./sprites/entity/health_1.png");
-		health2Spr = std::make_unique<olc::Sprite>("./sprites/entity/health_2.png");
-		health3Spr = std::make_unique<olc::Sprite>("./sprites/entity/health_3.png");
+		player1Spr = std::make_unique<olc::Sprite>(entity_path.string() +"player_1.png");
+		player2Spr = std::make_unique<olc::Sprite>(entity_path.string() +"player_2.png");
+		player3Spr = std::make_unique<olc::Sprite>(entity_path.string() +"player_3.png");
+		health1Spr = std::make_unique<olc::Sprite>(entity_path.string() +"health_1.png");
+		health2Spr = std::make_unique<olc::Sprite>(entity_path.string() +"health_2.png");
+		health3Spr = std::make_unique<olc::Sprite>(entity_path.string() +"health_3.png");
 
 	}
 

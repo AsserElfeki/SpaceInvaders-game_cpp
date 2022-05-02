@@ -1,5 +1,4 @@
-MICHAL :  812
-ASSER :  596
-BATTA :  1223
-C :  0
-ASSER :  610
+MRNOON :  4118
+WD :  0
+D :  0
+D :  0

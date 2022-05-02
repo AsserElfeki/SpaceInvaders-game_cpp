@@ -19,7 +19,7 @@ int main()
 	std::cin >> h;*/
 
 	SpaceInvaders demo;
-	if (demo.Construct(1200, 800, 1, 1, true, true))  
+	if (demo.Construct(1200, 800, 1, 1, false, true))  
 		demo.Start();
 
 	return 0;

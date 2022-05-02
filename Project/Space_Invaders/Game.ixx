@@ -1,6 +1,10 @@
 module;
 
 #include "olcPixelGameEngine.h"
+#include <future>
+#include <thread>
+#include <chrono>
+
 
 //using namespace std::this_thread;     // sleep_for, sleep_until
 //using namespace std::chrono_literals; // ns, us, ms, s, h, etc.
@@ -10,11 +14,14 @@ import FileHandler;
 import Credits;
 import Level;
 import Bullet;
+
 export module Game;
 
 export class SpaceInvaders : public olc::PixelGameEngine
 {
 private:
+	//paths
+	std::filesystem::path screens_path = "D:/POLSL/Year II/CP4/Repo/Project/Space_Invaders/sprites/screens/";
 
 	//game units
 	std::unique_ptr <Level> m_level1;
@@ -38,28 +45,30 @@ private:
 	std::unique_ptr <olc::Sprite> spr_lost;
 	std::unique_ptr <olc::Sprite> spr_credits_background;
 
-	
+
 	//others
 	std::unique_ptr<FileHandler> scores_handler;
 
 	std::vector<char> player_name;
 
-	enum gameState {
+	enum gameState
+	{
 		intro = 1,
 		instructions,
 		name,
-		level,   
-		won, 
-		pause, 
-		lost, 
+		level,
+		won,
+		pause,
+		lost,
 		credits,
 		quit
 	};
 
 	int current_score = 0000;
-	int current_state = intro;
+	gameState current_state = intro;
 	int current_level = 1;
 	bool score_was_set = false;
+	bool writing_score_done = false;
 
 public:
 	SpaceInvaders()
@@ -90,17 +99,15 @@ public:
 		m_credits = std::make_unique<Credits>(ScreenWidth(), ScreenHeight());
 
 		//sprites
-		spr_intro = std::make_unique<olc::Sprite>("./sprites/screens/intro.png");
-		spr_name = std::make_unique<olc::Sprite>("./sprites/screens/name.png");
-		spr_instructions = std::make_unique<olc::Sprite>("./sprites/screens/instructions.png");
-		
-		spr_pause = std::make_unique<olc::Sprite>("./sprites/screens/pause.png");
-		spr_won = std::make_unique<olc::Sprite>("./sprites/screens/won.png");
-		spr_lost = std::make_unique<olc::Sprite>("./sprites/screens/lost.png");
-		spr_credits_background = std::make_unique<olc::Sprite>("./sprites/credits/background.png");
+		spr_intro = std::make_unique<olc::Sprite>(screens_path.string() + "intro.png");
+		spr_name = std::make_unique<olc::Sprite>(screens_path.string() + "name.png");
+		spr_instructions = std::make_unique<olc::Sprite>(screens_path.string() + "instructions.png");
+		spr_pause = std::make_unique<olc::Sprite>(screens_path.string() + "pause.png");
+		spr_won = std::make_unique<olc::Sprite>(screens_path.string() + "won.png");
+		spr_lost = std::make_unique<olc::Sprite>(screens_path.string() + "lost.png");
+
 		return true;
 	}
-
 
 	bool OnUserUpdate(float fElapsedTime) override
 	{
@@ -109,22 +116,24 @@ public:
 		/****************************************************
 		*                  Level Loading                    *
 		****************************************************/
+		//std::mutex 
 
-		//new sprites
 		if (current_state == intro)
 		{
+			//lock
 			Clear(olc::WHITE);
 			DrawSprite(0, 0, spr_intro.get());
 
 			if (GetKey(olc::Key::SPACE).bPressed)
 				current_state = name;
+			//unlock it
 		}
 
 		else if (current_state == name)
 		{
 			Clear(olc::WHITE);
 			DrawSprite(0, 0, spr_name.get());
- 
+
 			for (int i = 0; i < 25; i++)
 			{
 				int x = int(olc::Key::A + i);
@@ -141,13 +150,13 @@ public:
 				current_state = instructions;
 		}
 
-		else if (current_state == instructions) 
+		else if (current_state == instructions)
 		{
 			Clear(olc::WHITE);
 			DrawSprite(0, 0, spr_instructions.get());
 
 			if (GetKey(olc::Key::ENTER).bPressed)
-				current_state = level; 
+				current_state = level;
 
 			if (GetKey(olc::Key::K1).bPressed || GetKey(olc::Key::NP1).bPressed)
 			{
@@ -212,11 +221,11 @@ public:
 				play(m_level4, fElapsedTime);
 			}
 		}
-	
+
 		else if (current_state == won)
 		{
 			if (current_level < 4)
-			{ 
+			{
 				Clear(olc::WHITE);
 				DrawSprite(0, 0, spr_won.get());
 
@@ -278,12 +287,16 @@ public:
 
 		else if (current_state == credits)
 		{
-			SetPixelMode(olc::Pixel::ALPHA);
+			if (!writing_score_done)
+			{
+				scores_handler = std::make_unique<FileHandler>(player_name, current_score);
+				scores_handler->write();
+				writing_score_done = true;
+			}
 
 			Clear(olc::BLACK);
-			DrawSprite(0, 0, spr_credits_background.get());
+
 			m_credits->run_Credits(this, fElapsedTime);
-			SetPixelMode(olc::Pixel::MASK);
 
 			if (GetKey(olc::Key::ENTER).bPressed)
 			{
@@ -295,7 +308,7 @@ public:
 				m_level2->Create_Ships(2, m_level2->level2_speed);
 				m_level3->Create_Ships(3, m_level3->level3_speed);
 				m_level4->Create_Ships(4, m_level4->level4_speed);
-
+				m_player->reload();
 				current_level = 1;
 				current_state = intro;
 			}
@@ -318,19 +331,47 @@ public:
 				SetPixelMode(olc::Pixel::MASK);
 			}
 		}
-		
+
 		else if (current_state == quit)
 		{
 			scores_handler = std::make_unique<FileHandler>(player_name, current_score);
 			scores_handler->write();
-			return false;	
+			return false;
 		}
 
-			if (GetKey(olc::Key::Q).bHeld && current_state != name)
-				current_state = quit;
+		if (GetKey(olc::Key::Q).bHeld && current_state != name)
+			current_state = quit;
 
 		return true;
 	}
+
+	void userInput(float fElapsedTime)
+	{
+		if (GetKey(olc::Key::LEFT).bHeld)
+			m_player->move_left(fElapsedTime);
+
+		if (GetKey(olc::Key::RIGHT).bHeld)
+			m_player->move_right(fElapsedTime);
+
+		if (m_player->get_Pos().x < 11)
+			m_player->Pos_left();
+
+		if ((m_player->get_Pos().x + m_player->get_Width()) > (ScreenWidth() - 11))
+			m_player->Pos_right();
+
+		if (GetKey(olc::Key::SPACE).bHeld)
+		{
+			if (m_player->is_exist())
+				m_bullets.emplace_back(this, m_player->get_Pos().x + m_player->get_Width() / 2, m_player->get_Pos().y);
+		}
+
+		if (GetKey(olc::Key::Q).bHeld)
+			current_state = quit;
+
+		if (GetKey(olc::Key::ESCAPE).bHeld)
+			current_state = pause;
+	}
+
 
 	void play(std::unique_ptr<Level>& level, float fElapsedTime)
 	{
@@ -415,51 +456,29 @@ public:
 			level->clearAlienBullets();
 			m_player->set_Player_Pos(ScreenWidth(), ScreenHeight());
 			current_state = won;
-
 		}
 
-		{
-			/****************************************************
-			*                  User Input                       *
-			****************************************************/
-
-			if (GetKey(olc::Key::LEFT).bHeld)
-				m_player->move_left(fElapsedTime);
-
-			if (GetKey(olc::Key::RIGHT).bHeld)
-				m_player->move_right(fElapsedTime);
-
-			if (m_player->get_Pos().x < 11)
-				m_player->Pos_left();
-
-			if ((m_player->get_Pos().x + m_player->get_Width()) > (ScreenWidth() - 11))
-				m_player->Pos_right();
-
-			if (GetKey(olc::Key::SPACE).bPressed)
-			{
-				if (m_player->is_exist())
-					m_bullets.emplace_back(this, m_player->get_Pos().x + m_player->get_Width() / 2, m_player->get_Pos().y);
-			}
-
-			if (GetKey(olc::Key::Q).bHeld)
-				current_state = quit;
-
-			if (GetKey(olc::Key::ESCAPE).bHeld)
-				current_state = pause;
-		}
+		std::future<void> thread1 = std::async(std::launch::async, &SpaceInvaders::userInput, this, fElapsedTime);
 
 		current_score = level->get_Score();
-
 	}
 
 };
 
+
+
 //todo:
 /*
-* ships creation (ughhhhhh) 
-* threads : async in loading sprites 
+* ships creation (ughhhhhh)
 * regex : name ?
-* 
+*/
+
+//done
+/*
+* modules
+* filesystem : paths for all sprites directories
+* async in user input
+*
 */
 
 //testing feedback 

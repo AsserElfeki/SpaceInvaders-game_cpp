@@ -12,6 +12,10 @@ export class Alien_Ship : public Entity
 {
 
 private: 
+	//paths
+	std::filesystem::path entity_path = "D:/POLSL/Year II/CP4/Repo/Project/Space_Invaders/sprites/entity/";
+
+
 	std::list<Bullet> m_alienBullets;
 	std::shared_ptr<olc::Sprite> alien1Spr; //60 * 50
 	std::shared_ptr<olc::Sprite> alien2Spr; //60 * 50
@@ -25,10 +29,10 @@ public:
 
 	Alien_Ship(olc::vi2d pos, int w, int h, bool _exist, float _speed, int _health) 
 	{
-		alien1Spr = std::make_shared<olc::Sprite>("./sprites/entity/alien_1.png");
-		alien2Spr = std::make_shared<olc::Sprite>("./sprites/entity/alien_2.png");
-		alien3Spr = std::make_shared<olc::Sprite>("./sprites/entity/alien_3.png");
-		alienBossSpr = std::make_shared<olc::Sprite>("./sprites/entity/boss.png");
+		alien1Spr = std::make_shared<olc::Sprite>(entity_path.string() + "alien_1.png");
+		alien2Spr = std::make_shared<olc::Sprite>(entity_path.string() + "alien_2.png");
+		alien3Spr = std::make_shared<olc::Sprite>(entity_path.string() + "alien_3.png");
+		alienBossSpr = std::make_shared<olc::Sprite>(entity_path.string() + "boss.png");
 
 		ScreenWidth = w;
 		ScreenHeight = h;
