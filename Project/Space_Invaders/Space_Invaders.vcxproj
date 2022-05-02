@@ -154,6 +154,7 @@
     <ClCompile Include="Level.ixx" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.ixx" />
+    <ClCompile Include="Credit.ixx" />
     <ClCompile Include="Ship.ixx" />
   </ItemGroup>
   <ItemGroup>

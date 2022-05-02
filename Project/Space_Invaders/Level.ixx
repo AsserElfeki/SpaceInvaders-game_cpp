@@ -238,8 +238,8 @@ public:
 		//pge->DrawLine(10, ScreenHeight() - 10, ScreenWidth() - 10, ScreenHeight() - 10, olc::BLUE); // bottom HZ line
 		
 		/*Score and player*/
-		pge->DrawString(ScreenWidth - 180, 10, "Score: " + std::to_string(m_score), olc::WHITE, 2);
-		pge->DrawString(10, 10, name, olc::WHITE, 2);
+		pge->DrawString(ScreenWidth - 180, 20, "Score: " + std::to_string(m_score), olc::WHITE, 2);
+		pge->DrawString(10, 20, name, olc::WHITE, 2);
 	}
 
 	std::vector<std::vector<Alien_Ship>>& get_Ships() {

@@ -8,10 +8,13 @@ export module Player;
 export class Player : public Entity  {
 
 private:
-	//int score;
-	std::shared_ptr<olc::Sprite> player1Spr; //50 * 70
-	std::shared_ptr<olc::Sprite> player2Spr; //50 * 70
-	std::shared_ptr<olc::Sprite> player3Spr; //50 * 70
+
+	std::unique_ptr<olc::Sprite> player1Spr; //50 * 70
+	std::unique_ptr<olc::Sprite> player2Spr; //50 * 70
+	std::unique_ptr<olc::Sprite> player3Spr; //50 * 70
+	std::unique_ptr<olc::Sprite> health1Spr; //20 * 20
+	std::unique_ptr<olc::Sprite> health2Spr; //48 * 20
+	std::unique_ptr<olc::Sprite> health3Spr; //76 * 20
 
 public:
 
@@ -25,9 +28,12 @@ public:
 		speed = 500.0f;
 		exist = true;
 		health = 3;
-		player1Spr = std::make_shared<olc::Sprite>("./sprites/entity/player_1.png");
-		player2Spr = std::make_shared<olc::Sprite>("./sprites/entity/player_2.png");
-		player3Spr = std::make_shared<olc::Sprite>("./sprites/entity/player_3.png");
+		player1Spr = std::make_unique<olc::Sprite>("./sprites/entity/player_1.png");
+		player2Spr = std::make_unique<olc::Sprite>("./sprites/entity/player_2.png");
+		player3Spr = std::make_unique<olc::Sprite>("./sprites/entity/player_3.png");
+		health1Spr = std::make_unique<olc::Sprite>("./sprites/entity/health_1.png");
+		health2Spr = std::make_unique<olc::Sprite>("./sprites/entity/health_2.png");
+		health3Spr = std::make_unique<olc::Sprite>("./sprites/entity/health_3.png");
 
 	}
 
@@ -42,16 +48,25 @@ public:
 	{
 		if (exist)
 		{
-			pge->DrawString(ScreenWidth - 500, 10, "Health: " + std::to_string(health), olc::WHITE, 2);
-			pge->DrawString(float(get_Pos().x), float(get_Pos().y + get_Height()), player_name, olc::WHITE, 2);
+			pge->DrawString(500, 20, "Health:", olc::WHITE, 2);
+
 			if (health == 3)
+			{
 				pge->DrawSprite(get_Pos().x, get_Pos().y, player3Spr.get());
+				pge->DrawSprite(620, 20, health3Spr.get());
+			}
 
 			else if (health == 2)
+			{
 				pge->DrawSprite(get_Pos().x, get_Pos().y, player2Spr.get());
+				pge->DrawSprite(620, 20, health2Spr.get());
+			}
 
 			else if (health == 1)
+			{
 				pge->DrawSprite(get_Pos().x, get_Pos().y, player1Spr.get());
+				pge->DrawSprite(620, 20, health1Spr.get());
+			}
 		}
 	}
 
@@ -63,16 +78,19 @@ public:
 		ScreenHeight = h;
 	}
 
-	void set_Player_Pos(int w, int h) {
+	void set_Player_Pos(int w, int h) 
+	{
 		pos_x = w / 2 - element_Width / 2;
 		pos_y = h - 1.5 * element_Height;
 	}
 
-	void Pos_left() {
+	void Pos_left() 
+	{
 		pos_x = 11;
 	}
 
-	void Pos_right() {
+	void Pos_right() 
+	{
 		pos_x = ScreenWidth - element_Width - 11;
 	}
 	

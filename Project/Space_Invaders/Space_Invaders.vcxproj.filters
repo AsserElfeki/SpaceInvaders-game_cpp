@@ -39,6 +39,9 @@
     <ClCompile Include="Bullet.ixx">
       <Filter>Modules</Filter>
     </ClCompile>
+    <ClCompile Include="Credit.ixx">
+      <Filter>Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="olcPixelGameEngine.h">
