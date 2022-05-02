@@ -72,7 +72,6 @@ public:
 
 	void set_Scale(int32_t w, int32_t h) 
 	{
-		//set_Size(w / 10, h / 10);
 		set_Player_Pos(w, h);
 		ScreenWidth = w;
 		ScreenHeight = h;

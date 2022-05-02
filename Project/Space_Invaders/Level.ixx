@@ -113,7 +113,6 @@ public:
 		}
 	}
 
-
 	bool is_finished() {
 		for (auto& shiprow : ships)
 		{
@@ -202,8 +201,8 @@ public:
 				}
 				for (int j = 0; j < 4; j++)
 				{	
-						ships[i][j].move_right(time);
-						ships[i][j].DrawSelf(pge);
+					ships[i][j].DrawSelf(pge);
+					ships[i][j].move_right(time);
 				}
 			}
 		}
@@ -219,8 +218,8 @@ public:
 				}
 				for (int j = 0; j < 4; j++)
 				{
-						ships[i][j].move_left(time);
-						ships[i][j].DrawSelf(pge);			
+					ships[i][j].DrawSelf(pge);
+					ships[i][j].move_left(time);
 				}
 			}
 		}

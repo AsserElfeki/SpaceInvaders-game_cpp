@@ -1,0 +1,5 @@
+MICHAL :  812
+ASSER :  596
+BATTA :  1223
+C :  0
+ASSER :  610

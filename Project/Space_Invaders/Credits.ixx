@@ -28,10 +28,7 @@ public:
 
 	}
 
-	int get_Pos() 
-	{
-		return pos_y; 
-	}
+	int get_Pos() {return pos_y; }
 
 	void run_Credits(olc::PixelGameEngine* pge, float time) 
 	{
@@ -41,10 +38,8 @@ public:
 			pge->DrawSprite(pos_x, pos_y, creditsSpr.get());
 		}
 		else
-		{
-			//pge->Clear(olc::BLACK);
 			pge->DrawSprite(pos_x, 0, credit_options_Spr.get());
-		}
+
 	}
 
 	void reset() {

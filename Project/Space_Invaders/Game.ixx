@@ -1,10 +1,12 @@
 module;
 
 #include "olcPixelGameEngine.h"
-using namespace std::this_thread;     // sleep_for, sleep_until
-using namespace std::chrono_literals; // ns, us, ms, s, h, etc.
-using std::chrono::system_clock;
 
+//using namespace std::this_thread;     // sleep_for, sleep_until
+//using namespace std::chrono_literals; // ns, us, ms, s, h, etc.
+//using std::chrono::system_clock;
+
+import FileHandler;
 import Credits;
 import Level;
 import Bullet;
@@ -25,6 +27,8 @@ private:
 
 	//sprites
 	std::unique_ptr <olc::Sprite> spr_intro;
+	std::unique_ptr <olc::Sprite> spr_name;
+
 	std::unique_ptr <olc::Sprite> spr_instructions;
 	std::unique_ptr <olc::Sprite> spr_instructions2;
 
@@ -36,11 +40,14 @@ private:
 
 	
 	//others
-	std::string player_name;
+	std::unique_ptr<FileHandler> scores_handler;
+
+	std::vector<char> player_name;
 
 	enum gameState {
 		intro = 1,
-		instructions, 
+		instructions,
+		name,
 		level,   
 		won, 
 		pause, 
@@ -84,6 +91,7 @@ public:
 
 		//sprites
 		spr_intro = std::make_unique<olc::Sprite>("./sprites/screens/intro.png");
+		spr_name = std::make_unique<olc::Sprite>("./sprites/screens/name.png");
 		spr_instructions = std::make_unique<olc::Sprite>("./sprites/screens/instructions.png");
 		
 		spr_pause = std::make_unique<olc::Sprite>("./sprites/screens/pause.png");
@@ -106,20 +114,30 @@ public:
 		if (current_state == intro)
 		{
 			Clear(olc::WHITE);
-			DrawSprite(0, 50, spr_intro.get());
-
-			//// fix deleting 
-			//for (int i = 0; i < 25; i++)
-			//{
-			//	int x = int(olc::Key::A + i);
-			//	if (GetKey(olc::Key(x)).bPressed)
-			//		player_name += x + 64;
-			//	if (GetKey(olc::Key::BACK).bPressed && !player_name.empty())
-			//		player_name.pop_back();
-			//}
-			//DrawString(ScreenWidth() / 4, 500, player_name, olc::BLUE, 2);
+			DrawSprite(0, 0, spr_intro.get());
 
 			if (GetKey(olc::Key::SPACE).bPressed)
+				current_state = name;
+		}
+
+		else if (current_state == name)
+		{
+			Clear(olc::WHITE);
+			DrawSprite(0, 0, spr_name.get());
+ 
+			for (int i = 0; i < 25; i++)
+			{
+				int x = int(olc::Key::A + i);
+				if (GetKey(olc::Key(x)).bPressed)
+					player_name.push_back(x + 64);
+
+			}
+			if (GetKey(olc::Key::BACK).bPressed && !player_name.empty())
+				player_name.pop_back();
+
+			DrawString(737, 445, std::string(player_name.data(), player_name.size()), olc::BLUE, 2);
+
+			if (GetKey(olc::Key::ENTER).bPressed)
 				current_state = instructions;
 		}
 
@@ -292,8 +310,7 @@ public:
 
 		else if (current_state == pause)
 		{
-		
-			SetPixelMode(olc::Pixel::NORMAL);
+			SetPixelMode(olc::Pixel::ALPHA);
 			DrawSprite(0, 0, spr_pause.get());
 			if (GetKey(olc::Key::SPACE).bPressed)
 			{
@@ -303,10 +320,14 @@ public:
 		}
 		
 		else if (current_state == quit)
-			return false;
+		{
+			scores_handler = std::make_unique<FileHandler>(player_name, current_score);
+			scores_handler->write();
+			return false;	
+		}
 
-		if (GetKey(olc::Key::Q).bHeld)
-			return false;
+			if (GetKey(olc::Key::Q).bHeld && current_state != name)
+				current_state = quit;
 
 		return true;
 	}
@@ -397,9 +418,6 @@ public:
 
 		}
 
-		current_score = level->get_Score();
-
-
 		{
 			/****************************************************
 			*                  User Input                       *
@@ -429,16 +447,19 @@ public:
 			if (GetKey(olc::Key::ESCAPE).bHeld)
 				current_state = pause;
 		}
+
+		current_score = level->get_Score();
+
 	}
 
 };
 
 //todo:
 /*
-* threads : score
-* filesystem : score sheet
+* ships creation (ughhhhhh) 
+* threads : async in loading sprites 
 * regex : name ?
-* score sheet
+* 
 */
 
 //testing feedback 

@@ -39,7 +39,7 @@
     <ClCompile Include="Bullet.ixx">
       <Filter>Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Credit.ixx">
+    <ClCompile Include="Credits.ixx">
       <Filter>Modules</Filter>
     </ClCompile>
   </ItemGroup>
