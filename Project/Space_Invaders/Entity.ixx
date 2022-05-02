@@ -15,8 +15,6 @@ protected:
 	float speed;
 	bool exist;
 
-
-
 public:
 	Entity() {
 	}

@@ -359,7 +359,7 @@ public:
 		if ((m_player->get_Pos().x + m_player->get_Width()) > (ScreenWidth() - 11))
 			m_player->Pos_right();
 
-		if (GetKey(olc::Key::SPACE).bHeld)
+		if (GetKey(olc::Key::SPACE).bPressed)
 		{
 			if (m_player->is_exist())
 				m_bullets.emplace_back(this, m_player->get_Pos().x + m_player->get_Width() / 2, m_player->get_Pos().y);
@@ -470,26 +470,6 @@ public:
 //todo:
 /*
 * ships creation (ughhhhhh)
-* regex : name ?
+* 4th thematic task
 */
 
-//done
-/*
-* modules
-* filesystem : paths for all sprites directories
-* async in user input
-*
-*/
-
-//testing feedback 
-/*
-* level 3 player can go to the sie and not die
-* after level 4 : credits
-* in the credist : restart or quit
-*/
-
-//ideas
-/*
-* redraw at left border: because game loop moves right then left then restarts other way around, so it lags for a ms
-* different speeds: no idea
-*/

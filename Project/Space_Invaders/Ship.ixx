@@ -120,6 +120,4 @@ public:
 		pos_x = w;
 		pos_y = h;
 	}
-
-	
 };

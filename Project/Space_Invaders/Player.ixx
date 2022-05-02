@@ -13,7 +13,6 @@ private:
 	//paths
 	std::filesystem::path entity_path = "D:/POLSL/Year II/CP4/Repo/Project/Space_Invaders/sprites/entity/";
 
-
 	//sprites
 	std::unique_ptr<olc::Sprite> player1Spr; //50 * 70
 	std::unique_ptr<olc::Sprite> player2Spr; //50 * 70
@@ -27,7 +26,8 @@ public:
 	Player(){}
 
 
-	Player(int32_t w, int32_t h) {
+	Player(int32_t w, int32_t h) 
+	{
 		element_Width = 50;
 		element_Height = 70; 
 		set_Scale(w, h);
@@ -40,7 +40,6 @@ public:
 		health1Spr = std::make_unique<olc::Sprite>(entity_path.string() +"health_1.png");
 		health2Spr = std::make_unique<olc::Sprite>(entity_path.string() +"health_2.png");
 		health3Spr = std::make_unique<olc::Sprite>(entity_path.string() +"health_3.png");
-
 	}
 
 	void reload()
@@ -98,6 +97,5 @@ public:
 	{
 		pos_x = ScreenWidth - element_Width - 11;
 	}
-	
-	
+		
 };
