@@ -14,17 +14,29 @@ export module Level;
 export class Level {
 	
 private: 
-	enum levelSHipsSpeed {
+	enum levelShipsSpeed {
 		level1_speed = 100, 
 		level2_speed = 150,
 		level3_speed = 200,
 		level4_speed = 300
 	};
 
+	enum levelShipCount {
+		level1_rows = 3,
+		level2_rows = 4,
+		level3_rows = 5
+	};
+
+	enum shipsOnBorder {
+		rightBorder = 3,
+		left_and_upBorder = 0
+	};
+
 	int32_t ScreenWidth;
 	int32_t ScreenHeight;
-	bool last_move = true;
-	std::string name; 
+	bool last_move_h = true;
+	bool last_move_v = true;
+	std::string level_name; 
 	
 	int m_score = 0000;
 
@@ -93,22 +105,22 @@ public:
 
 		if (_level == 1)
 		{
-			name = "Level 1";
+			level_name = "Level 1";
 			Create_Ships(_level, level1_speed);
 		}
 		else if (_level == 2)
 		{
-			name = "Level 2";
+			level_name = "Level 2";
 			Create_Ships(_level, level2_speed);
 		}
 		else if (_level == 3)
 		{
-			name = "Level 3";
+			level_name = "Level 3";
 			Create_Ships(_level, level3_speed);
 		}
 		else
 		{
-			name = "Level 4";
+			level_name = "Level 4";
 			Create_Ships(_level, level4_speed);
 		}
 	}
@@ -143,7 +155,7 @@ public:
 		ScreenHeight = h;
 	}
 
-	void Create_Ships(int level, float _speed) 
+	void Create_Ships(int level, int _speed) 
 	{
 		ships.clear();
 		int tmp_health;
@@ -174,8 +186,8 @@ public:
 			std::vector<Alien_Ship> tmp; 
 			for (int j = 0; j < 4; j++) 
 			{
-				olc::vi2d tmp_pos = { (j + 1) * (ScreenWidth / 5) ,
-					 (i + 1) * (ScreenHeight / 7) };
+				olc::vf2d tmp_pos = { (float) (j + 1) * (ScreenWidth / 5) ,
+					(float) (i + 1) * (ScreenHeight / 7) };
 				tmp.emplace_back(tmp_pos, ScreenWidth, ScreenHeight, booltmp[i][j], _speed, tmp_health);
 			}
 			ships.push_back(tmp);
@@ -188,38 +200,94 @@ public:
 				ship.get_AlienBullets().clear(); 
 	}
 
-	void Move_Ships(float time, olc::PixelGameEngine* pge) 
+	void MoveShips_h(float fElapsedTime, olc::PixelGameEngine* pge, int level) 
 	{
-		if (last_move)
+		int rows;
+		if (level == 1)
+			rows = level1_rows;
+		else if (level == 3)
+			rows = level3_rows;
+		else 
+			rows = level2_rows;
+		
+		if (last_move_h)
 		{
-			for (int i = 0; i < 5; i++)
+			for (int i = 0; i < rows; i++)
 			{
-				if (ships[i][3].get_Pos().x + ships[i][3].get_Width() >= ScreenWidth - 20)
+				if (ships[i][rightBorder].get_Pos().x + ships[i][rightBorder].get_Width() >= ScreenWidth - 20)
 				{
-					last_move = false;
+					last_move_h = false;
 					continue;
 				}
 				for (int j = 0; j < 4; j++)
 				{	
-					ships[i][j].DrawSelf(pge);
-					ships[i][j].move_right(time);
+					ships[i][j].move_right(fElapsedTime);
+					//ships[i][j].move_down(fElapsedTime);
+					//ships[i][j].DrawShip(pge);
 				}
 			}
 		}
 
-		if (!last_move)
+		if (!last_move_h)
 		{
-			for (int i = 0; i < 5; i++)
+			for (int i = 0; i < rows; i++)
 			{
-				if (ships[i][0].get_Pos().x <= 20)
+				if (ships[i][left_and_upBorder].get_Pos().x <= 20)
 				{
-					last_move = true;
+					last_move_h = true;
 					continue;
 				}
 				for (int j = 0; j < 4; j++)
 				{
-					ships[i][j].DrawSelf(pge);
-					ships[i][j].move_left(time);
+					ships[i][j].move_left(fElapsedTime);
+					//ships[i][j].move_down(fElapsedTime);
+					//ships[i][j].DrawShip(pge);
+				}
+			}
+		}
+	}
+
+	void MoveShips_v(float fElapsedTime, olc::PixelGameEngine* pge, int level)
+	{
+		int rows;
+		if (level == 1)
+			rows = level1_rows;
+		else if (level == 3)
+			rows = level3_rows;
+		else
+			rows = level2_rows;
+
+
+		if (last_move_v)
+		{
+			for (int i = 0; i < rows; i++)
+			{
+				for (int j = 0; j < 4; j++)
+				{
+					ships[i][j].move_down(fElapsedTime);
+
+					if (ships[rows-1][j].get_Pos().y + ships[rows-1][j].get_Height() >= ScreenHeight)
+					{
+						last_move_v = false;
+						break;
+					}
+				}	
+			}
+		}
+
+		if (!last_move_v)
+		{
+			for (int i = 0; i < rows; i++)
+			{
+				for (int j = 0; j < 4; j++)
+				{
+					ships[i][j].move_up(fElapsedTime);
+
+					if (ships[left_and_upBorder][j].get_Pos().y <= 50)
+					{
+						last_move_v = true;
+						break;
+					}
 				}
 			}
 		}
@@ -237,8 +305,8 @@ public:
 		//pge->DrawLine(10, ScreenHeight() - 10, ScreenWidth() - 10, ScreenHeight() - 10, olc::BLUE); // bottom HZ line
 		
 		/*Score and player*/
-		pge->DrawString(ScreenWidth - 180, 20, "Score: " + std::to_string(m_score), olc::WHITE, 2);
-		pge->DrawString(10, 20, name, olc::WHITE, 2);
+		pge->DrawString(ScreenWidth - 200, 20, "Score:" + std::to_string(m_score), olc::WHITE, 2);
+		pge->DrawString(10, 20, level_name, olc::WHITE, 2);
 	}
 
 	std::vector<std::vector<Alien_Ship>>& get_Ships() {

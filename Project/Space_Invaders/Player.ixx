@@ -49,24 +49,27 @@ public:
 		health = 3;
 	}
 
-	void DrawSelf(olc::PixelGameEngine* pge)
+	void DrawPlayer(olc::PixelGameEngine* pge)
 	{
 		if (exist)
 		{
 			pge->DrawString(500, 20, "Health:", olc::WHITE, 2);
 
+			//total 200 pixels
 			if (health == 3)
 			{
 				pge->DrawSprite(get_Pos().x, get_Pos().y, player3Spr.get());
 				pge->DrawSprite(620, 20, health3Spr.get());
 			}
 
+			//150
 			else if (health == 2)
 			{
 				pge->DrawSprite(get_Pos().x, get_Pos().y, player2Spr.get());
 				pge->DrawSprite(620, 20, health2Spr.get());
 			}
 
+			//120
 			else if (health == 1)
 			{
 				pge->DrawSprite(get_Pos().x, get_Pos().y, player1Spr.get());

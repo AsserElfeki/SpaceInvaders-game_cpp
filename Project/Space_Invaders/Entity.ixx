@@ -10,9 +10,9 @@ export class Entity {
 
 protected:
 	int element_Width, element_Height,
-		pos_x, pos_y, center_x, center_y, ScreenWidth, ScreenHeight,
-		health;
-	float speed;
+		 ScreenWidth, ScreenHeight,
+		speed, health;
+	float  pos_x, pos_y, center_x, center_y ;
 	bool exist;
 
 public:
@@ -55,13 +55,14 @@ public:
 		center_x += (ElapsedTime * speed);
 	}
 
+
 	/*void set_Pos(int32_t h, int32_t w)
 	{
 		pos_x = w;
 		pos_y = h;
 	}*/
 
-	olc::vi2d  get_Pos() {
+	olc::vf2d  get_Pos() {
 		return { pos_x, pos_y };
 	}
 

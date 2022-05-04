@@ -21,7 +21,7 @@ export class SpaceInvaders : public olc::PixelGameEngine
 {
 private:
 	//paths
-	std::filesystem::path screens_path = "D:/POLSL/Year II/CP4/Repo/Project/Space_Invaders/sprites/screens/";
+	std::filesystem::path screens_path = "./sprites/screens/";
 
 	//game units
 	std::unique_ptr <Level> m_level1;
@@ -73,19 +73,18 @@ private:
 public:
 	SpaceInvaders()
 	{
-		sAppName = "Space Invaders "
-			" By: Asser Moustafa";
-
+		sAppName = "Space Invaders "" By: Asser Moustafa";
 	}
 
 	bool OnUserCreate() override
 	{
 		// Called once at the start
 		/*
-		1- instantiating a player
-		2- instantiating a level and player
-		3- passing screen params to level
+		1- instantiating a player obj
+		2- instantiating all levels obj
+		3- instantiatiing credits obj
 		4- creating ships
+		5- loding sprites
 		*/
 
 		//game units
@@ -309,6 +308,7 @@ public:
 				m_level3->Create_Ships(3, m_level3->level3_speed);
 				m_level4->Create_Ships(4, m_level4->level4_speed);
 				m_player->reload();
+				m_credits->reset();
 				current_level = 1;
 				current_state = intro;
 			}
@@ -327,8 +327,8 @@ public:
 			DrawSprite(0, 0, spr_pause.get());
 			if (GetKey(olc::Key::SPACE).bPressed)
 			{
-				current_state = level;
 				SetPixelMode(olc::Pixel::MASK);
+				current_state = level;
 			}
 		}
 
@@ -375,13 +375,19 @@ public:
 
 	void play(std::unique_ptr<Level>& level, float fElapsedTime)
 	{
+		//Clear(olc::BLACK);
 		level->increase_Score_With_Time(fElapsedTime);
 		auto Itr = m_bullets.begin();
 
 		level->LoadLevel(this, fElapsedTime);
-		m_player->DrawSelf(this);
+		m_player->DrawPlayer(this);
 
-		level->Move_Ships(fElapsedTime, this);
+		level->MoveShips_h(fElapsedTime, this, current_level);
+		level->MoveShips_v(fElapsedTime, this, current_level);
+
+		for (auto& shipsrow : level->get_Ships())
+			for (auto& ship : shipsrow)
+				ship.DrawShip(this);
 
 		//collision detection between player and aliens bullets
 		for (auto& shipsrow : level->get_Ships())
@@ -393,6 +399,7 @@ public:
 				auto ITR = ship.get_AlienBullets().begin();
 				for (auto A_bullet : ship.get_AlienBullets())
 				{
+					//check hit
 					if (A_bullet.get_Pos().y + 10 >= m_player->get_Pos().y)
 					{
 						if (A_bullet.get_Pos().x >= m_player->get_Pos().x && A_bullet.get_Pos().x <= (m_player->get_Pos().x + m_player->get_Width()))
@@ -402,10 +409,18 @@ public:
 							m_player->gotHit();
 							level->decrease_Score_When_Health_Decreased();
 
+							//check player lost
 							if (!m_player->is_exist())
 							{
 								m_bullets.clear();
 								current_state = lost;
+							}
+
+							//chech bullet outta screen
+							if (A_bullet.get_Pos().y + 10 >= ScreenHeight())
+							{
+								A_bullet.Kill();
+								ship.get_AlienBullets().erase(ITR);
 							}
 						}
 					}
@@ -443,11 +458,14 @@ public:
 			Itr++;
 		}
 
-		//if bullet goes out of screen
+		//if player bullet goes out of screen
 		for (auto& bullet : m_bullets)
 		{
 			if (bullet.get_Pos().y < 60)
+			{
+				bullet.Kill();
 				m_bullets.pop_front();
+			}
 		}
 
 		if (level->is_finished())
@@ -465,11 +483,21 @@ public:
 
 };
 
-
+//questions: 
+/*
+* 1- it crashes in debug mode !? 
+*/
 
 //todo:
 /*
+* presentation class? 
+* 
 * ships creation (ughhhhhh)
 * 4th thematic task
+*
+* aliens moving down 
+* credits : ferenc
+*  
+ 
 */
 

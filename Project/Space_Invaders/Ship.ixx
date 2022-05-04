@@ -58,7 +58,7 @@ public:
 		exist = _exist;
 	}
 
-	olc::vi2d get_Center() {
+	olc::vf2d get_Center() {
 		return { center_x, center_y };
 	}
 
@@ -86,17 +86,27 @@ public:
 			if (bullet.get_Pos().y >= ScreenHeight - 20)
 				m_alienBullets.pop_front();
 		}
-		
 	}
 
-	void erase_bullet() {
+	
+
+	/*void erase_bullet() {
 		auto Itr = m_alienBullets.begin();
 		m_alienBullets.erase(Itr);
 		Itr++; 
+	}*/
 
+	void move_down(float ElapsedTime) {
+		pos_y += (ElapsedTime * speed) / 10;
+		center_y += (ElapsedTime * speed) / 10;
 	}
 
-	void DrawSelf(olc::PixelGameEngine* pge) {
+	void move_up(float ElapsedTime) {
+		pos_y -= (ElapsedTime * speed) / 10;
+		center_y -= (ElapsedTime * speed) / 10;
+	}
+
+	void DrawShip(olc::PixelGameEngine* pge) {
 		
 		if (exist)
 		{

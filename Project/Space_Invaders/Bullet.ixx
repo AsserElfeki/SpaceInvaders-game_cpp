@@ -26,12 +26,12 @@ public:
 		pos_y = posy;
 		element_Height = 10;
 		speed = 500.0f;
-		DrawSelf(pge);
+		DrawBullet(pge);
 	}
 
 	~Bullet(){}
 
-	void DrawSelf(olc::PixelGameEngine* pge)
+	void DrawBullet(olc::PixelGameEngine* pge)
 	{
 		if (exist)
 			pge->DrawSprite(get_Pos().x, get_Pos().y, bulletSpr.get());	 
@@ -39,13 +39,13 @@ public:
 
 	void move_PlayerBullet(float time, olc::PixelGameEngine* pge) 
 	{
-		DrawSelf(pge);
+		DrawBullet(pge);
 		pos_y -= (time * speed);
 	}
 
 	void move_AlienBullet(float time, olc::PixelGameEngine* pge)
 	{
-		DrawSelf(pge);
+		DrawBullet(pge);
 		pos_y += (time * speed);
 	}
 
