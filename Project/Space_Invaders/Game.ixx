@@ -372,23 +372,36 @@ public:
 			current_state = pause;
 	}
 
-
-	void play(std::unique_ptr<Level>& level, float fElapsedTime)
+	void playerBulletVsAlien(float fElapsedTime, std::unique_ptr<Level>& level)
 	{
-		//Clear(olc::BLACK);
-		level->increase_Score_With_Time(fElapsedTime);
 		auto Itr = m_bullets.begin();
 
-		level->LoadLevel(this, fElapsedTime);
-		m_player->DrawPlayer(this);
+		//collision detection between a player's bullet and alien ship and killing in case of collision
+		for (auto& bullet : m_bullets)
+		{
+			bullet.move_PlayerBullet(fElapsedTime, this);
+			for (int i = 0; i < 5; i++)
+				for (int j = 0; j < 4; j++)
+				{
+					if (level->get_Ships()[i][j].is_exist()) //circle collision
+						if (((level->get_Ships()[i][j].get_Center().x - bullet.get_Pos().x) *
+							(level->get_Ships()[i][j].get_Center().x - bullet.get_Pos().x)) +
+							((level->get_Ships()[i][j].get_Center().y - bullet.get_Pos().y) *
+								(level->get_Ships()[i][j].get_Center().y - bullet.get_Pos().y)) <=
+							level->get_Ships()[i][j].get_Width() / 2 * level->get_Ships()[i][j].get_Width() / 2)
+						{
+							bullet.Kill();
+							m_bullets.erase(Itr);
+							level->get_Ships()[i][j].gotHit();
+							level->increase_Score_When_Hit_Alien();
+						}
+				}
+			Itr++;
+		}
+	}
 
-		level->MoveShips_h(fElapsedTime, this, current_level);
-		level->MoveShips_v(fElapsedTime, this, current_level);
-
-		for (auto& shipsrow : level->get_Ships())
-			for (auto& ship : shipsrow)
-				ship.DrawShip(this);
-
+	void alienBulletVsPlayer(float fElapsedTime , std::unique_ptr<Level>& level)
+	{
 		//collision detection between player and aliens bullets 
 		for (auto& shipsrow : level->get_Ships())
 		{
@@ -421,6 +434,48 @@ public:
 				}
 			}
 		}
+	}
+
+	void alienShipVsPlayerShip(float fElapsedTime, std::unique_ptr<Level>& level)
+	{
+		//collision detection between player and alien itself 
+		for (auto& shipsrow : level->get_Ships())
+		{
+			for (auto& ship : shipsrow)
+			{
+				if (ship.is_exist())
+					if (ship.get_Pos().y + ship.get_Height() >= m_player->get_Pos().y && ship.get_Pos().y <= m_player->get_Pos().y + m_player->get_Height()
+						&& ship.get_Pos().x + ship.get_Width() >= m_player->get_Pos().x && ship.get_Pos().x <= m_player->get_Pos().x + m_player->get_Width())
+					{
+						m_player->playerGotHit();
+						ship.gotHit();
+						level->decrease_Score_When_Health_Decreased();
+					}
+			}
+		}
+	}
+
+	void play(std::unique_ptr<Level>& level, float fElapsedTime)
+	{
+		std::future<void> thread1 = std::async(std::launch::async, &SpaceInvaders::userInput, this, fElapsedTime);
+		/*std::future<void> thread2 = std::async(std::launch::async, &SpaceInvaders::playerBulletVsAlien, this, fElapsedTime, level);
+		std::future<void> thread3 = std::async(std::launch::async, &SpaceInvaders::alienBulletVsPlayer, this, fElapsedTime, level);
+		std::future<void> thread4 = std::async(std::launch::async, &SpaceInvaders::alienShipVsPlayerShip, this, fElapsedTime, level);*/
+
+		//Clear(olc::BLACK);
+		level->increase_Score_With_Time(fElapsedTime);
+
+		level->LoadLevel(this, fElapsedTime);
+		m_player->DrawPlayer(this);
+
+		level->MoveShips_h(fElapsedTime, this, current_level);
+		level->MoveShips_v(fElapsedTime, this, current_level);
+
+		for (auto& shipsrow : level->get_Ships())
+			for (auto& ship : shipsrow)
+				ship.DrawShip(this);
+
+		auto Itr = m_bullets.begin();
 
 		//collision detection between a player's bullet and alien ship and killing in case of collision
 		for (auto& bullet : m_bullets)
@@ -445,6 +500,39 @@ public:
 			Itr++;
 		}
 
+		//collision detection between player and aliens bullets 
+		for (auto& shipsrow : level->get_Ships())
+		{
+			for (auto& ship : shipsrow)
+			{
+				ship.shoot(this);
+				ship.move_AlienBullet(fElapsedTime, this);
+				auto ITR = ship.get_AlienBullets().begin();
+				for (auto A_bullet : ship.get_AlienBullets())
+				{
+					//check hit
+					if (A_bullet.get_Pos().y + 10 >= m_player->get_Pos().y)
+					{
+						if (A_bullet.get_Pos().x >= m_player->get_Pos().x && A_bullet.get_Pos().x <= (m_player->get_Pos().x + m_player->get_Width()))
+						{
+							A_bullet.Kill();
+							ship.get_AlienBullets().erase(ITR);
+							m_player->playerGotHit();
+							level->decrease_Score_When_Health_Decreased();
+
+							//chech bullet outta screen
+							if (A_bullet.get_Pos().y + 10 >= ScreenHeight())
+							{
+								A_bullet.Kill();
+								ship.get_AlienBullets().erase(ITR);
+							}
+						}
+					}
+					ITR++;
+				}
+			}
+		}
+		
 		//collision detection between player and alien itself 
 		for (auto& shipsrow : level->get_Ships())
 		{
@@ -453,11 +541,11 @@ public:
 				if (ship.is_exist())
 					if (ship.get_Pos().y + ship.get_Height() >= m_player->get_Pos().y && ship.get_Pos().y <= m_player->get_Pos().y + m_player->get_Height()
 						&& ship.get_Pos().x + ship.get_Width() >= m_player->get_Pos().x && ship.get_Pos().x <= m_player->get_Pos().x + m_player->get_Width())
-						{
-							m_player->playerGotHit();
-							ship.gotHit();
-							level->decrease_Score_When_Health_Decreased();
-						}
+					{
+						m_player->playerGotHit();
+						ship.gotHit();
+						level->decrease_Score_When_Health_Decreased();
+					}
 			}
 		}
 
@@ -478,6 +566,7 @@ public:
 			current_state = lost;
 		}
 
+		//if all aliens are dead : go to next level
 		if (level->is_finished())
 		{
 			m_bullets.clear();
@@ -485,8 +574,6 @@ public:
 			m_player->set_Player_Pos(ScreenWidth(), ScreenHeight());
 			current_state = won;
 		}
-
-		std::future<void> thread1 = std::async(std::launch::async, &SpaceInvaders::userInput, this, fElapsedTime);
 
 		current_score = level->get_Score();
 	}
@@ -496,6 +583,7 @@ public:
 //questions: 
 /*
 * 1- it crashes in debug mode !? 
+* 2- async with 2 args ?
 */
 
 //todo:
@@ -505,7 +593,6 @@ public:
 * ships creation (ughhhhhh)
 * 4th thematic task
 *
-* aliens moving down 
 * credits : ferenc
 *  
  
