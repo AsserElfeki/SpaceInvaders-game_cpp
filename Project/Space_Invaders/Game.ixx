@@ -389,12 +389,12 @@ public:
 			for (auto& ship : shipsrow)
 				ship.DrawShip(this);
 
-		//collision detection between player and aliens bullets
+		//collision detection between player and aliens bullets 
 		for (auto& shipsrow : level->get_Ships())
 		{
 			for (auto& ship : shipsrow)
 			{
-				ship.shoot(this);
+				//ship.shoot(this);
 				ship.move_AlienBullet(fElapsedTime, this);
 				auto ITR = ship.get_AlienBullets().begin();
 				for (auto A_bullet : ship.get_AlienBullets())
@@ -406,15 +406,8 @@ public:
 						{
 							A_bullet.Kill();
 							ship.get_AlienBullets().erase(ITR);
-							m_player->gotHit();
+							m_player->playerGotHit();
 							level->decrease_Score_When_Health_Decreased();
-
-							//check player lost
-							if (!m_player->is_exist())
-							{
-								m_bullets.clear();
-								current_state = lost;
-							}
 
 							//chech bullet outta screen
 							if (A_bullet.get_Pos().y + 10 >= ScreenHeight())
@@ -448,14 +441,24 @@ public:
 							level->get_Ships()[i][j].gotHit();
 							level->increase_Score_When_Hit_Alien();
 						}
-					//for some reason it doesnt work
-					//if (level->get_Ships()[i][j].is_exist()) //rectangle collision 
-					//	if (bullet.get_Pos().y <= level->get_Ships()[i][j].get_Pos().y + 50)
-					//		if (bullet.get_Pos().x >= level->get_Ships()[i][j].get_Pos().x
-					//			&& bullet.get_Pos().x <= level->get_Ships()[i][j].get_Pos().x + 60)
-
 				}
 			Itr++;
+		}
+
+		//collision detection between player and alien itself 
+		for (auto& shipsrow : level->get_Ships())
+		{
+			for (auto& ship : shipsrow)
+			{
+				if (ship.is_exist())
+					if (ship.get_Pos().y + ship.get_Height() >= m_player->get_Pos().y && ship.get_Pos().y <= m_player->get_Pos().y + m_player->get_Height()
+						&& ship.get_Pos().x + ship.get_Width() >= m_player->get_Pos().x && ship.get_Pos().x <= m_player->get_Pos().x + m_player->get_Width())
+						{
+							m_player->playerGotHit();
+							ship.gotHit();
+							level->decrease_Score_When_Health_Decreased();
+						}
+			}
 		}
 
 		//if player bullet goes out of screen
@@ -466,6 +469,13 @@ public:
 				bullet.Kill();
 				m_bullets.pop_front();
 			}
+		}
+
+		//check player lost
+		if (!m_player->is_exist())
+		{
+			m_bullets.clear();
+			current_state = lost;
 		}
 
 		if (level->is_finished())

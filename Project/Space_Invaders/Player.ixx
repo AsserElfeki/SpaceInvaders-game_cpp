@@ -1,6 +1,7 @@
 module;
 #include "olcPixelGameEngine.h"
-
+#include <chrono>
+#include <time.h>
 
 extern std::string player_name;
 import Bullet;
@@ -10,6 +11,8 @@ export module Player;
 export class Player : public Entity  {
 
 private:
+	clock_t time_of_last_hit;
+
 	//paths
 	std::filesystem::path entity_path = "D:/POLSL/Year II/CP4/Repo/Project/Space_Invaders/sprites/entity/";
 
@@ -101,4 +104,14 @@ public:
 		pos_x = ScreenWidth - element_Width - 11;
 	}
 		
+	void playerGotHit()
+	{
+		if ((clock() - time_of_last_hit) / CLOCKS_PER_SEC > 1)
+		{
+			health--;
+			time_of_last_hit = clock();
+		}
+		if (health == 0)
+			Kill();
+	}
 };
