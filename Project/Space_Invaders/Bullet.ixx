@@ -10,13 +10,17 @@ private:
 
 	std::shared_ptr<olc::Sprite> bulletSpr; //10 * 15
 	std::filesystem::path entity_path = "./sprites/entity/";
+	//std::unique_ptr<SpriteManager> spritesManager; 
 
 public: 
 	Bullet() = delete; 
 
 	Bullet(olc::PixelGameEngine* pge, float posx, float posy)
 	{
-		bulletSpr = std::make_shared<olc::Sprite>(entity_path.string() + "player_bullet.png");
+		//spritesManager = std::make_unique<SpriteManager>();
+
+
+		bulletSpr = std::make_shared<olc::Sprite>(entity_path.string() + "bullet.png");
 	
 		exist = true;
 		health = 1;
@@ -32,7 +36,9 @@ public:
 	void DrawSelf(olc::PixelGameEngine* pge)
 	{
 		if (exist)
-			pge->DrawSprite(get_Pos().x, get_Pos().y, bulletSpr.get());	 
+			pge->DrawSprite(get_Pos().x, get_Pos().y, bulletSpr.get());	
+		//pge->DrawSprite(get_Pos().x, get_Pos().y, spritesManager->entitySprite("bullet").get());
+
 	}
 
 	void move_PlayerBullet(float time, olc::PixelGameEngine* pge) 

@@ -4,6 +4,8 @@ module;
 #include <map>
 #include <string>
 
+namespace fs = std::filesystem; 
+
 export module SpritesManager;
 
 export class SpriteManager {
@@ -14,14 +16,12 @@ private:
 	
 
 
-	std::filesystem::path screens_path = "./sprites/screens/";
-	std::filesystem::path entity_path = "./sprites/entity/";
-	std::filesystem::path credits_path = "./sprites/credits/";
+	fs::path screens_path = "./sprites/screens/";
+	fs::path entity_path = "./sprites/entity/";
+	fs::path credits_path = "./sprites/credits/";
 
 public: 
-	SpriteManager() {
-
-	}
+	SpriteManager() {}
 
 	std::unique_ptr <olc::Sprite>& screenSprite(std::string name)
 	{
@@ -46,6 +46,43 @@ public:
 
 		return creditsSprites_[name];
 	}
-
 	
+
+	bool checkAllSpritesExist()
+	{
+		fs::path intro = "./sprites/screens/intro.png";
+		fs::path instructions = "./sprites/screens/instructions.png";
+		fs::path lost = "./sprites/screens/lost.png";
+		fs::path name = "./sprites/screens/name.png";
+		fs::path pause = "./sprites/screens/pause.png";
+		fs::path won = "./sprites/screens/won.png";
+
+		fs::path alien_1 = "./sprites/entity/alien_1.png";
+		fs::path alien_2 = "./sprites/entity/alien_2.png";
+		fs::path alien_3 = "./sprites/entity/alien_3.png";
+		fs::path boss = "./sprites/entity/boss.png";
+		fs::path bullet = "./sprites/entity/bullet.png";
+		fs::path health_1 = "./sprites/entity/health_1.png";
+		fs::path health_2 = "./sprites/entity/health_2.png";
+		fs::path health_3 = "./sprites/entity/health_3.png";
+		fs::path player_1 = "./sprites/entity/player_1.png";
+		fs::path player_2 = "./sprites/entity/player_2.png";
+		fs::path player_3 = "./sprites/entity/player_3.png";
+
+		fs::path background = "./sprites/credits/background.png";
+		fs::path credits = "./sprites/credits/credits.png";
+		fs::path credits_options = "./sprites/credits/credits_options.png";
+
+		std::vector<fs::path> paths{intro, instructions, lost, name, pause, won, 
+			alien_1,alien_2, alien_3, boss, bullet, health_1, health_2, health_3, player_1, player_2, player_3,
+		background, credits, credits_options};
+
+		for (auto& file : paths)
+		{
+			if (!fs::exists(file))
+				return false;
+		}
+
+		return true; 
+	}
 };

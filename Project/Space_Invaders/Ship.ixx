@@ -22,6 +22,7 @@ private:
 	std::shared_ptr<olc::Sprite> alien3Spr; //60 * 50
 	std::shared_ptr<olc::Sprite> alienBossSpr; //100 * 100
 
+	//std::unique_ptr<SpriteManager> spritesManager; 
 
 public: 
 
@@ -29,6 +30,9 @@ public:
 
 	Alien_Ship(olc::vi2d pos, int w, int h, bool _exist, float _speed, int _health) 
 	{
+		//spritesManager = std::make_unique<SpriteManager>();
+
+
 		alien1Spr = std::make_shared<olc::Sprite>(entity_path.string() + "alien_1.png");
 		alien2Spr = std::make_shared<olc::Sprite>(entity_path.string() + "alien_2.png");
 		alien3Spr = std::make_shared<olc::Sprite>(entity_path.string() + "alien_3.png");
@@ -64,15 +68,19 @@ public:
 		{
 			if (health == 1)
 				pge->DrawSprite(get_Pos().x, get_Pos().y, alien1Spr.get());
+			//pge->DrawSprite(get_Pos().x, get_Pos().y, spritesManager->entitySprite("alien_1").get());
 
 			else if (health == 2)
 				pge->DrawSprite(get_Pos().x, get_Pos().y, alien2Spr.get());
+			//pge->DrawSprite(get_Pos().x, get_Pos().y, spritesManager->entitySprite("alien_2").get());
 
 			else if (health == 3)
 				pge->DrawSprite(get_Pos().x, get_Pos().y, alien3Spr.get());
+			//pge->DrawSprite(get_Pos().x, get_Pos().y, spritesManager->entitySprite("alien_3").get());
 
 			else
 				pge->DrawSprite(get_Pos().x, get_Pos().y, alienBossSpr.get());
+			//pge->DrawSprite(get_Pos().x, get_Pos().y, spritesManager->entitySprite("boss").get());
 
 		}
 	}

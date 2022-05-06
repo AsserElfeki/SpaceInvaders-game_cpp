@@ -23,6 +23,7 @@ int main() {
               << "File name: " << a.filename() << std::endl
               << "Stem: " << a.stem() << std::endl
               << "Extension: " << a.extension() << std::endl;
+
     std::cout << "### Task 4 ###\n";
     std::cout << "info about " << current << " : " << std::endl
               << "exists: " << fs::exists(current) << std::endl

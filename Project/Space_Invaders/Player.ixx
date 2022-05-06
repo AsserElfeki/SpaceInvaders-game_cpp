@@ -3,7 +3,6 @@ module;
 #include <chrono>
 #include <time.h>
 
-//extern std::string player_name;
 import Bullet;
 import Entity;
 
@@ -29,8 +28,7 @@ public:
 		set_Scale(w, h);
 		speed = 500.0f;
 		exist = true;
-		health = 3;
-		
+		health = 3;	
 	}
 
 	void reload()
@@ -50,14 +48,14 @@ public:
 			if (health == 3)
 			{
 				pge->DrawSprite(get_Pos().x, get_Pos().y, spritesManager->entitySprite("player_3").get());
-				pge->DrawSprite(620, 20, spritesManager->entitySprite("health_1").get());
+				pge->DrawSprite(620, 20, spritesManager->entitySprite("health_3").get());
 			}
 
 			//150
 			else if (health == 2)
 			{
 				pge->DrawSprite(get_Pos().x, get_Pos().y, spritesManager->entitySprite("player_2").get());
-				pge->DrawSprite(620, 20, spritesManager->entitySprite("health_1").get());
+				pge->DrawSprite(620, 20, spritesManager->entitySprite("health_2").get());
 			}
 
 			//120

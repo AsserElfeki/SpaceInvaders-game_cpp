@@ -347,7 +347,7 @@ public:
 		{
 			for (auto& ship : shipsrow)
 			{
-				//ship.shoot(this);
+				ship.shoot(this);
 				ship.move_AlienBullet(fElapsedTime, this);
 				auto ITR = ship.get_AlienBullets().begin();
 				for (auto A_bullet : ship.get_AlienBullets())
@@ -545,7 +545,7 @@ public:
 
 //BUGS:
 /*
-* 
+* bullets and ships cant be in sprite manager
 */
 
 //questions: 
@@ -554,21 +554,14 @@ public:
 */
 
 
-/*
-filesystems : search for files in the folder in main and run according window
-sprites manager
-ranges in move_ships
-*/
+
 
 //todo:
 /*
-* presentation class? 
-* 
-* ships creation (ughhhhhh)
-* 4th thematic task
-*
+* clean level code 
+* 4th thematic task : ranges in move ships
+* level manager ? 
 * credits : ferenc
-*  
- 
+* presentation class? 
 */
 

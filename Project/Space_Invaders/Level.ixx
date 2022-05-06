@@ -219,12 +219,8 @@ public:
 					last_move_h = false;
 					continue;
 				}
-				for (int j = 0; j < 4; j++)
-				{	
+				for (int j = 0; j < 4; j++)	
 					ships[i][j].move_right(fElapsedTime);
-					//ships[i][j].move_down(fElapsedTime);
-					//ships[i][j].DrawShip(pge);
-				}
 			}
 		}
 
@@ -238,11 +234,7 @@ public:
 					continue;
 				}
 				for (int j = 0; j < 4; j++)
-				{
 					ships[i][j].move_left(fElapsedTime);
-					//ships[i][j].move_down(fElapsedTime);
-					//ships[i][j].DrawShip(pge);
-				}
 			}
 		}
 	}
@@ -309,27 +301,15 @@ public:
 		pge->DrawString(10, 20, level_name, olc::WHITE, 2);
 	}
 
-	std::vector<std::vector<Alien_Ship>>& get_Ships() {
-		return ships;
-	}
+	std::vector<std::vector<Alien_Ship>>& get_Ships() {return ships;}
 
-	void set_Score(int _score) {
-		m_score = _score;
-	}
+	void set_Score(int _score) {m_score = _score;}
 
-	int get_Score() {
-		return m_score;
-	}
+	int get_Score() {return m_score;}
 
-	void increase_Score_With_Time(float time) {
-		m_score +=  (time * 60); 
-	}
+	void increase_Score_With_Time(float time) {m_score +=  (time * 60); }
 
-	void increase_Score_When_Hit_Alien() {
-		m_score += 100;
-	}
+	void increase_Score_When_Hit_Alien() {m_score += 100;}
 
-	void decrease_Score_When_Health_Decreased() {
-		m_score -= 300;
-	}
+	void decrease_Score_When_Health_Decreased() {m_score -= 300;}
 };

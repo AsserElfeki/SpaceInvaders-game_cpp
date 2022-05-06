@@ -5,22 +5,29 @@ import Game;
 import Level; 
 import Ship;
 import Player; 
+import SpritesManager; 
+import Error; 
 
-std::string player_name;
 
 int main()
 {
-	//int w, h; 
-	/*std::cout << "please enter your name:\n";
-	std::cin >> player_name;*/
-	/*std::cout << "please provide game window width:\n";
-	std::cin >> w; 
-	std::cout << "please provide game window height:\n";
-	std::cin >> h;*/
+	
 
-	SpaceInvaders demo;
-	if (demo.Construct(1200, 800, 1, 1, false, true))  
-		demo.Start();
+	SpriteManager obj;
+	if (obj.checkAllSpritesExist())
+	{
+		SpaceInvaders demo;
+		if (demo.Construct(1200, 800, 1, 1, false, true))
+			demo.Start();
+	}
+
+	else
+	{
+		Error error; 
+		if (error.Construct(600, 200, 1, 1, false, true))
+			error.Start();
+	}
+	
 		
 	return 0;
 }
