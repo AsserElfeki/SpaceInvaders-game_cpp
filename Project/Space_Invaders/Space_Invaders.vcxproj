@@ -156,6 +156,7 @@
     <ClCompile Include="Player.ixx" />
     <ClCompile Include="Credits.ixx" />
     <ClCompile Include="Ship.ixx" />
+    <ClCompile Include="SpritesManager.ixx" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="olcPixelGameEngine.h" />

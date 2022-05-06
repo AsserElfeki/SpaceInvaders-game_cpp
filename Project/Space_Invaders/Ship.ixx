@@ -13,7 +13,7 @@ export class Alien_Ship : public Entity
 
 private: 
 	//paths
-	std::filesystem::path entity_path = "D:/POLSL/Year II/CP4/Repo/Project/Space_Invaders/sprites/entity/";
+	std::filesystem::path entity_path = "./sprites/entity/";
 
 
 	std::list<Bullet> m_alienBullets;
@@ -58,6 +58,25 @@ public:
 		exist = _exist;
 	}
 
+	void DrawShip(olc::PixelGameEngine* pge) {
+
+		if (exist)
+		{
+			if (health == 1)
+				pge->DrawSprite(get_Pos().x, get_Pos().y, alien1Spr.get());
+
+			else if (health == 2)
+				pge->DrawSprite(get_Pos().x, get_Pos().y, alien2Spr.get());
+
+			else if (health == 3)
+				pge->DrawSprite(get_Pos().x, get_Pos().y, alien3Spr.get());
+
+			else
+				pge->DrawSprite(get_Pos().x, get_Pos().y, alienBossSpr.get());
+
+		}
+	}
+
 	olc::vf2d get_Center() {
 		return { center_x, center_y };
 	}
@@ -65,7 +84,6 @@ public:
 	std::list<Bullet>& get_AlienBullets() {
 		return m_alienBullets; 
 	}
-
 
 	void shoot(olc::PixelGameEngine* pge) 
 	{
@@ -88,8 +106,6 @@ public:
 		}
 	}
 
-	
-
 	/*void erase_bullet() {
 		auto Itr = m_alienBullets.begin();
 		m_alienBullets.erase(Itr);
@@ -104,25 +120,6 @@ public:
 	void move_up(float ElapsedTime) {
 		pos_y -= (ElapsedTime * speed) / 10;
 		center_y -= (ElapsedTime * speed) / 10;
-	}
-
-	void DrawShip(olc::PixelGameEngine* pge) {
-		
-		if (exist)
-		{
-			if (health == 1)
-				pge->DrawSprite(get_Pos().x, get_Pos().y, alien1Spr.get());
-			
-			else if (health == 2)
-				pge->DrawSprite(get_Pos().x, get_Pos().y, alien2Spr.get());
-
-			else if (health ==3)
-				pge->DrawSprite(get_Pos().x, get_Pos().y, alien3Spr.get());
-
-			else 
-				pge->DrawSprite(get_Pos().x, get_Pos().y, alienBossSpr.get());
-
-		}
 	}
 
 	void set_Ship_Pos(int w, int h)

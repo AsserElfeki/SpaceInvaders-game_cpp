@@ -9,7 +9,7 @@ export class Bullet : public Entity {
 private: 
 
 	std::shared_ptr<olc::Sprite> bulletSpr; //10 * 15
-	std::filesystem::path entity_path = "D:/POLSL/Year II/CP4/Repo/Project/Space_Invaders/sprites/entity/";
+	std::filesystem::path entity_path = "./sprites/entity/";
 
 public: 
 	Bullet() = delete; 
@@ -18,20 +18,18 @@ public:
 	{
 		bulletSpr = std::make_shared<olc::Sprite>(entity_path.string() + "player_bullet.png");
 	
-
 		exist = true;
-		//m_checked = false;
 		health = 1;
 		pos_x = posx;
 		pos_y = posy;
 		element_Height = 10;
 		speed = 500.0f;
-		DrawBullet(pge);
+		DrawSelf(pge);
 	}
 
 	~Bullet(){}
 
-	void DrawBullet(olc::PixelGameEngine* pge)
+	void DrawSelf(olc::PixelGameEngine* pge)
 	{
 		if (exist)
 			pge->DrawSprite(get_Pos().x, get_Pos().y, bulletSpr.get());	 
@@ -39,13 +37,13 @@ public:
 
 	void move_PlayerBullet(float time, olc::PixelGameEngine* pge) 
 	{
-		DrawBullet(pge);
+		DrawSelf(pge);
 		pos_y -= (time * speed);
 	}
 
 	void move_AlienBullet(float time, olc::PixelGameEngine* pge)
 	{
-		DrawBullet(pge);
+		DrawSelf(pge);
 		pos_y += (time * speed);
 	}
 

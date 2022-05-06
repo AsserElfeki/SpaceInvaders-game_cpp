@@ -21,6 +21,6 @@ int main()
 	SpaceInvaders demo;
 	if (demo.Construct(1200, 800, 1, 1, false, true))  
 		demo.Start();
-
+		
 	return 0;
 }

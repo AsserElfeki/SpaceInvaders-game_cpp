@@ -42,6 +42,9 @@
     <ClCompile Include="Credits.ixx">
       <Filter>Modules</Filter>
     </ClCompile>
+    <ClCompile Include="SpritesManager.ixx">
+      <Filter>Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="olcPixelGameEngine.h">

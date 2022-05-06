@@ -3,26 +3,17 @@ module;
 #include <chrono>
 #include <time.h>
 
-extern std::string player_name;
+//extern std::string player_name;
 import Bullet;
 import Entity;
+
 export module Player;
 
 export class Player : public Entity  {
 
 private:
 	clock_t time_of_last_hit;
-
-	//paths
-	std::filesystem::path entity_path = "D:/POLSL/Year II/CP4/Repo/Project/Space_Invaders/sprites/entity/";
-
-	//sprites
-	std::unique_ptr<olc::Sprite> player1Spr; //50 * 70
-	std::unique_ptr<olc::Sprite> player2Spr; //50 * 70
-	std::unique_ptr<olc::Sprite> player3Spr; //50 * 70
-	std::unique_ptr<olc::Sprite> health1Spr; //20 * 20
-	std::unique_ptr<olc::Sprite> health2Spr; //48 * 20
-	std::unique_ptr<olc::Sprite> health3Spr; //76 * 20
+	std::unique_ptr<SpriteManager> spritesManager;
 
 public:
 
@@ -31,18 +22,15 @@ public:
 
 	Player(int32_t w, int32_t h) 
 	{
+		spritesManager = std::make_unique<SpriteManager>();
+
 		element_Width = 50;
 		element_Height = 70; 
 		set_Scale(w, h);
 		speed = 500.0f;
 		exist = true;
 		health = 3;
-		player1Spr = std::make_unique<olc::Sprite>(entity_path.string() +"player_1.png");
-		player2Spr = std::make_unique<olc::Sprite>(entity_path.string() +"player_2.png");
-		player3Spr = std::make_unique<olc::Sprite>(entity_path.string() +"player_3.png");
-		health1Spr = std::make_unique<olc::Sprite>(entity_path.string() +"health_1.png");
-		health2Spr = std::make_unique<olc::Sprite>(entity_path.string() +"health_2.png");
-		health3Spr = std::make_unique<olc::Sprite>(entity_path.string() +"health_3.png");
+		
 	}
 
 	void reload()
@@ -61,22 +49,22 @@ public:
 			//total 200 pixels
 			if (health == 3)
 			{
-				pge->DrawSprite(get_Pos().x, get_Pos().y, player3Spr.get());
-				pge->DrawSprite(620, 20, health3Spr.get());
+				pge->DrawSprite(get_Pos().x, get_Pos().y, spritesManager->entitySprite("player_3").get());
+				pge->DrawSprite(620, 20, spritesManager->entitySprite("health_1").get());
 			}
 
 			//150
 			else if (health == 2)
 			{
-				pge->DrawSprite(get_Pos().x, get_Pos().y, player2Spr.get());
-				pge->DrawSprite(620, 20, health2Spr.get());
+				pge->DrawSprite(get_Pos().x, get_Pos().y, spritesManager->entitySprite("player_2").get());
+				pge->DrawSprite(620, 20, spritesManager->entitySprite("health_1").get());
 			}
 
 			//120
 			else if (health == 1)
 			{
-				pge->DrawSprite(get_Pos().x, get_Pos().y, player1Spr.get());
-				pge->DrawSprite(620, 20, health1Spr.get());
+				pge->DrawSprite(get_Pos().x, get_Pos().y, spritesManager->entitySprite("player_1").get());
+				pge->DrawSprite(620, 20, spritesManager->entitySprite("health_1").get());
 			}
 		}
 	}

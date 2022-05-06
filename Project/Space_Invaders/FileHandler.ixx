@@ -13,7 +13,7 @@ private :
 	bool writing_done = false;
 	std::string player_name;
 	int score;
-	std::filesystem::path scoresFile_path = "D:/POLSL/Year II/CP4/Repo/Project/Space_Invaders/scores.txt";
+	std::filesystem::path scoresFile_path = "./scores.txt";
 
 public:
 
@@ -21,7 +21,7 @@ public:
 	{
 		player_name = std::string(name.data(), name.size());
 		score = _score;
-		std::cout << "file handler was created\n";
+		//std::cout << "file handler was created\n";
 	}
 
 

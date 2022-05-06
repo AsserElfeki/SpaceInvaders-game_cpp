@@ -3,7 +3,7 @@ module;
 #include "olcPixelGameEngine.h"
 
 
-
+export import SpritesManager;
 export module Entity;
 
 export class Entity {
@@ -14,7 +14,7 @@ protected:
 		speed, health;
 	float  pos_x, pos_y, center_x, center_y ;
 	bool exist;
- 
+
 public:
 	Entity() {
 	}
