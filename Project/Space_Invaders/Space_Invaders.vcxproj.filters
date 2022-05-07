@@ -48,6 +48,9 @@
     <ClCompile Include="Error.ixx">
       <Filter>Modules</Filter>
     </ClCompile>
+    <ClCompile Include="ScoreHandler.ixx">
+      <Filter>Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="olcPixelGameEngine.h">

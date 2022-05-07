@@ -16,6 +16,7 @@ import Credits;
 import Level;
 import Bullet;
 import SpritesManager;
+import ScoreHandler;
 
 export module Game;
 
@@ -33,12 +34,13 @@ private:
 	std::unique_ptr<Credits> m_credits;
 	std::unique_ptr <Player> m_player;
 	std::list<Bullet> m_bullets;
+	std::unique_ptr<ScoreHandler> scoreHandler; 
 
 	//SpritesManager
 	std::unique_ptr<SpriteManager> spritesManager;
 
 	//others
-	std::unique_ptr<FileHandler> scores_handler;
+	std::unique_ptr<FileHandler> outputScore;
 
 	std::vector<char> player_name;
 
@@ -80,6 +82,7 @@ public:
 		
 		*/
 
+		scoreHandler = std::make_unique<ScoreHandler>();
 
 		spritesManager = std::make_unique<SpriteManager>();
 
@@ -94,6 +97,10 @@ public:
 		m_credits = std::make_unique<Credits>(ScreenWidth(), ScreenHeight());
 
 		return true;
+	}
+
+	void drawScore() {
+		DrawString(ScreenWidth() - 200, 20, "Score:" + std::to_string(current_score), olc::WHITE, 2);
 	}
 
 	void inputPlayerName() {
@@ -144,54 +151,29 @@ public:
 
 	void goToLevel(float fElapsedTime) {
 		if (current_level == 1)
-		{
 			play(m_level1, fElapsedTime);
-		}
 
 		else if (current_level == 2)
-		{
-			if (!score_was_set)
-				m_level2->set_Score(current_score);
-
-			score_was_set = false;
-
 			play(m_level2, fElapsedTime);
-		}
 
 		else if (current_level == 3)
-		{
-			if (!score_was_set)
-				m_level3->set_Score(current_score);
-
-			score_was_set = false;
 			play(m_level3, fElapsedTime);
-		}
 
 		else if (current_level == 4)
-		{
-			if (!score_was_set)
-				m_level4->set_Score(current_score);
-
-			score_was_set = false;
 			play(m_level4, fElapsedTime);
-		}
 	}
 
 	void play(std::unique_ptr<Level>& level, float fElapsedTime)
 	{
 		std::future<void> thread1 = std::async(std::launch::async, &SpaceInvaders::userInput, this, fElapsedTime);
-		/*std::future<void> thread2 = std::async(std::launch::async, &SpaceInvaders::playerBulletVsAlien, this, fElapsedTime, std::ref(level));
-		std::future<void> thread3 = std::async(std::launch::async, &SpaceInvaders::alienBulletVsPlayer, this, fElapsedTime, std::ref(level));
-		std::future<void> thread4 = std::async(std::launch::async, &SpaceInvaders::alienShipVsPlayerShip, this, fElapsedTime, std::ref(level));*/
-
-		//Clear(olc::BLACK);
 
 		level->LoadLevel(this, fElapsedTime);
 		m_player->DrawPlayer(this);
+		drawScore(); 
 
 		level->MoveShips_h(fElapsedTime, this, current_level);
 		level->MoveShips_v(fElapsedTime, this, current_level);
-		level->increase_Score_With_Time(fElapsedTime);
+		scoreHandler->increase_Score_With_Time(fElapsedTime);
 
 		drawShips(level);
 
@@ -215,13 +197,13 @@ public:
 		//if all aliens are dead : go to next level
 		didPlayerWin(level);
 
-		current_score = level->get_Score();
+		current_score = scoreHandler->get_Score();
 	}
 
 	void playAgainAfterLoss() {
 		if (current_level == 1)
 		{
-			m_level1->set_Score(0000);
+			scoreHandler->reset_scores();
 			score_was_set = true;
 			m_level1->Create_Ships(1, m_level1->level1_speed);
 			m_player->reload();
@@ -230,7 +212,7 @@ public:
 
 		else if (current_level == 2)
 		{
-			m_level2->set_Score(m_level1->get_Score());
+			scoreHandler->set_Score(scoreHandler->lastLevelScore());
 			score_was_set = true;
 			m_level2->Create_Ships(2, m_level1->level2_speed);
 			m_player->reload();
@@ -239,7 +221,7 @@ public:
 
 		else if (current_level == 3)
 		{
-			m_level3->set_Score(m_level2->get_Score());
+			scoreHandler->set_Score(scoreHandler->lastLevelScore());
 			score_was_set = true;
 			m_level3->Create_Ships(3, m_level1->level3_speed);
 			m_player->reload();
@@ -248,7 +230,7 @@ public:
 
 		else
 		{
-			m_level4->set_Score(m_level3->get_Score());
+			scoreHandler->set_Score(scoreHandler->lastLevelScore());
 			score_was_set = true;
 			m_level4->Create_Ships(4, m_level1->level4_speed);
 			m_player->reload();
@@ -256,12 +238,6 @@ public:
 		}
 	}
 
-	void resetAllScores() {
-		m_level1->set_Score(0000);
-		m_level2->set_Score(0000);
-		m_level3->set_Score(0000);
-		m_level4->set_Score(0000);
-	}
 
 	void reloadAllLevels() {
 		m_level1->Create_Ships(1, m_level1->level1_speed);
@@ -271,7 +247,7 @@ public:
 	}
 
 	void playAgainAfterFinished() {
-		resetAllScores();
+		scoreHandler->reset_scores();
 		reloadAllLevels();
 		m_player->reload();
 		m_credits->reset();
@@ -333,7 +309,7 @@ public:
 							bullet.Kill();
 							m_bullets.erase(Itr);
 							level->get_Ships()[i][j].gotHit();
-							level->increase_Score_When_Hit_Alien();
+							scoreHandler->increase_Score_When_Hit_Alien();
 						}
 				}
 			Itr++;
@@ -360,7 +336,7 @@ public:
 							A_bullet.Kill();
 							ship.get_AlienBullets().erase(ITR);
 							m_player->playerGotHit();
-							level->decrease_Score_When_Health_Decreased();
+							scoreHandler->decrease_Score_When_Health_Decreased();
 
 							//chech bullet outta screen
 							if (A_bullet.get_Pos().y + 10 >= ScreenHeight())
@@ -389,7 +365,7 @@ public:
 					{
 						m_player->playerGotHit();
 						ship.gotHit();
-						level->decrease_Score_When_Health_Decreased();
+						scoreHandler->decrease_Score_When_Health_Decreased();
 					}
 			}
 		}
@@ -469,7 +445,7 @@ public:
 			{
 				Clear(olc::WHITE);
 				DrawSprite(0, 0, spritesManager->screenSprite("won").get());
-
+				scoreHandler->setLastLevelScore(scoreHandler->get_Score());
 				if (GetKey(olc::Key::ENTER).bPressed)
 				{
 					current_level += 1;
@@ -485,7 +461,7 @@ public:
 		{
 			Clear(olc::WHITE);
 			DrawSprite(0, 0, spritesManager->screenSprite("lost").get());
-
+			scoreHandler->set_Score(scoreHandler->lastLevelScore());
 			if (GetKey(olc::Key::ENTER).bPressed)
 				playAgainAfterLoss();
 		}
@@ -497,8 +473,8 @@ public:
 
 			if (!writing_score_done)
 			{
-				scores_handler = std::make_unique<FileHandler>(player_name, current_score);
-				scores_handler->write();
+				outputScore = std::make_unique<FileHandler>(player_name, current_score);
+				outputScore->write();
 				writing_score_done = true;
 			}
 
@@ -526,8 +502,8 @@ public:
 
 		else if (current_state == quit)
 		{
-			scores_handler = std::make_unique<FileHandler>(player_name, current_score);
-			scores_handler->write();
+			outputScore = std::make_unique<FileHandler>(player_name, current_score);
+			outputScore->write();
 			return false;
 		}
 
@@ -561,7 +537,6 @@ public:
 * clean level code 
 * 4th thematic task : ranges in move ships
 * level manager ? 
-* credits : ferenc
 * presentation class? 
 */
 

@@ -156,6 +156,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.ixx" />
     <ClCompile Include="Credits.ixx" />
+    <ClCompile Include="ScoreHandler.ixx" />
     <ClCompile Include="Ship.ixx" />
     <ClCompile Include="SpritesManager.ixx" />
   </ItemGroup>

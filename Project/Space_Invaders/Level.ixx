@@ -38,18 +38,11 @@ private:
 	bool last_move_v = true;
 	std::string level_name; 
 	
-	int m_score = 0000;
 
 	std::vector<std::vector<Alien_Ship>> ships;
 
 	std::vector<std::vector<bool>> ships_pos_level_1 =
 	{
-		/*{0,0,1,0},
-		{0,0,0,0},
-		{0,0,0,0},
-		{0,0,0,0},
-		{0,0,0,0}*/
-
 		{1,1,1,1},
 		{1,1,1,1},
 		{1,1,1,1},
@@ -59,12 +52,6 @@ private:
 
 	std::vector<std::vector<bool>> ships_pos_level_2 =
 	{
-		/*{0,0,1,0},
-		{0,0,0,0},
-		{0,0,0,0},
-		{0,0,0,0},
-		{0,0,0,0}*/
-
 		{1,0,0,1},
 		{0,1,1,0},
 		{0,1,1,0},
@@ -74,12 +61,6 @@ private:
 
 	std::vector<std::vector<bool>> ships_pos_level_3 =
 	{
-		/*{0,0,1,0},
-		{0,0,0,0},
-		{0,0,0,0},
-		{0,0,0,0},
-		{0,0,0,0}*/
-
 		{1,1,1,1},
 		{1,1,1,1},
 		{1,1,1,1},
@@ -200,6 +181,7 @@ public:
 				ship.get_AlienBullets().clear(); 
 	}
 
+	//moving can be in aliensmovementHandler
 	void MoveShips_h(float fElapsedTime, olc::PixelGameEngine* pge, int level) 
 	{
 		int rows;
@@ -297,19 +279,11 @@ public:
 		//pge->DrawLine(10, ScreenHeight() - 10, ScreenWidth() - 10, ScreenHeight() - 10, olc::BLUE); // bottom HZ line
 		
 		/*Score and player*/
-		pge->DrawString(ScreenWidth - 200, 20, "Score:" + std::to_string(m_score), olc::WHITE, 2);
+		//pge->DrawString(ScreenWidth - 200, 20, "Score:" + std::to_string(m_score), olc::WHITE, 2);
 		pge->DrawString(10, 20, level_name, olc::WHITE, 2);
 	}
 
 	std::vector<std::vector<Alien_Ship>>& get_Ships() {return ships;}
 
-	void set_Score(int _score) {m_score = _score;}
 
-	int get_Score() {return m_score;}
-
-	void increase_Score_With_Time(float time) {m_score +=  (time * 60); }
-
-	void increase_Score_When_Hit_Alien() {m_score += 100;}
-
-	void decrease_Score_When_Health_Decreased() {m_score -= 300;}
 };
