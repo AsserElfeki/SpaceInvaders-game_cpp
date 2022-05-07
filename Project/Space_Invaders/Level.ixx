@@ -275,11 +275,8 @@ public:
 		/*Boundaries*/
 		pge->DrawLine(10, 50, ScreenWidth - 10, 50, olc::BLUE); //upper HZ line
 		pge->DrawLine(10, 50, 10, ScreenHeight - 10, olc::BLUE); // left V line 
-		pge->DrawLine(ScreenWidth - 10, 50, ScreenWidth - 10, ScreenHeight - 10, olc::BLUE); // right V line 
-		//pge->DrawLine(10, ScreenHeight() - 10, ScreenWidth() - 10, ScreenHeight() - 10, olc::BLUE); // bottom HZ line
+		pge->DrawLine(ScreenWidth - 10, 50, ScreenWidth - 10, ScreenHeight - 10, olc::BLUE); // right V line 		
 		
-		/*Score and player*/
-		//pge->DrawString(ScreenWidth - 200, 20, "Score:" + std::to_string(m_score), olc::WHITE, 2);
 		pge->DrawString(10, 20, level_name, olc::WHITE, 2);
 	}
 
