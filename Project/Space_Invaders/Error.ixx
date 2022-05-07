@@ -10,12 +10,9 @@ private:
 	std::unique_ptr<olc::Sprite> message;
 	std::filesystem::path error_file = "./sprites/screens/error.png";
 
-
 public: 
 
-	Error() {
-		sAppName = "Error";
-	}
+	Error() {sAppName = "Error";}
 
 	bool OnUserCreate() override
 	{
@@ -47,8 +44,3 @@ public:
 		return true; 
 	}
 };
-
-/*X1: 165 & 260
-* Y: 130 * 165
-* X2: 335 & 430
-* */

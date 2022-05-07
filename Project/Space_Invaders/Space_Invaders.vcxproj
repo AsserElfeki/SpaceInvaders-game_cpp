@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -147,7 +147,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AliensMovementHandler.ixx" />
     <ClCompile Include="Bullet.ixx" />
+    <ClCompile Include="CollisionDetector.ixx" />
     <ClCompile Include="Error.ixx" />
     <ClCompile Include="FileHandler.ixx" />
     <ClCompile Include="Game.ixx" />
@@ -157,7 +159,7 @@
     <ClCompile Include="Player.ixx" />
     <ClCompile Include="Credits.ixx" />
     <ClCompile Include="ScoreHandler.ixx" />
-    <ClCompile Include="Ship.ixx" />
+    <ClCompile Include="Alien_Ship.ixx" />
     <ClCompile Include="SpritesManager.ixx" />
   </ItemGroup>
   <ItemGroup>

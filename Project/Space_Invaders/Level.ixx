@@ -4,8 +4,6 @@ module;
 #include <thread>
 #include <chrono>
 
-
-
 export import Ship;
 export import Player; 
 
@@ -21,24 +19,11 @@ private:
 		level4_speed = 300
 	};
 
-	enum levelShipCount {
-		level1_rows = 3,
-		level2_rows = 4,
-		level3_rows = 5
-	};
-
-	enum shipsOnBorder {
-		rightBorder = 3,
-		left_and_upBorder = 0
-	};
-
 	int32_t ScreenWidth;
 	int32_t ScreenHeight;
-	bool last_move_h = true;
-	bool last_move_v = true;
+
 	std::string level_name; 
 	
-
 	std::vector<std::vector<Alien_Ship>> ships;
 
 	std::vector<std::vector<bool>> ships_pos_level_1 =
@@ -181,92 +166,6 @@ public:
 				ship.get_AlienBullets().clear(); 
 	}
 
-	//moving can be in aliensmovementHandler
-	void MoveShips_h(float fElapsedTime, olc::PixelGameEngine* pge, int level) 
-	{
-		int rows;
-		if (level == 1)
-			rows = level1_rows;
-		else if (level == 3)
-			rows = level3_rows;
-		else 
-			rows = level2_rows;
-		
-		if (last_move_h)
-		{
-			for (int i = 0; i < rows; i++)
-			{
-				if (ships[i][rightBorder].get_Pos().x + ships[i][rightBorder].get_Width() >= ScreenWidth - 20)
-				{
-					last_move_h = false;
-					continue;
-				}
-				for (int j = 0; j < 4; j++)	
-					ships[i][j].move_right(fElapsedTime);
-			}
-		}
-
-		if (!last_move_h)
-		{
-			for (int i = 0; i < rows; i++)
-			{
-				if (ships[i][left_and_upBorder].get_Pos().x <= 20)
-				{
-					last_move_h = true;
-					continue;
-				}
-				for (int j = 0; j < 4; j++)
-					ships[i][j].move_left(fElapsedTime);
-			}
-		}
-	}
-
-	void MoveShips_v(float fElapsedTime, olc::PixelGameEngine* pge, int level)
-	{
-		int rows;
-		if (level == 1)
-			rows = level1_rows;
-		else if (level == 3)
-			rows = level3_rows;
-		else
-			rows = level2_rows;
-
-
-		if (last_move_v)
-		{
-			for (int i = 0; i < rows; i++)
-			{
-				for (int j = 0; j < 4; j++)
-				{
-					ships[i][j].move_down(fElapsedTime);
-
-					if (ships[rows-1][j].get_Pos().y + ships[rows-1][j].get_Height() >= ScreenHeight)
-					{
-						last_move_v = false;
-						break;
-					}
-				}	
-			}
-		}
-
-		if (!last_move_v)
-		{
-			for (int i = 0; i < rows; i++)
-			{
-				for (int j = 0; j < 4; j++)
-				{
-					ships[i][j].move_up(fElapsedTime);
-
-					if (ships[left_and_upBorder][j].get_Pos().y <= 50)
-					{
-						last_move_v = true;
-						break;
-					}
-				}
-			}
-		}
-	}
-
 	void LoadLevel(olc::PixelGameEngine* pge, float time) 
 	{
 		// Erase previous frame
@@ -281,6 +180,5 @@ public:
 	}
 
 	std::vector<std::vector<Alien_Ship>>& get_Ships() {return ships;}
-
 
 };

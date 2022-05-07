@@ -14,8 +14,6 @@ private:
 	std::map <std::string, std::unique_ptr <olc::Sprite>> entitySprites_;
 	std::map <std::string, std::unique_ptr <olc::Sprite>> creditsSprites_;
 	
-
-
 	fs::path screens_path = "./sprites/screens/";
 	fs::path entity_path = "./sprites/entity/";
 	fs::path credits_path = "./sprites/credits/";
@@ -47,7 +45,6 @@ public:
 		return creditsSprites_[name];
 	}
 	
-
 	bool checkAllSpritesExist()
 	{
 		fs::path intro = "./sprites/screens/intro.png";

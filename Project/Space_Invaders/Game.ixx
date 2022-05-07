@@ -17,6 +17,7 @@ import Level;
 import Bullet;
 import SpritesManager;
 import ScoreHandler;
+import AliensMovementHandler;
 
 export module Game;
 
@@ -34,7 +35,8 @@ private:
 	std::unique_ptr<Credits> m_credits;
 	std::unique_ptr <Player> m_player;
 	std::list<Bullet> m_bullets;
-	std::unique_ptr<ScoreHandler> scoreHandler; 
+	std::unique_ptr<ScoreHandler> scoreHandler;
+	std::unique_ptr<AliensMovementHandler> aliensMovementHandler;
 
 	//SpritesManager
 	std::unique_ptr<SpriteManager> spritesManager;
@@ -85,6 +87,8 @@ public:
 		scoreHandler = std::make_unique<ScoreHandler>();
 
 		spritesManager = std::make_unique<SpriteManager>();
+
+		aliensMovementHandler = std::make_unique<AliensMovementHandler>();
 
 		//game units
 		m_level1 = std::make_unique<Level>(1, ScreenWidth(), ScreenHeight());
@@ -171,13 +175,11 @@ public:
 		m_player->DrawPlayer(this);
 		drawScore(); 
 
-		level->MoveShips_h(fElapsedTime, this, current_level);
-		level->MoveShips_v(fElapsedTime, this, current_level);
+		aliensMovementHandler->moveShips(fElapsedTime, current_level, level->get_Ships());
+		
 		scoreHandler->increase_Score_With_Time(fElapsedTime);
 
 		drawShips(level);
-
-		auto Itr = m_bullets.begin();
 
 		//collision detection between a player's bullet and alien ship and killing in case of collision
 		playerBulletVsAlien(fElapsedTime, level);
@@ -237,7 +239,6 @@ public:
 			current_state = level;
 		}
 	}
-
 
 	void reloadAllLevels() {
 		m_level1->Create_Ships(1, m_level1->level1_speed);
@@ -512,10 +513,6 @@ public:
 
 		return true;
 	}
-
-	
-	
-
 };
 
 
@@ -526,17 +523,18 @@ public:
 
 //questions: 
 /*
-* 1- it crashes in debug mode !? 
+* 1- it crashes in debug mode !? (bullets iterators) 
 */
-
-
-
 
 //todo:
 /*
-* clean level code 
-* 4th thematic task : ranges in move ships
-* level manager ? 
 * presentation class? 
+*/
+
+//improvements: 
+/*
+* fix bullet and ship sprites
+* level manager ? 
+* collision detector ?
 */
 

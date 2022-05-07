@@ -114,12 +114,6 @@ public:
 		}
 	}
 
-	/*void erase_bullet() {
-		auto Itr = m_alienBullets.begin();
-		m_alienBullets.erase(Itr);
-		Itr++; 
-	}*/
-
 	void move_down(float ElapsedTime) {
 		pos_y += (ElapsedTime * speed) / 10;
 		center_y += (ElapsedTime * speed) / 10;
@@ -130,9 +124,9 @@ public:
 		center_y -= (ElapsedTime * speed) / 10;
 	}
 
-	void set_Ship_Pos(int w, int h)
+	/*void set_Ship_Pos(int w, int h)
 	{
 		pos_x = w;
 		pos_y = h;
-	}
+	}*/
 };

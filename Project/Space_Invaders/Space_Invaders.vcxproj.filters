@@ -24,7 +24,7 @@
     <ClCompile Include="Player.ixx">
       <Filter>Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Ship.ixx">
+    <ClCompile Include="Alien_Ship.ixx">
       <Filter>Modules</Filter>
     </ClCompile>
     <ClCompile Include="Game.ixx">
@@ -50,6 +50,12 @@
     </ClCompile>
     <ClCompile Include="ScoreHandler.ixx">
       <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="AliensMovementHandler.ixx">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionDetector.ixx">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
