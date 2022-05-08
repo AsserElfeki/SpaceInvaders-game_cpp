@@ -14,6 +14,8 @@ private:
 	std::unique_ptr<olc::Sprite> presentation_4;
 	std::unique_ptr<olc::Sprite> presentation_5;
 	std::unique_ptr<olc::Sprite> presentation_6;
+	std::unique_ptr<olc::Sprite> presentation_7;
+	std::unique_ptr<olc::Sprite> presentation_8;
 
 	enum slide {
 		slide1 =1 , slide2, slide3, slide4, slide5, slide6
@@ -30,6 +32,8 @@ public:
 		presentation_4 = std::make_unique<olc::Sprite>("./sprites/presentation/presentation_4.png");
 		presentation_5 = std::make_unique<olc::Sprite>("./sprites/presentation/presentation_5.png");
 		presentation_6 = std::make_unique<olc::Sprite>("./sprites/presentation/presentation_6.png");
+		presentation_7 = std::make_unique<olc::Sprite>("./sprites/presentation/presentation_7.png");
+		presentation_8 = std::make_unique<olc::Sprite>("./sprites/presentation/presentation_8.png");
 	}
 
 	void runPresentation(olc::PixelGameEngine* pge) {
@@ -53,7 +57,13 @@ public:
 		else if (current_slide == 6)
 			pge->DrawSprite(0, 0, presentation_6.get());
 		
-		if (pge->GetKey(olc::Key::RIGHT).bPressed && current_slide < 6)
+		else if (current_slide == 7)
+			pge->DrawSprite(0, 0, presentation_7.get());
+
+		else if (current_slide == 8)
+			pge->DrawSprite(0, 0, presentation_8.get());
+
+		if (pge->GetKey(olc::Key::RIGHT).bPressed && current_slide < 8)
 			current_slide += 1; 
 
 		if (pge->GetKey(olc::Key::LEFT).bPressed && current_slide > 1)

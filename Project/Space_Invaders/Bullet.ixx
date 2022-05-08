@@ -53,11 +53,4 @@ public:
 		pos_y += (time * speed);
 	}
 
-	/*bool checked() {
-		return m_checked; 
-	}
-
-	void set_Checked() {
-		m_checked = true;
-	}*/
 };

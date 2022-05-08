@@ -38,18 +38,6 @@ public:
 		return true;
 	}
 
-	//std::vector<std::vector<bool>> get_level1() {
-	//	return ships_pos_level_1; 
-	//}
-
-	//std::vector<std::vector<bool>> get_level2() {
-	//	return ships_pos_level_2;
-	//}
-
-	//std::vector<std::vector<bool>> get_level3() {
-	//	return ships_pos_level_3;
-	//}
-
 	void set_Scale(int32_t w, int32_t h) 
 	{
 		ScreenWidth = w; 

@@ -21,7 +21,6 @@ public:
 	{
 		player_name = std::string(name.data(), name.size());
 		score = _score;
-		//std::cout << "file handler was created\n";
 	}
 
 

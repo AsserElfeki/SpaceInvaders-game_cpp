@@ -124,9 +124,4 @@ public:
 		center_y -= (ElapsedTime * speed) / 10;
 	}
 
-	/*void set_Ship_Pos(int w, int h)
-	{
-		pos_x = w;
-		pos_y = h;
-	}*/
 };

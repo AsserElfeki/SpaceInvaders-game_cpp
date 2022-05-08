@@ -462,8 +462,12 @@ public:
 
 		else if (current_state == quit)
 		{
-			outputScore = std::make_unique<FileHandler>(player_name, current_score);
-			outputScore->write();
+			if (!writing_score_done)
+			{
+				outputScore = std::make_unique<FileHandler>(player_name, current_score);
+				outputScore->write();
+			}
+			
 			return false;
 		}
 
