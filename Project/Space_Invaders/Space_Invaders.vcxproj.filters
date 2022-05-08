@@ -57,6 +57,18 @@
     <ClCompile Include="Presentation.ixx">
       <Filter>Modules</Filter>
     </ClCompile>
+    <ClCompile Include="LevelOne.ixx">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelTwo.ixx">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelThree.ixx">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelFour.ixx">
+      <Filter>Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="olcPixelGameEngine.h">

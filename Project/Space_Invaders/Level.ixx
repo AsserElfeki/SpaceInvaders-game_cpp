@@ -13,92 +13,18 @@ export class Level {
 	
 protected: 
 
-	/*int speed; 
+	int speed; 
 	int ships_health; 
 	std::string level_name; 
 	int32_t ScreenWidth;
 	int32_t ScreenHeight;
 	std::vector<std::vector<Alien_Ship>> ships;
-	std::vector<std::vector<bool>> ships_positions; */
+	std::vector<std::vector<bool>> ships_positions; 
 
-	enum levelShipsSpeed {
-		level1_speed = 100, 
-		level2_speed = 150,
-		level3_speed = 200,
-		level4_speed = 300
-	};
-
-	int32_t ScreenWidth;
-	int32_t ScreenHeight;
-
-	std::string level_name; 
-	
-	std::vector<std::vector<Alien_Ship>> ships;
-
-	std::vector<std::vector<bool>> ships_pos_level_1 =
-	{
-		{1,1,1,1},
-		{1,1,1,1},
-		{1,1,1,1},
-		{0,0,0,0},
-		{0,0,0,0}
-	};
-
-	std::vector<std::vector<bool>> ships_pos_level_2 =
-	{
-		{1,0,0,1},
-		{0,1,1,0},
-		{0,1,1,0},
-		{1,0,0,1},
-		{0,0,0,0}
-	};
-
-	std::vector<std::vector<bool>> ships_pos_level_3 =
-	{
-		{1,1,1,1},
-		{1,1,1,1},
-		{1,1,1,1},
-		{1,1,1,1},
-		{1,1,1,1}
-	};
-	
-	std::vector<std::vector<bool>> ships_pos_level_4 =
-	{
-		{0,1,1,0},
-		{1,0,0,1},
-		{1,0,0,1},
-		{0,1,1,0},
-		{0,0,0,0}
-	};
 	
 public: 
 
 	Level() {}
-
-	Level(int _level, int32_t w, int32_t h) {
-		set_Scale(w, h);
-
-		if (_level == 1)
-		{
-			level_name = "Level 1";
-			Create_Ships(_level, level1_speed);
-		}
-		else if (_level == 2)
-		{
-			level_name = "Level 2";
-			Create_Ships(_level, level2_speed);
-		}
-		else if (_level == 3)
-		{
-			level_name = "Level 3";
-			Create_Ships(_level, level3_speed);
-		}
-		else
-		{
-			level_name = "Level 4";
-			Create_Ships(_level, level4_speed);
-		}
-	}
 
 	bool is_finished() {
 		for (auto& shiprow : ships)
@@ -130,31 +56,9 @@ public:
 		ScreenHeight = h;
 	}
 
-	void Create_Ships(int level, int _speed) 
+	void Create_Ships() 
 	{
 		ships.clear();
-		int tmp_health;
-		std::vector<std::vector<bool>> booltmp;
-		if (level == 1)
-		{
-			booltmp = ships_pos_level_1;
-			tmp_health = 1;
-		}
-		else if (level == 2)
-		{
-			booltmp = ships_pos_level_2;
-			tmp_health = 2;
-		}
-		else if (level == 3)
-		{
-			booltmp = ships_pos_level_3;
-			tmp_health = 3;
-		}
-		else
-		{
-			booltmp = ships_pos_level_4;
-			tmp_health = 5;
-		}
 
 		for (int i = 0; i < 5; i++) 
 		{
@@ -163,7 +67,7 @@ public:
 			{
 				olc::vf2d tmp_pos = { (float) (j + 1) * (ScreenWidth / 5) ,
 					(float) (i + 1) * (ScreenHeight / 7) };
-				tmp.emplace_back(tmp_pos, ScreenWidth, ScreenHeight, booltmp[i][j], _speed, tmp_health);
+				tmp.emplace_back(tmp_pos, ScreenWidth, ScreenHeight, ships_positions[i][j], speed, ships_health);
 			}
 			ships.push_back(tmp);
 		}

@@ -19,6 +19,7 @@ import SpritesManager;
 import ScoreHandler;
 import AliensMovementHandler;
 import Presentation; 
+import LevelFour; 
 
 export module Game;
 
@@ -29,10 +30,10 @@ private:
 	std::filesystem::path screens_path = "./sprites/screens/";
 
 	//game units
-	std::unique_ptr <Level> m_level1;
-	std::unique_ptr <Level> m_level2;
-	std::unique_ptr <Level> m_level3;
-	std::unique_ptr <Level> m_level4;
+	std::shared_ptr <Level> m_level1;
+	std::shared_ptr <Level> m_level2;
+	std::shared_ptr <Level> m_level3;
+	std::shared_ptr <Level> m_level4;
 	std::unique_ptr<Credits> m_credits;
 	std::unique_ptr <Player> m_player;
 	std::list<Bullet> m_bullets;
@@ -88,22 +89,23 @@ public:
 		*/
 		m_presentation = std::make_unique<Presentation>();
 
-		scoreHandler = std::make_unique<ScoreHandler>();
-
-		spritesManager = std::make_unique<SpriteManager>();
-
-		aliensMovementHandler = std::make_unique<AliensMovementHandler>();
+		
 
 		//game units
-		m_level1 = std::make_unique<Level>(1, ScreenWidth(), ScreenHeight());
-		m_level2 = std::make_unique<Level>(2, ScreenWidth(), ScreenHeight());
-		m_level3 = std::make_unique<Level>(3, ScreenWidth(), ScreenHeight());
-		m_level4 = std::make_unique<Level>(4, ScreenWidth(), ScreenHeight());
+		m_level1 = std::make_shared<LevelOne>(ScreenWidth(), ScreenHeight());
+		m_level2 = std::make_shared<LevelTwo>(ScreenWidth(), ScreenHeight());
+		m_level3 = std::make_shared<LevelThree>(ScreenWidth(), ScreenHeight());
+		m_level4 = std::make_shared<LevelFour>(ScreenWidth(), ScreenHeight());
 
 		m_player = std::make_unique<Player>(ScreenWidth(), ScreenHeight());
 
 		m_credits = std::make_unique<Credits>(ScreenWidth(), ScreenHeight());
 
+		scoreHandler = std::make_unique<ScoreHandler>();
+
+		spritesManager = std::make_unique<SpriteManager>();
+
+		aliensMovementHandler = std::make_unique<AliensMovementHandler>();
 		return true;
 	}
 
@@ -171,7 +173,7 @@ public:
 			play(m_level4, fElapsedTime);
 	}
 
-	void play(std::unique_ptr<Level>& level, float fElapsedTime)
+	void play(std::shared_ptr<Level>& level, float fElapsedTime)
 	{
 		std::future<void> thread1 = std::async(std::launch::async, &SpaceInvaders::handleUserInput, this, fElapsedTime);
 
@@ -211,7 +213,7 @@ public:
 		{
 			scoreHandler->reset_scores();
 			score_was_set = true;
-			m_level1->Create_Ships(1, m_level1->level1_speed);
+			m_level1->Create_Ships();
 			m_player->reload();
 			current_state = level;
 		}
@@ -220,7 +222,7 @@ public:
 		{
 			scoreHandler->set_Score(scoreHandler->lastLevelScore());
 			score_was_set = true;
-			m_level2->Create_Ships(2, m_level1->level2_speed);
+			m_level2->Create_Ships();
 			m_player->reload();
 			current_state = level;
 		}
@@ -229,7 +231,7 @@ public:
 		{
 			scoreHandler->set_Score(scoreHandler->lastLevelScore());
 			score_was_set = true;
-			m_level3->Create_Ships(3, m_level1->level3_speed);
+			m_level3->Create_Ships();
 			m_player->reload();
 			current_state = level;
 		}
@@ -238,17 +240,17 @@ public:
 		{
 			scoreHandler->set_Score(scoreHandler->lastLevelScore());
 			score_was_set = true;
-			m_level4->Create_Ships(4, m_level1->level4_speed);
+			m_level4->Create_Ships();
 			m_player->reload();
 			current_state = level;
 		}
 	}
 
 	void reloadAllLevels() {
-		m_level1->Create_Ships(1, m_level1->level1_speed);
-		m_level2->Create_Ships(2, m_level2->level2_speed);
-		m_level3->Create_Ships(3, m_level3->level3_speed);
-		m_level4->Create_Ships(4, m_level4->level4_speed);
+		m_level1->Create_Ships();
+		m_level2->Create_Ships();
+		m_level3->Create_Ships();
+		m_level4->Create_Ships();
 	}
 
 	void playAgainAfterFinished() {
@@ -287,13 +289,13 @@ public:
 			current_state = pause;
 	}
 
-	void drawShips(std::unique_ptr<Level>& level) {
+	void drawShips(std::shared_ptr<Level>& level) {
 		for (auto& shipsrow : level->get_Ships())
 			for (auto& ship : shipsrow)
 				ship.DrawShip(this);
 	}
 
-	void playerBulletVsAlien(float fElapsedTime, std::unique_ptr<Level>& level)
+	void playerBulletVsAlien(float fElapsedTime, std::shared_ptr<Level>& level)
 	{
 		auto Itr = m_bullets.begin();
 
@@ -348,7 +350,7 @@ public:
 		}
 	}
 
-	void shootAlienBullets(float fElapsedTime, std::unique_ptr<Level>& level)
+	void shootAlienBullets(float fElapsedTime, std::shared_ptr<Level>& level)
 	{
 		//collision detection between player and aliens bullets 
 		for (auto& shipsrow : level->get_Ships())
@@ -362,7 +364,7 @@ public:
 		}
 	}
 
-	void alienShipVsPlayerShip(float fElapsedTime, std::unique_ptr<Level>& level)
+	void alienShipVsPlayerShip(float fElapsedTime, std::shared_ptr<Level>& level)
 	{
 		//collision detection between player and alien itself 
 		for (auto& shipsrow : level->get_Ships())
@@ -400,7 +402,7 @@ public:
 		}
 	}
 
-	void didPlayerWin(std::unique_ptr<Level>& level) {
+	void didPlayerWin(std::shared_ptr<Level>& level) {
 		if (level->is_finished())
 		{
 			m_bullets.clear();

@@ -154,6 +154,10 @@
     <ClCompile Include="Game.ixx" />
     <ClCompile Include="Entity.ixx" />
     <ClCompile Include="Level.ixx" />
+    <ClCompile Include="LevelFour.ixx" />
+    <ClCompile Include="LevelOne.ixx" />
+    <ClCompile Include="LevelThree.ixx" />
+    <ClCompile Include="LevelTwo.ixx" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.ixx" />
     <ClCompile Include="Credits.ixx" />
