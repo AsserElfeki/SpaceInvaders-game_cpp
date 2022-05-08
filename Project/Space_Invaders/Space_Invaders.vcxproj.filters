@@ -69,6 +69,9 @@
     <ClCompile Include="LevelFour.ixx">
       <Filter>Modules</Filter>
     </ClCompile>
+    <ClCompile Include="CollisionDetector.ixx">
+      <Filter>Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="olcPixelGameEngine.h">

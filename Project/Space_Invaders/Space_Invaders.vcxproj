@@ -149,6 +149,7 @@
   <ItemGroup>
     <ClCompile Include="AliensMovementHandler.ixx" />
     <ClCompile Include="Bullet.ixx" />
+    <ClCompile Include="CollisionDetector.ixx" />
     <ClCompile Include="Error.ixx" />
     <ClCompile Include="FileHandler.ixx" />
     <ClCompile Include="Game.ixx" />
