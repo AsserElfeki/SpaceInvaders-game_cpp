@@ -54,8 +54,8 @@
     <ClCompile Include="AliensMovementHandler.ixx">
       <Filter>Modules</Filter>
     </ClCompile>
-    <ClCompile Include="CollisionDetector.ixx">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Presentation.ixx">
+      <Filter>Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

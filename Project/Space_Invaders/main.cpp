@@ -6,24 +6,23 @@ import Level;
 import Ship;
 import Player; 
 import SpritesManager; 
-import Error; 
+import ErrorHandler; 
 
 
 int main()
 {
 	
 
-	SpriteManager obj;
-	if (obj.checkAllSpritesExist())
+	ErrorHandler error;
+	if (error.checkAllSpritesExist())
 	{
 		SpaceInvaders demo;
-		if (demo.Construct(1200, 800, 1, 1, false, true))
+		if (demo.Construct(1200, 800, 1, 1, true, true))
 			demo.Start();
 	}
 
 	else
-	{
-		Error error; 
+	{ 
 		if (error.Construct(600, 200, 1, 1, false, true))
 			error.Start();
 	}

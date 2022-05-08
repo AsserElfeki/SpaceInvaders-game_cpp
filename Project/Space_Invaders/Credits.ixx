@@ -42,6 +42,12 @@ public:
 		}
 		else
 			pge->DrawSprite(pos_x, 0, spritesManager->creditSprite("credits_options").get());
+
+		if (pge->GetKey(olc::Key::UP).bHeld)
+			pos_y -= 10; 
+
+		if (pge->GetKey(olc::Key::DOWN).bHeld)
+			pos_y += 20;
 	}
 
 	void reset() {pos_y = 800;}

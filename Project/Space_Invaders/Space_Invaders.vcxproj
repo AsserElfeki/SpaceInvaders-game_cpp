@@ -149,7 +149,6 @@
   <ItemGroup>
     <ClCompile Include="AliensMovementHandler.ixx" />
     <ClCompile Include="Bullet.ixx" />
-    <ClCompile Include="CollisionDetector.ixx" />
     <ClCompile Include="Error.ixx" />
     <ClCompile Include="FileHandler.ixx" />
     <ClCompile Include="Game.ixx" />
@@ -158,6 +157,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.ixx" />
     <ClCompile Include="Credits.ixx" />
+    <ClCompile Include="Presentation.ixx" />
     <ClCompile Include="ScoreHandler.ixx" />
     <ClCompile Include="Alien_Ship.ixx" />
     <ClCompile Include="SpritesManager.ixx" />

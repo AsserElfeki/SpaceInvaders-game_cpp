@@ -18,6 +18,7 @@ import Bullet;
 import SpritesManager;
 import ScoreHandler;
 import AliensMovementHandler;
+import Presentation; 
 
 export module Game;
 
@@ -37,6 +38,7 @@ private:
 	std::list<Bullet> m_bullets;
 	std::unique_ptr<ScoreHandler> scoreHandler;
 	std::unique_ptr<AliensMovementHandler> aliensMovementHandler;
+	std::unique_ptr<Presentation> m_presentation;
 
 	//SpritesManager
 	std::unique_ptr<SpriteManager> spritesManager;
@@ -56,7 +58,8 @@ private:
 		pause,
 		lost,
 		credits,
-		quit
+		quit,
+		presentation
 	};
 
 	int current_score = 0000;
@@ -83,6 +86,7 @@ public:
 		3- instantiatiing credits obj
 		
 		*/
+		m_presentation = std::make_unique<Presentation>();
 
 		scoreHandler = std::make_unique<ScoreHandler>();
 
@@ -169,7 +173,7 @@ public:
 
 	void play(std::unique_ptr<Level>& level, float fElapsedTime)
 	{
-		std::future<void> thread1 = std::async(std::launch::async, &SpaceInvaders::userInput, this, fElapsedTime);
+		std::future<void> thread1 = std::async(std::launch::async, &SpaceInvaders::handleUserInput, this, fElapsedTime);
 
 		level->LoadLevel(this, fElapsedTime);
 		m_player->DrawPlayer(this);
@@ -185,7 +189,7 @@ public:
 		playerBulletVsAlien(fElapsedTime, level);
 
 		//collision detection between player and aliens bullets 
-		alienBulletVsPlayer(fElapsedTime, level);
+		shootAlienBullets(fElapsedTime, level);
 
 		//collision detection between player and alien itself 
 		alienShipVsPlayerShip(fElapsedTime, level);
@@ -256,7 +260,7 @@ public:
 		current_state = level;
 	}
 
-	void userInput(float fElapsedTime)
+	void handleUserInput(float fElapsedTime)
 	{
 		if (GetKey(olc::Key::LEFT).bHeld)
 			m_player->move_left(fElapsedTime);
@@ -317,7 +321,34 @@ public:
 		}
 	}
 
-	void alienBulletVsPlayer(float fElapsedTime, std::unique_ptr<Level>& level)
+	void alienBulletVsPlayer(Alien_Ship& ship) {
+		auto Itr = ship.get_AlienBullets().begin();
+
+		for (auto A_bullet : ship.get_AlienBullets())
+		{
+			//check hit
+			if (A_bullet.get_Pos().y + 10 >= m_player->get_Pos().y)
+			{
+				if (A_bullet.get_Pos().x >= m_player->get_Pos().x && A_bullet.get_Pos().x <= (m_player->get_Pos().x + m_player->get_Width()))
+				{
+					A_bullet.Kill();
+					ship.get_AlienBullets().erase(Itr);
+					m_player->playerGotHit();
+					scoreHandler->decrease_Score_When_Health_Decreased();
+
+					//check bullet outta screen
+					if (A_bullet.get_Pos().y + 10 >= ScreenHeight())
+					{
+						A_bullet.Kill();
+						ship.get_AlienBullets().erase(Itr);
+					}
+				}
+			}
+			Itr++;
+		}
+	}
+
+	void shootAlienBullets(float fElapsedTime, std::unique_ptr<Level>& level)
 	{
 		//collision detection between player and aliens bullets 
 		for (auto& shipsrow : level->get_Ships())
@@ -326,29 +357,7 @@ public:
 			{
 				ship.shoot(this);
 				ship.move_AlienBullet(fElapsedTime, this);
-				auto ITR = ship.get_AlienBullets().begin();
-				for (auto A_bullet : ship.get_AlienBullets())
-				{
-					//check hit
-					if (A_bullet.get_Pos().y + 10 >= m_player->get_Pos().y)
-					{
-						if (A_bullet.get_Pos().x >= m_player->get_Pos().x && A_bullet.get_Pos().x <= (m_player->get_Pos().x + m_player->get_Width()))
-						{
-							A_bullet.Kill();
-							ship.get_AlienBullets().erase(ITR);
-							m_player->playerGotHit();
-							scoreHandler->decrease_Score_When_Health_Decreased();
-
-							//chech bullet outta screen
-							if (A_bullet.get_Pos().y + 10 >= ScreenHeight())
-							{
-								A_bullet.Kill();
-								ship.get_AlienBullets().erase(ITR);
-							}
-						}
-					}
-					ITR++;
-				}
+				alienBulletVsPlayer(ship);
 			}
 		}
 	}
@@ -416,6 +425,9 @@ public:
 
 			if (GetKey(olc::Key::SPACE).bPressed || GetKey(olc::Key::ENTER).bPressed)
 				current_state = name;
+
+			if (GetKey(olc::Key::P).bPressed)
+				current_state = presentation;
 		}
 
 		else if (current_state == name)
@@ -508,6 +520,15 @@ public:
 			return false;
 		}
 
+		else if (current_state == presentation)
+		{
+			Clear(olc::WHITE);
+			m_presentation->runPresentation(this);
+
+			if (GetKey(olc::Key::ESCAPE).bPressed)
+				current_state = intro; 
+		}
+
 		if (GetKey(olc::Key::Q).bHeld && current_state != name)
 			current_state = quit;
 
@@ -521,10 +542,6 @@ public:
 * bullets and ships cant be in sprite manager
 */
 
-//questions: 
-/*
-* 1- it crashes in debug mode !? (bullets iterators) 
-*/
 
 //todo:
 /*
@@ -532,7 +549,9 @@ public:
 */
 
 //improvements: 
-/*
+/* 
+* level blueprint, and class for each level (cant be done, need a better idea)
+* bullet iterators (crashes in debug mode
 * fix bullet and ship sprites
 * level manager ? 
 * collision detector ?

@@ -11,7 +11,16 @@ export module Level;
 
 export class Level {
 	
-private: 
+protected: 
+
+	/*int speed; 
+	int ships_health; 
+	std::string level_name; 
+	int32_t ScreenWidth;
+	int32_t ScreenHeight;
+	std::vector<std::vector<Alien_Ship>> ships;
+	std::vector<std::vector<bool>> ships_positions; */
+
 	enum levelShipsSpeed {
 		level1_speed = 100, 
 		level2_speed = 150,
