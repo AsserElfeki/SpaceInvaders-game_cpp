@@ -18,21 +18,21 @@ protected:
 public:
 	Entity() {}
 
-	int get_Width() {return element_Width;}
+	int getWidth() {return element_Width;}
 
-	int get_Height() {return element_Height;}
+	int getHeight() {return element_Height;}
 
-	void move_left(float ElapsedTime) {
+	void moveLeft(float ElapsedTime) {
 		pos_x -= (ElapsedTime * speed);
 		center_x -= (ElapsedTime * speed);
 	}
 
-	void move_right(float ElapsedTime) {
+	void moveRight(float ElapsedTime) {
 		pos_x += (ElapsedTime * speed);
 		center_x += (ElapsedTime * speed);
 	}
 
-	olc::vf2d  get_Pos() {
+	olc::vf2d  getPos() {
 		return { pos_x, pos_y };
 	}
 
@@ -40,19 +40,15 @@ public:
 	{
 		health--;
 		if (health == 0)
-			Kill();
+			kill();
 	}
 
-	void Kill()  {
+	void kill()  {
 		exist = false;
 	}
 
-	bool& is_exist() {
+	bool& isExist() {
 		return exist;
-	}
-
-	int get_Health() {
-		return health; 
 	}
 
 };

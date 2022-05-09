@@ -26,7 +26,7 @@ public:
 			{1,1,1,1},
 			{1,1,1,1}
 		};
-		set_Scale(w, h);
-		Create_Ships();
+		setScale(w, h);
+		createShips();
 	}
 };

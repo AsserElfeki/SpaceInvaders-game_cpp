@@ -33,8 +33,8 @@ public:
 
 	void MoveShips_h(float& fElapsedTime, int level, std::vector<std::vector<Alien_Ship>>& ships )
 	{
-		auto moveShipRight = [fElapsedTime](Alien_Ship& ship) {ship.move_right(fElapsedTime); };
-		auto moveShipLeft = [fElapsedTime](Alien_Ship& ship) {ship.move_left(fElapsedTime); };
+		auto moveShipRight = [fElapsedTime](Alien_Ship& ship) {ship.moveRight(fElapsedTime); };
+		auto moveShipLeft = [fElapsedTime](Alien_Ship& ship) {ship.moveLeft(fElapsedTime); };
 
 		levelShipCount rows;
 		if (level == 1)
@@ -50,7 +50,7 @@ public:
 			{
 				std::ranges::for_each(ships[i], moveShipRight);
 
-				if (ships[i][rightBorder].get_Pos().x + ships[i][rightBorder].get_Width() >= 1200 - 20)
+				if (ships[i][rightBorder].getPos().x + ships[i][rightBorder].getWidth() >= 1200 - 20)
 				{
 					last_move_h = false;
 					break;
@@ -64,7 +64,7 @@ public:
 			{
 				std::ranges::for_each(ships[i], moveShipLeft);
 
-				if (ships[i][left_and_upBorder].get_Pos().x <= 20)
+				if (ships[i][left_and_upBorder].getPos().x <= 20)
 				{
 					last_move_h = true;
 					break;
@@ -75,8 +75,8 @@ public:
 
 	void MoveShips_v(float fElapsedTime, int level, std::vector<std::vector<Alien_Ship>>& ships)
 	{
-		auto moveShipUp = [fElapsedTime](Alien_Ship& ship) {ship.move_up(fElapsedTime); };
-		auto moveShipDown = [fElapsedTime](Alien_Ship& ship) {ship.move_down(fElapsedTime); };
+		auto moveShipUp = [fElapsedTime](Alien_Ship& ship) {ship.moveUp(fElapsedTime); };
+		auto moveShipDown = [fElapsedTime](Alien_Ship& ship) {ship.moveDown(fElapsedTime); };
 
 		levelShipCount rows;
 		if (level == 1)
@@ -93,7 +93,7 @@ public:
 			{
 				std::ranges::for_each(ships[i], moveShipDown);
 
-				if (ships[rows - 1][rightBorder].get_Pos().y + ships[rows - 1][rightBorder].get_Height() >= 800)
+				if (ships[rows - 1][rightBorder].getPos().y + ships[rows - 1][rightBorder].getHeight() >= 800)
 				{
 					last_move_v = false;
 					break;
@@ -107,7 +107,7 @@ public:
 			{
 				std::ranges::for_each(ships[i], moveShipUp);
 
-					if (ships[left_and_upBorder][rightBorder].get_Pos().y <= 50)
+					if (ships[left_and_upBorder][rightBorder].getPos().y <= 50)
 					{
 						last_move_v = true;
 						break;

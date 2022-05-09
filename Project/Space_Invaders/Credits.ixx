@@ -27,15 +27,15 @@ public:
 		pos_y = h; 
 	}
 
-	int get_Pos() {return pos_y; }
+	int getPos() {return pos_y; }
 
-	void run_Credits(olc::PixelGameEngine* pge, float time) 
+	void runCredits(olc::PixelGameEngine* pge, float time) 
 	{
 		pge->SetPixelMode(olc::Pixel::ALPHA);
 		pge->DrawSprite(0, 0, spritesManager->creditSprite("background").get());
 	
 
-		if (get_Pos() > - ScreenHeight)
+		if (getPos() > - ScreenHeight)
 		{
 			pos_y -= (time * speed);
 			pge->DrawSprite(pos_x, pos_y, spritesManager->creditSprite("credits").get());

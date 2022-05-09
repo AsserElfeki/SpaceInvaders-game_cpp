@@ -26,25 +26,25 @@ public:
 
 	Level() {}
 
-	bool is_finished() {
+	bool isFinished() {
 		for (auto& shiprow : ships)
 		{
 			for (auto& ship : shiprow)
 			{
-				if ( ship.is_exist() )
+				if ( ship.isExist() )
 					return false; 
 			}
 		}
 		return true;
 	}
 
-	void set_Scale(int32_t w, int32_t h) 
+	void setScale(int32_t w, int32_t h) 
 	{
 		ScreenWidth = w; 
 		ScreenHeight = h;
 	}
 
-	void Create_Ships() 
+	void createShips() 
 	{
 		ships.clear();
 
@@ -64,10 +64,10 @@ public:
 	void clearAlienBullets() {
 		for (auto& shipsrow : ships)
 			for (auto& ship : shipsrow)
-				ship.get_AlienBullets().clear(); 
+				ship.getAlienBullets().clear(); 
 	}
 
-	void LoadLevel(olc::PixelGameEngine* pge, float time) 
+	void loadLevel(olc::PixelGameEngine* pge, float time) 
 	{
 		// Erase previous frame
 		pge->Clear(olc::BLACK);

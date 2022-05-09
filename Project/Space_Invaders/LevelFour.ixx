@@ -29,7 +29,7 @@ public:
 			{0,1,1,0},
 			{0,0,0,0}
 		};
-		set_Scale(w, h);
-		Create_Ships();
+		setScale(w, h);
+		createShips();
 	}
 };

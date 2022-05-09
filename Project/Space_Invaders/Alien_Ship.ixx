@@ -62,34 +62,34 @@ public:
 		exist = _exist;
 	}
 
-	void DrawShip(olc::PixelGameEngine* pge) {
+	void drawShip(olc::PixelGameEngine* pge) {
 
 		if (exist)
 		{
 			if (health == 1)
-				pge->DrawSprite(get_Pos().x, get_Pos().y, alien1Spr.get());
+				pge->DrawSprite(getPos().x, getPos().y, alien1Spr.get());
 			//pge->DrawSprite(get_Pos().x, get_Pos().y, spritesManager->entitySprite("alien_1").get());
 
 			else if (health == 2)
-				pge->DrawSprite(get_Pos().x, get_Pos().y, alien2Spr.get());
+				pge->DrawSprite(getPos().x, getPos().y, alien2Spr.get());
 			//pge->DrawSprite(get_Pos().x, get_Pos().y, spritesManager->entitySprite("alien_2").get());
 
 			else if (health == 3)
-				pge->DrawSprite(get_Pos().x, get_Pos().y, alien3Spr.get());
+				pge->DrawSprite(getPos().x, getPos().y, alien3Spr.get());
 			//pge->DrawSprite(get_Pos().x, get_Pos().y, spritesManager->entitySprite("alien_3").get());
 
 			else
-				pge->DrawSprite(get_Pos().x, get_Pos().y, alienBossSpr.get());
+				pge->DrawSprite(getPos().x, getPos().y, alienBossSpr.get());
 			//pge->DrawSprite(get_Pos().x, get_Pos().y, spritesManager->entitySprite("boss").get());
 
 		}
 	}
 
-	olc::vf2d get_Center() {
+	olc::vf2d getCenter() {
 		return { center_x, center_y };
 	}
 
-	std::list<Bullet>& get_AlienBullets() {
+	std::list<Bullet>& getAlienBullets() {
 		return m_alienBullets; 
 	}
 
@@ -100,26 +100,26 @@ public:
 			unsigned int seed = std::chrono::system_clock::now().time_since_epoch().count();
 			std::mt19937 generator(seed); 
 			if (generator() < generator.min()+ (50000 * speed) )
-				m_alienBullets.emplace_back(pge, this->get_Pos().x + this->get_Width()/2, this->get_Pos().y + this->get_Height());
+				m_alienBullets.emplace_back(pge, this->getPos().x + this->getWidth()/2, this->getPos().y + this->getHeight());
 		}
 	}
 
-	void move_AlienBullet(float time, olc::PixelGameEngine* pge)
+	void moveAlienBullet(float time, olc::PixelGameEngine* pge)
 	{
 		for (auto& bullet : m_alienBullets)
 		{
-			bullet.move_AlienBullet(time, pge);
-			if (bullet.get_Pos().y >= ScreenHeight - 20)
+			bullet.moveAlienBullet(time, pge);
+			if (bullet.getPos().y >= ScreenHeight - 20)
 				m_alienBullets.pop_front();
 		}
 	}
 
-	void move_down(float ElapsedTime) {
+	void moveDown(float ElapsedTime) {
 		pos_y += (ElapsedTime * speed) / 10;
 		center_y += (ElapsedTime * speed) / 10;
 	}
 
-	void move_up(float ElapsedTime) {
+	void moveUp(float ElapsedTime) {
 		pos_y -= (ElapsedTime * speed) / 10;
 		center_y -= (ElapsedTime * speed) / 10;
 	}

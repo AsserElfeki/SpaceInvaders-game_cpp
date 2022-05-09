@@ -115,13 +115,13 @@ public:
 	{
 		std::future<void> thread1 = std::async(std::launch::async, &SpaceInvaders::handleUserInput, this, fElapsedTime);
 
-		level->LoadLevel(this, fElapsedTime);
-		m_player->DrawPlayer(this);
+		level->loadLevel(this, fElapsedTime);
+		m_player->drawPlayer(this);
 		drawScore();
 
 		aliensMovementHandler->moveShips(fElapsedTime, current_level, level->get_Ships());
 
-		scoreHandler->increase_Score_With_Time(fElapsedTime);
+		scoreHandler->increaseScoreWithTime(fElapsedTime);
 
 		drawShips(level);
 
@@ -147,7 +147,7 @@ public:
 		//if all aliens are dead : go to next level
 		didPlayerWin(level);
 
-		current_score = scoreHandler->get_Score();
+		current_score = scoreHandler->getScore();
 	}
 
 
@@ -158,21 +158,21 @@ public:
 	void handleUserInput(float fElapsedTime)
 	{
 		if (GetKey(olc::Key::LEFT).bHeld)
-			m_player->move_left(fElapsedTime);
+			m_player->moveLeft(fElapsedTime);
 
 		if (GetKey(olc::Key::RIGHT).bHeld)
-			m_player->move_right(fElapsedTime);
+			m_player->moveRight(fElapsedTime);
 
-		if (m_player->get_Pos().x < 11)
-			m_player->Pos_left();
+		if (m_player->getPos().x < 11)
+			m_player->maxPosLeft();
 
-		if ((m_player->get_Pos().x + m_player->get_Width()) > (ScreenWidth() - 11))
-			m_player->Pos_right();
+		if ((m_player->getPos().x + m_player->getWidth()) > (ScreenWidth() - 11))
+			m_player->maxPosRight();
 
 		if (GetKey(olc::Key::SPACE).bHeld)
 		{
-			if (m_player->is_exist())
-				m_bullets.emplace_back(this, m_player->get_Pos().x + m_player->get_Width() / 2, m_player->get_Pos().y);
+			if (m_player->isExist())
+				m_bullets.emplace_back(this, m_player->getPos().x + m_player->getWidth() / 2, m_player->getPos().y);
 		}
 
 		if (GetKey(olc::Key::Q).bHeld)
@@ -185,7 +185,7 @@ public:
 	void drawShips(std::shared_ptr<Level>& level) {
 		for (auto& shipsrow : level->get_Ships())
 			for (auto& ship : shipsrow)
-				ship.DrawShip(this);
+				ship.drawShip(this);
 	}
 	
 	void shootAlienBullets(float fElapsedTime, std::shared_ptr<Level>& level)
@@ -195,7 +195,7 @@ public:
 			for (auto& ship : shipsrow)
 			{
 				ship.shoot(this);
-				ship.move_AlienBullet(fElapsedTime, this);
+				ship.moveAlienBullet(fElapsedTime, this);
 			}
 		}
 	}
@@ -207,16 +207,16 @@ public:
 	void checkPlayerBulletsOutScreen() {
 		for (auto& bullet : m_bullets)
 		{
-			if (bullet.get_Pos().y < 60)
+			if (bullet.getPos().y < 60)
 			{
-				bullet.Kill();
+				bullet.kill();
 				m_bullets.pop_front();
 			}
 		}
 	}
 
 	void didPlayerLose() {
-		if (!m_player->is_exist())
+		if (!m_player->isExist())
 		{
 			m_bullets.clear();
 			current_state = lost;
@@ -224,11 +224,11 @@ public:
 	}
 
 	void didPlayerWin(std::shared_ptr<Level>& level) {
-		if (level->is_finished())
+		if (level->isFinished())
 		{
 			m_bullets.clear();
 			level->clearAlienBullets();
-			m_player->set_Player_Pos(ScreenWidth(), ScreenHeight());
+			m_player->setPlayerPos(ScreenWidth(), ScreenHeight());
 			current_state = won;
 		}
 	}
@@ -236,43 +236,43 @@ public:
 	void playAgainAfterLoss() {
 		if (current_level == 1)
 		{
-			scoreHandler->reset_scores();
+			scoreHandler->resetScores();
 			score_was_set = true;
-			m_level1->Create_Ships();
+			m_level1->createShips();
 			m_player->reload();
 			current_state = level;
 		}
 
 		else if (current_level == 2)
 		{
-			scoreHandler->set_Score(scoreHandler->lastLevelScore());
+			scoreHandler->setScore(scoreHandler->lastLevelScore());
 			score_was_set = true;
-			m_level2->Create_Ships();
+			m_level2->createShips();
 			m_player->reload();
 			current_state = level;
 		}
 
 		else if (current_level == 3)
 		{
-			scoreHandler->set_Score(scoreHandler->lastLevelScore());
+			scoreHandler->setScore(scoreHandler->lastLevelScore());
 			score_was_set = true;
-			m_level3->Create_Ships();
+			m_level3->createShips();
 			m_player->reload();
 			current_state = level;
 		}
 
 		else
 		{
-			scoreHandler->set_Score(scoreHandler->lastLevelScore());
+			scoreHandler->setScore(scoreHandler->lastLevelScore());
 			score_was_set = true;
-			m_level4->Create_Ships();
+			m_level4->createShips();
 			m_player->reload();
 			current_state = level;
 		}
 	}
 
 	void playAgainAfterFinished() {
-		scoreHandler->reset_scores();
+		scoreHandler->resetScores();
 		reloadAllLevels();
 		m_player->reload();
 		m_credits->reset();
@@ -281,10 +281,10 @@ public:
 	}
 
 	void reloadAllLevels() {
-		m_level1->Create_Ships();
-		m_level2->Create_Ships();
-		m_level3->Create_Ships();
-		m_level4->Create_Ships();
+		m_level1->createShips();
+		m_level2->createShips();
+		m_level3->createShips();
+		m_level4->createShips();
 	}
 
 
@@ -405,7 +405,7 @@ public:
 			{
 				Clear(olc::WHITE);
 				DrawSprite(0, 0, spritesManager->screenSprite("won").get());
-				scoreHandler->setLastLevelScore(scoreHandler->get_Score());
+				scoreHandler->setLastLevelScore(scoreHandler->getScore());
 				if (GetKey(olc::Key::ENTER).bPressed)
 				{
 					current_level += 1;
@@ -421,7 +421,7 @@ public:
 		{
 			Clear(olc::WHITE);
 			DrawSprite(0, 0, spritesManager->screenSprite("lost").get());
-			scoreHandler->set_Score(scoreHandler->lastLevelScore());
+			scoreHandler->setScore(scoreHandler->lastLevelScore());
 			if (GetKey(olc::Key::ENTER).bPressed)
 				playAgainAfterLoss();
 		}
@@ -429,7 +429,7 @@ public:
 		else if (current_state == credits)
 		{
 			Clear(olc::BLACK);
-			m_credits->run_Credits(this, fElapsedTime);
+			m_credits->runCredits(this, fElapsedTime);
 
 			if (!writing_score_done)
 			{
@@ -445,7 +445,7 @@ public:
 			{
 				Clear(olc::BLACK);
 				m_credits->reset();
-				m_credits->run_Credits(this, fElapsedTime);
+				m_credits->runCredits(this, fElapsedTime);
 			}
 		}
 
@@ -491,7 +491,7 @@ public:
 //improvements: 
 /* 
 * 
-* bullet iterators (crashes in debug mode
+* bullet iterators 
 * fix bullet and ship sprites to be in sprites manager
 * 
 */
