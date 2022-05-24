@@ -21,9 +21,7 @@ private:
 
 public: 
 
-	CollisionDetectionHandler() {
-
-	}
+	CollisionDetectionHandler() {}
 
 	void playerBulletVsAlien(float fElapsedTime, std::shared_ptr<Level>& level, std::unique_ptr<Player>& m_player, std::unique_ptr<ScoreHandler>& scoreHandler, std::list<Bullet>& m_bullets, olc::PixelGameEngine* pge)
 	{
@@ -36,7 +34,8 @@ public:
 			for (int i = 0; i < 5; i++)
 				for (int j = 0; j < 4; j++)
 				{
-					if (level->get_Ships()[i][j].isExist()) //circle collision
+					
+					if (bullet.getPos().y > 0 && level->get_Ships()[i][j].isExist()) //circle collision
 						if (((level->get_Ships()[i][j].getCenter().x - bullet.getPos().x) *
 							(level->get_Ships()[i][j].getCenter().x - bullet.getPos().x)) +
 							((level->get_Ships()[i][j].getCenter().y - bullet.getPos().y) *
@@ -65,7 +64,7 @@ public:
 				for (auto A_bullet : ship.getAlienBullets())
 				{
 					//check hit
-					if (A_bullet.getPos().y + 10 >= m_player->getPos().y)
+					if (A_bullet.getPos().y < ScreenHeight && A_bullet.getPos().y + 10 >= m_player->getPos().y)
 					{
 						if (A_bullet.getPos().x >= m_player->getPos().x && A_bullet.getPos().x <= (m_player->getPos().x + m_player->getWidth()))
 						{
@@ -78,7 +77,7 @@ public:
 							if (A_bullet.getPos().y + 10 >= ScreenHeight)
 							{
 								A_bullet.kill();
-								ship.getAlienBullets().erase(Itr);
+								//ship.getAlienBullets().erase(Itr);
 							}
 						}
 					}

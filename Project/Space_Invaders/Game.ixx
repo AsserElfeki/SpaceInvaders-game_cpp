@@ -7,10 +7,6 @@ module;
 #include <chrono>
 
 
-//using namespace std::this_thread;     // sleep_for, sleep_until
-//using namespace std::chrono_literals; // ns, us, ms, s, h, etc.
-//using std::chrono::system_clock;
-
 import FileHandler;
 import Credits;
 import Level;
@@ -27,9 +23,6 @@ export module Game;
 export class SpaceInvaders : public olc::PixelGameEngine
 {
 private:
-	//paths
-	std::filesystem::path screens_path = "./sprites/screens/";
-
 	//game units
 	std::shared_ptr <Level> m_level1;
 	std::shared_ptr <Level> m_level2;
@@ -116,7 +109,11 @@ public:
 		std::future<void> thread1 = std::async(std::launch::async, &SpaceInvaders::handleUserInput, this, fElapsedTime);
 
 		level->loadLevel(this, fElapsedTime);
+		
 		m_player->drawPlayer(this);
+
+		drawPlayerBullets();
+
 		drawScore();
 
 		aliensMovementHandler->moveShips(fElapsedTime, current_level, level->get_Ships());
@@ -125,12 +122,12 @@ public:
 
 		drawShips(level);
 
-
 		shootAlienBullets(fElapsedTime, level);
+
+		drawAlienBullets(level);
 
 		//collision detection between a player's bullet and alien ship and killing in case of collision
 		collisionDetector->playerBulletVsAlien(fElapsedTime, level, m_player, scoreHandler,m_bullets, this);
-
 
 		//collision detection between player and aliens bullets 
 		collisionDetector->alienBulletVsPlayer(level, m_player, scoreHandler);
@@ -142,7 +139,7 @@ public:
 		checkPlayerBulletsOutScreen();
 
 		//check player lost
-		didPlayerLose();
+		didPlayerLose(level);
 
 		//if all aliens are dead : go to next level
 		didPlayerWin(level);
@@ -169,10 +166,10 @@ public:
 		if ((m_player->getPos().x + m_player->getWidth()) > (ScreenWidth() - 11))
 			m_player->maxPosRight();
 
-		if (GetKey(olc::Key::SPACE).bHeld)
+		if (GetKey(olc::Key::SPACE).bPressed)
 		{
 			if (m_player->isExist())
-				m_bullets.emplace_back(this, m_player->getPos().x + m_player->getWidth() / 2, m_player->getPos().y);
+				m_bullets.emplace_back(this, m_player->getPos().x + (m_player->getWidth() / 2) -4, m_player->getPos().y);
 		}
 
 		if (GetKey(olc::Key::Q).bHeld)
@@ -185,7 +182,22 @@ public:
 	void drawShips(std::shared_ptr<Level>& level) {
 		for (auto& shipsrow : level->get_Ships())
 			for (auto& ship : shipsrow)
-				ship.drawShip(this);
+			{
+				if (ship.isExist())
+				{
+					if (ship.getHealth() == 1)
+						DrawSprite(ship.getPos().x, ship.getPos().y, spritesManager->entitySprite("alien_1").get());
+
+					else if (ship.getHealth() == 2)
+						DrawSprite(ship.getPos().x, ship.getPos().y, spritesManager->entitySprite("alien_2").get());
+
+					else if (ship.getHealth() == 3)
+						DrawSprite(ship.getPos().x, ship.getPos().y, spritesManager->entitySprite("alien_3").get());
+
+					else
+						DrawSprite(ship.getPos().x, ship.getPos().y, spritesManager->entitySprite("boss").get());
+				}
+			}
 	}
 	
 	void shootAlienBullets(float fElapsedTime, std::shared_ptr<Level>& level)
@@ -197,6 +209,29 @@ public:
 				ship.shoot(this);
 				ship.moveAlienBullet(fElapsedTime, this);
 			}
+		}
+	}
+
+	void drawAlienBullets(std::shared_ptr<Level>& level) {
+		for (auto& shipsrow : level->get_Ships())
+		{
+			for (auto& ship : shipsrow)
+			{
+				if (ship.isExist())
+					for (auto& bullet : ship.getAlienBullets())
+						if (bullet.isExist())
+							DrawSprite(bullet.getPos().x, bullet.getPos().y, spritesManager->entitySprite("bullet").get());
+						//bullet.drawSelf(this);
+			}
+		}
+	}
+
+	void drawPlayerBullets()
+	{
+		for (auto& bullet : m_bullets)
+		{
+			if (bullet.isExist())
+				DrawSprite(bullet.getPos().x, bullet.getPos().y, spritesManager->entitySprite("bullet").get());
 		}
 	}
 
@@ -215,10 +250,11 @@ public:
 		}
 	}
 
-	void didPlayerLose() {
+	void didPlayerLose(std::shared_ptr<Level>& level) {
 		if (!m_player->isExist())
 		{
 			m_bullets.clear();
+			level->clearAlienBullets();
 			current_state = lost;
 		}
 	}
@@ -490,9 +526,7 @@ public:
 
 //improvements: 
 /* 
-* 
-* bullet iterators 
-* fix bullet and ship sprites to be in sprites manager
-* 
+* 1- level reading frpm a file 
+* bullet iterators (not the problem it seems) 
 */
 

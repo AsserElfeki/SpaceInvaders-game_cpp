@@ -10,34 +10,15 @@ export module Ship;
  
 export class Alien_Ship : public Entity
 {
-
 private: 
-	//paths
-	std::filesystem::path entity_path = "./sprites/entity/";
-
-
 	std::list<Bullet> m_alienBullets;
-	std::shared_ptr<olc::Sprite> alien1Spr; //60 * 50
-	std::shared_ptr<olc::Sprite> alien2Spr; //60 * 50
-	std::shared_ptr<olc::Sprite> alien3Spr; //60 * 50
-	std::shared_ptr<olc::Sprite> alienBossSpr; //100 * 100
-
-	//std::unique_ptr<SpriteManager> spritesManager; 
-
+	
 public: 
 
 	Alien_Ship() = delete; 
 
 	Alien_Ship(olc::vi2d pos, int w, int h, bool _exist, float _speed, int _health) 
 	{
-		//spritesManager = std::make_unique<SpriteManager>();
-
-
-		alien1Spr = std::make_shared<olc::Sprite>(entity_path.string() + "alien_1.png");
-		alien2Spr = std::make_shared<olc::Sprite>(entity_path.string() + "alien_2.png");
-		alien3Spr = std::make_shared<olc::Sprite>(entity_path.string() + "alien_3.png");
-		alienBossSpr = std::make_shared<olc::Sprite>(entity_path.string() + "boss.png");
-
 		ScreenWidth = w;
 		ScreenHeight = h;
 		
@@ -60,29 +41,6 @@ public:
 		center_y = (pos_y + element_Height / 2);
 
 		exist = _exist;
-	}
-
-	void drawShip(olc::PixelGameEngine* pge) {
-
-		if (exist)
-		{
-			if (health == 1)
-				pge->DrawSprite(getPos().x, getPos().y, alien1Spr.get());
-			//pge->DrawSprite(get_Pos().x, get_Pos().y, spritesManager->entitySprite("alien_1").get());
-
-			else if (health == 2)
-				pge->DrawSprite(getPos().x, getPos().y, alien2Spr.get());
-			//pge->DrawSprite(get_Pos().x, get_Pos().y, spritesManager->entitySprite("alien_2").get());
-
-			else if (health == 3)
-				pge->DrawSprite(getPos().x, getPos().y, alien3Spr.get());
-			//pge->DrawSprite(get_Pos().x, get_Pos().y, spritesManager->entitySprite("alien_3").get());
-
-			else
-				pge->DrawSprite(getPos().x, getPos().y, alienBossSpr.get());
-			//pge->DrawSprite(get_Pos().x, get_Pos().y, spritesManager->entitySprite("boss").get());
-
-		}
 	}
 
 	olc::vf2d getCenter() {

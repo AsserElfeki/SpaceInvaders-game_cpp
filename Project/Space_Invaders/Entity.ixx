@@ -51,5 +51,6 @@ public:
 		return exist;
 	}
 
+	int& getHealth() { return health; }
 };
 
