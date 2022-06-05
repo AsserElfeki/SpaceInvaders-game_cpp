@@ -96,10 +96,6 @@ public:
 	void play(Level& level, float fElapsedTime)
 	{
 		std::future<void> thread1 = std::async(std::launch::async, &SpaceInvaders::handleUserInput, this, fElapsedTime);
-
-		level.loadLevel(this, fElapsedTime);
-		
-		//m_player->drawPlayer(this);
 	
 		renderer.drawLevel(level, m_bullets, current_score, spritesManager, m_player , this);
 
@@ -109,15 +105,7 @@ public:
 
 		shootAlienBullets(fElapsedTime, level);
 
-
-		//collision detection between a player's bullet and alien ship and killing in case of collision
 		collisionDetector->detectAllCollisions(fElapsedTime, level, m_player, scoreHandler,m_bullets);
-
-		////collision detection between player and aliens bullets 
-		//collisionDetector->alienBulletVsPlayer(level, m_player, scoreHandler);
-
-		////collision detection between player and alien itself 
-		//collisionDetector->alienShipVsPlayerShip(level, m_player, scoreHandler);
 
 		//if player bullet goes out of screen
 		checkPlayerBulletsOutScreen();

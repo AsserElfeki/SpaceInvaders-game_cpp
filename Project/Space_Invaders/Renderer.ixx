@@ -11,9 +11,22 @@ export module Renderer;
 export class Renderer {
 
 private: 
-	double screenWidth = 1200;
-	double screenHeight = 800; 
+	int32_t screenWidth = 1200;
+	int32_t screenHeight = 800;
 public: 
+
+	void drawLevelBoundary(Level& level, olc::PixelGameEngine* pge)
+	{
+		// Erase previous frame
+		pge->Clear(olc::BLACK);
+
+		/*Boundaries*/
+		pge->DrawLine(10, 50, screenWidth - 10, 50, olc::BLUE); //upper HZ line
+		pge->DrawLine(10, 50, 10, screenHeight - 10, olc::BLUE); // left V line 
+		pge->DrawLine(screenWidth - 10, 50, screenWidth - 10, screenHeight - 10, olc::BLUE); // right V line 		
+
+		pge->DrawString(10, 20, level.getName(), olc::WHITE, 2);
+	}
 
 	void drawPlayerAndHealth(std::shared_ptr<Player> player, std::shared_ptr<SpriteManager>& spritesManager, olc::PixelGameEngine* pge)
 	{
@@ -96,6 +109,7 @@ public:
 		int& current_score, std::shared_ptr<SpriteManager>& spritesManager, 
 		std::shared_ptr<Player> player, olc::PixelGameEngine* pge) {
 		
+		drawLevelBoundary(level, pge);
 		drawPlayerBullets(bullets, spritesManager, pge);
 		drawShips(level, spritesManager, pge);
 		drawAlienBullets(level, spritesManager, pge);

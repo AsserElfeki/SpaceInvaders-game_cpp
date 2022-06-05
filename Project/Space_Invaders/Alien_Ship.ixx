@@ -17,10 +17,8 @@ public:
 
 	Alien_Ship() = delete; 
 
-	Alien_Ship(olc::vi2d pos, int w, int h, bool _exist, float _speed, int _health) 
+	Alien_Ship(olc::vi2d pos, bool _exist, float _speed, int _health) 
 	{
-		ScreenWidth = w;
-		ScreenHeight = h;
 		
 		health = _health;
 		if (_health > 3)
@@ -67,7 +65,7 @@ public:
 		for (auto& bullet : m_alienBullets)
 		{
 			bullet.moveAlienBullet(time);
-			if (bullet.getPos().y >= ScreenHeight - 20)
+			if (bullet.getPos().y >= screenHeight - 20)
 				m_alienBullets.pop_front();
 		}
 	}

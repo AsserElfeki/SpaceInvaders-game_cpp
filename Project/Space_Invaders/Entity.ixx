@@ -10,9 +10,10 @@ export class Entity {
 
 protected:
 	int element_Width, element_Height,
-		 ScreenWidth, ScreenHeight,
 		speed, health;
 	float  pos_x, pos_y, center_x, center_y ;
+	int32_t screenWidth = 1200;
+	int32_t screenHeight = 800;
 	bool exist;
 
 public:
