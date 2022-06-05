@@ -16,14 +16,28 @@ export module CollisionDetectionHandler;
 export class CollisionDetectionHandler {
 
 private: 
+
+	enum shipsOnBorder {
+		rightBorder = 3,
+		left_and_upBorder = 0
+	};
+	const int num_of_rows = 5;
+	const int num_of_cols = 4;
+
 	float ScreenHeight = 800;
 	float ScreenWidth = 1200;
+	//constexpr int shipsinrow = 5;
 
 public: 
 
 	CollisionDetectionHandler() {}
 
-	void playerBulletVsAlien(float fElapsedTime, std::shared_ptr<Level>& level, std::unique_ptr<Player>& m_player, std::unique_ptr<ScoreHandler>& scoreHandler, std::list<Bullet>& m_bullets, olc::PixelGameEngine* pge)
+	void playerBulletVsAlien(float fElapsedTime, 
+								Level& level,
+								std::unique_ptr<Player>& m_player,
+								std::unique_ptr<ScoreHandler>& scoreHandler,
+								std::list<Bullet>& m_bullets, 
+								olc::PixelGameEngine* pge)
 	{
 
 		auto Itr = m_bullets.begin();
@@ -31,20 +45,20 @@ public:
 		for (auto& bullet : m_bullets)
 		{
 			bullet.movePlayerBullet(fElapsedTime, pge);
-			for (int i = 0; i < 5; i++)
-				for (int j = 0; j < 4; j++)
+			for (int i = 0; i < num_of_rows; i++)
+				for (int j = 0; j < num_of_cols; j++)
 				{
 					
-					if (bullet.getPos().y > 0 && level->get_Ships()[i][j].isExist()) //circle collision
-						if (((level->get_Ships()[i][j].getCenter().x - bullet.getPos().x) *
-							(level->get_Ships()[i][j].getCenter().x - bullet.getPos().x)) +
-							((level->get_Ships()[i][j].getCenter().y - bullet.getPos().y) *
-								(level->get_Ships()[i][j].getCenter().y - bullet.getPos().y)) <=
-							level->get_Ships()[i][j].getWidth() / 2 * level->get_Ships()[i][j].getWidth() / 2)
+					if (bullet.getPos().y > 0 && level.get_Ships()[i][j].isExist()) //circle collision
+						if (((level.get_Ships()[i][j].getCenter().x - bullet.getPos().x) *
+							(level.get_Ships()[i][j].getCenter().x - bullet.getPos().x)) +
+							((level.get_Ships()[i][j].getCenter().y - bullet.getPos().y) *
+								(level.get_Ships()[i][j].getCenter().y - bullet.getPos().y)) <=
+							level.get_Ships()[i][j].getWidth() / 2 * level.get_Ships()[i][j].getWidth() / 2)
 						{
 							bullet.kill();
 							m_bullets.erase(Itr);
-							level->get_Ships()[i][j].gotHit();
+							level.get_Ships()[i][j].gotHit();
 							scoreHandler->increaseScoreWhenHitAlien();
 						}
 				}
@@ -52,14 +66,19 @@ public:
 		}
 	}
 
-	void alienBulletVsPlayer(std::shared_ptr<Level>& level, std::unique_ptr<Player>& m_player, std::unique_ptr <ScoreHandler>& scoreHandler)
+	void alienBulletVsPlayer(Level& level, std::unique_ptr<Player>& m_player, std::unique_ptr <ScoreHandler>& scoreHandler)
 	{
-
-		for (auto& shipsrow : level->get_Ships())
+		//vector of bullets
+		//Vector<Bullet> bullets;
+		for (auto& shipsrow : level.get_Ships())
 		{
 			for (auto& ship : shipsrow)
 			{
 				auto Itr = ship.getAlienBullets().begin();
+				//bullets.insert(ship.getAlienBullets().begin(), ship.getAlienBullets().end());
+			
+		//}//center for plaeyer and circle collisions 
+
 
 				for (auto A_bullet : ship.getAlienBullets())
 				{
@@ -89,10 +108,12 @@ public:
 		
 	}
 
-	void alienShipVsPlayerShip(std::shared_ptr<Level>& level, std::unique_ptr<Player>& m_player, std::unique_ptr<ScoreHandler>& scoreHandler)
+	void alienShipVsPlayerShip(Level& level,
+								std::unique_ptr<Player>& m_player, 
+								std::unique_ptr<ScoreHandler>& scoreHandler)
 	{
 		//collision detection between player and alien itself
-		for (auto& shipsrow : level->get_Ships())
+		for (auto& shipsrow : level.get_Ships())
 		{
 			for (auto& ship : shipsrow)
 			{

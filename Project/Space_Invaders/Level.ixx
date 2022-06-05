@@ -16,8 +16,8 @@ protected:
 	int speed; 
 	int ships_health; 
 	std::string level_name; 
-	int32_t ScreenWidth;
-	int32_t ScreenHeight;
+	int32_t ScreenWidth = 1200;
+	int32_t ScreenHeight = 800 ;
 	std::vector<std::vector<Alien_Ship>> ships;
 	std::vector<std::vector<bool>> ships_positions; 
 
@@ -25,6 +25,13 @@ protected:
 public: 
 
 	Level() {}
+	Level(int _speed, int _ships_health, std::vector<std::vector<bool>> _ships_positions)
+	{
+		speed = _speed;
+		ships_health = _ships_health;
+		ships_positions = _ships_positions; 
+		createShips();
+	}
 
 	bool isFinished() {
 		for (auto& shiprow : ships)
@@ -46,7 +53,7 @@ public:
 
 	void createShips() 
 	{
-		ships.clear();
+ 		ships.clear();
 
 		for (int i = 0; i < 5; i++) 
 		{

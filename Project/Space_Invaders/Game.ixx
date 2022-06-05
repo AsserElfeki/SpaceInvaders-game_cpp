@@ -15,8 +15,8 @@ import SpritesManager;
 import ScoreHandler;
 import AliensMovementHandler;
 import Presentation; 
-import LevelFour; 
 import CollisionDetectionHandler;
+import LevelManager;
 
 export module Game;
 
@@ -24,10 +24,8 @@ export class SpaceInvaders : public olc::PixelGameEngine
 {
 private:
 	//game units
-	std::shared_ptr <Level> m_level1;
-	std::shared_ptr <Level> m_level2;
-	std::shared_ptr <Level> m_level3;
-	std::shared_ptr <Level> m_level4;
+	LevelManager levelManager; 
+
 	std::unique_ptr <Credits> m_credits;
 	std::unique_ptr <Player> m_player;
 	std::unique_ptr <CollisionDetectionHandler> collisionDetector;
@@ -80,10 +78,7 @@ public:
 		m_presentation = std::make_unique<Presentation>(); //just for presentation in the lab
 
 		//game units
-		m_level1 = std::make_shared<LevelOne>(ScreenWidth(), ScreenHeight());
-		m_level2 = std::make_shared<LevelTwo>(ScreenWidth(), ScreenHeight());
-		m_level3 = std::make_shared<LevelThree>(ScreenWidth(), ScreenHeight());
-		m_level4 = std::make_shared<LevelFour>(ScreenWidth(), ScreenHeight());
+		
 
 		m_player = std::make_unique<Player>(ScreenWidth(), ScreenHeight());
 
@@ -104,11 +99,11 @@ public:
 	*                      GamePlay Function
 	*****************************************************************/
 
-	void play(std::shared_ptr<Level>& level, float fElapsedTime)
+	void play(Level& level, float fElapsedTime)
 	{
 		std::future<void> thread1 = std::async(std::launch::async, &SpaceInvaders::handleUserInput, this, fElapsedTime);
 
-		level->loadLevel(this, fElapsedTime);
+		level.loadLevel(this, fElapsedTime);
 		
 		m_player->drawPlayer(this);
 
@@ -116,7 +111,7 @@ public:
 
 		drawScore();
 
-		aliensMovementHandler->moveShips(fElapsedTime, current_level, level->get_Ships());
+		aliensMovementHandler->moveShips(fElapsedTime, current_level, level.get_Ships());
 
 		scoreHandler->increaseScoreWithTime(fElapsedTime);
 
@@ -179,8 +174,8 @@ public:
 			current_state = pause;
 	}
 	
-	void drawShips(std::shared_ptr<Level>& level) {
-		for (auto& shipsrow : level->get_Ships())
+	void drawShips(Level& level) {
+		for (auto& shipsrow : level.get_Ships())
 			for (auto& ship : shipsrow)
 			{
 				if (ship.isExist())
@@ -200,9 +195,9 @@ public:
 			}
 	}
 	
-	void shootAlienBullets(float fElapsedTime, std::shared_ptr<Level>& level)
+	void shootAlienBullets(float fElapsedTime, Level& level)
 	{
-		for (auto& shipsrow : level->get_Ships())
+		for (auto& shipsrow : level.get_Ships())
 		{
 			for (auto& ship : shipsrow)
 			{
@@ -212,8 +207,8 @@ public:
 		}
 	}
 
-	void drawAlienBullets(std::shared_ptr<Level>& level) {
-		for (auto& shipsrow : level->get_Ships())
+	void drawAlienBullets(Level& level) {
+		for (auto& shipsrow : level.get_Ships())
 		{
 			for (auto& ship : shipsrow)
 			{
@@ -250,20 +245,20 @@ public:
 		}
 	}
 
-	void didPlayerLose(std::shared_ptr<Level>& level) {
+	void didPlayerLose(Level& level) {
 		if (!m_player->isExist())
 		{
 			m_bullets.clear();
-			level->clearAlienBullets();
+			level.clearAlienBullets();
 			current_state = lost;
 		}
 	}
 
-	void didPlayerWin(std::shared_ptr<Level>& level) {
-		if (level->isFinished())
+	void didPlayerWin(Level& level) {
+		if (level.isFinished())
 		{
 			m_bullets.clear();
-			level->clearAlienBullets();
+			level.clearAlienBullets();
 			m_player->setPlayerPos(ScreenWidth(), ScreenHeight());
 			current_state = won;
 		}
@@ -274,7 +269,7 @@ public:
 		{
 			scoreHandler->resetScores();
 			score_was_set = true;
-			m_level1->createShips();
+			levelManager.getLevel("Level 1").createShips();
 			m_player->reload();
 			current_state = level;
 		}
@@ -283,7 +278,7 @@ public:
 		{
 			scoreHandler->setScore(scoreHandler->lastLevelScore());
 			score_was_set = true;
-			m_level2->createShips();
+			levelManager.getLevel("Level 2").createShips();
 			m_player->reload();
 			current_state = level;
 		}
@@ -292,7 +287,7 @@ public:
 		{
 			scoreHandler->setScore(scoreHandler->lastLevelScore());
 			score_was_set = true;
-			m_level3->createShips();
+			levelManager.getLevel("Level 3").createShips();
 			m_player->reload();
 			current_state = level;
 		}
@@ -301,7 +296,7 @@ public:
 		{
 			scoreHandler->setScore(scoreHandler->lastLevelScore());
 			score_was_set = true;
-			m_level4->createShips();
+			levelManager.getLevel("Level 4").createShips();
 			m_player->reload();
 			current_state = level;
 		}
@@ -317,10 +312,11 @@ public:
 	}
 
 	void reloadAllLevels() {
-		m_level1->createShips();
-		m_level2->createShips();
-		m_level3->createShips();
-		m_level4->createShips();
+		levelManager.getLevel("Level 1").createShips();
+		levelManager.getLevel("Level 2").createShips();
+		levelManager.getLevel("Level 3").createShips();
+		levelManager.getLevel("Level 4").createShips();
+
 	}
 
 
@@ -376,16 +372,16 @@ public:
 
 	void goToLevel(float fElapsedTime) {
 		if (current_level == 1)
-			play(m_level1, fElapsedTime);
+			play(levelManager.getLevel("Level 1"), fElapsedTime);
 
 		else if (current_level == 2)
-			play(m_level2, fElapsedTime);
+			play(levelManager.getLevel("Level 2"), fElapsedTime);
 
 		else if (current_level == 3)
-			play(m_level3, fElapsedTime);
+			play(levelManager.getLevel("Level 3"), fElapsedTime);
 
 		else if (current_level == 4)
-			play(m_level4, fElapsedTime);
+			play(levelManager.getLevel("Level 4"), fElapsedTime);
 	}
 
 

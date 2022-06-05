@@ -32,9 +32,7 @@ public:
 		center_x += (ElapsedTime * speed);
 	}
 
-	olc::vf2d  getPos() {
-		return { pos_x, pos_y };
-	}
+	olc::vf2d  getPos() {return { pos_x, pos_y };}
 
 	void gotHit()
 	{

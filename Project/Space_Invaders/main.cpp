@@ -8,26 +8,29 @@ import Player;
 import SpritesManager; 
 import ErrorHandler; 
 import FileHandler; 
+import LevelManager;
 
 int main()
 {
 	
-	FileHandler fileHandler; 
+	LevelManager levelManager; 
 
-	std::cout << "Level 4 Health: " << fileHandler.readAlienHealth("Level 4") << " (5) was expected.." << std::endl;
-	std::cout << "Level 3 speed: " << fileHandler.readAlienSpeed("Level 3") << " (200) was expected.." << std::endl;
+	std::cout << "Level 4 Health: " << levelManager.getHealth("Level 4") << " (5) was expected.." << std::endl;
+	std::cout << "Level 3 speed: " << levelManager.getSpeed("Level 3") << " (200) was expected.." << std::endl;
 	
-	std::vector<std::vector<int>> bla = fileHandler.readAlienPos("Level 1"); 
+	/*std::vector<std::vector<bool>> bla;
+	levelManager.readAlienPos("Level 2");*/
 
-	std::cout << "level 1 pos: \n";
-	for (auto& shipsrow : bla)
-		std::cout << "{ " << shipsrow[0] << " , " << shipsrow[1] << " , " << shipsrow[2] << " , " << shipsrow[3] << " , " << shipsrow[4] <<  " }" << std::endl; 
+	std::cout << "level 2 pos: \n";
+	for (int i = 0 ; i < 5; i++)
+			std::cout << "{ " << levelManager.readAlienPos("Level 2")[i][0] << " , " << levelManager.readAlienPos("Level 2")[i][1] <<
+		" , " << levelManager.readAlienPos("Level 2")[i][2] << " , " << levelManager.readAlienPos("Level 2")[i][3] <<  " }" << std::endl;
 
-	/*ErrorHandler error;
+	ErrorHandler error;
 	if (error.checkAllSpritesExist())
 	{
 		SpaceInvaders demo;
-		if (demo.Construct(1200, 800, 1, 1, false, true))
+		if (demo.Construct(1200, 800, 1, 1, true, true))
 			demo.Start();
 	}
 
@@ -35,9 +38,16 @@ int main()
 	{ 
 		if (error.Construct(600, 200, 1, 1, false, true))
 			error.Start();
-	}*/
+	}
 	
 	
 		
 	return 0;
 }
+
+
+/*
+Questions:
+1- Grades? (as is) 
+3- what to be improved? 
+*/
