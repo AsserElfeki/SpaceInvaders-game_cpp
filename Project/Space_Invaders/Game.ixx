@@ -8,13 +8,9 @@ module;
 
 
 import FileHandler;
+import Presentation;
 import Credits;
-//import Level;
-//import Bullet;
-//import SpritesManager;
-import ScoreHandler;
 import AliensMovementHandler;
-import Presentation; 
 import CollisionDetectionHandler;
 import LevelManager;
 import Renderer; 
@@ -74,7 +70,6 @@ public:
 	{
 		// Called once at the start
 		// instantiates all needed game units
-
 
 		m_presentation = std::make_unique<Presentation>(); //just for presentation in the lab
 

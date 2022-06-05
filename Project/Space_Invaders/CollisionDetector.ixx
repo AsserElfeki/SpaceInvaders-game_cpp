@@ -4,11 +4,11 @@ module;
 #include <memory>
 #include <list>
 
-import Level; 
-import Bullet; 
-import Ship; 
-import Player; 
-import ScoreHandler;
+export import Level; 
+export import Bullet; 
+export import Ship; 
+export import Player; 
+export import ScoreHandler;
 
 export module CollisionDetectionHandler;
 
@@ -25,7 +25,6 @@ private:
 
 	float ScreenHeight = 800;
 	float ScreenWidth = 1200;
-	//constexpr int shipsinrow = 5;
 
 public: 
 
@@ -133,9 +132,9 @@ public:
 
 
 	//ship vs player
-	bool detectCircleCollision() {
+	/*bool detectCircleCollision() {
 
-	}
+	}*/
 
 	void alienShipVsPlayerShip(Level& level,
 								std::shared_ptr<Player>& m_player,

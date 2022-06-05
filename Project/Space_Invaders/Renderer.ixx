@@ -1,9 +1,7 @@
 module;
 #include "olcPixelGameEngine.h"
 
-//export import Player
 export import Level; 
-//export import Ship;
 export import SpritesManager;
 
 export module Renderer;
