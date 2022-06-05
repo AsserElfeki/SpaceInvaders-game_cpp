@@ -13,7 +13,7 @@ private:
 public: 
 	Bullet() = delete; 
 
-	Bullet(olc::PixelGameEngine* pge, float posx, float posy)
+	Bullet(float posx, float posy)
 	{
 		exist = true;
 		health = 1;
@@ -25,12 +25,12 @@ public:
 
 	~Bullet(){}
 
-	void movePlayerBullet(float time, olc::PixelGameEngine* pge) 
+	void movePlayerBullet(float time) 
 	{
 		pos_y -= (time * speed);
 	}
 
-	void moveAlienBullet(float time, olc::PixelGameEngine* pge)
+	void moveAlienBullet(float time)
 	{
 		pos_y += (time * speed);
 	}

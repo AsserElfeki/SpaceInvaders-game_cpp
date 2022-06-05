@@ -51,22 +51,22 @@ public:
 		return m_alienBullets; 
 	}
 
-	void shoot(olc::PixelGameEngine* pge) 
+	void shoot() 
 	{
 		if (exist)
 		{
 			unsigned int seed = std::chrono::system_clock::now().time_since_epoch().count();
 			std::mt19937 generator(seed); 
 			if (generator() < generator.min()+ (50000 * speed) )
-				m_alienBullets.emplace_back(pge, this->getPos().x + this->getWidth()/2, this->getPos().y + this->getHeight());
+				m_alienBullets.emplace_back(this->getPos().x + this->getWidth()/2, this->getPos().y + this->getHeight());
 		}
 	}
 
-	void moveAlienBullet(float time, olc::PixelGameEngine* pge)
+	void moveAlienBullet(float time)
 	{
 		for (auto& bullet : m_alienBullets)
 		{
-			bullet.moveAlienBullet(time, pge);
+			bullet.moveAlienBullet(time);
 			if (bullet.getPos().y >= ScreenHeight - 20)
 				m_alienBullets.pop_front();
 		}

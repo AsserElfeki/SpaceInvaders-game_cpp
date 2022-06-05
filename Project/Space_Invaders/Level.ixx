@@ -25,8 +25,9 @@ protected:
 public: 
 
 	Level() {}
-	Level(int _speed, int _ships_health, std::vector<std::vector<bool>> _ships_positions)
+	Level(std::string name, int _speed, int _ships_health, std::vector<std::vector<bool>> _ships_positions)
 	{
+		level_name = name;
 		speed = _speed;
 		ships_health = _ships_health;
 		ships_positions = _ships_positions; 

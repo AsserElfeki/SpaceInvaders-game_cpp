@@ -9,14 +9,15 @@ module;
 
 import FileHandler;
 import Credits;
-import Level;
-import Bullet;
-import SpritesManager;
+//import Level;
+//import Bullet;
+//import SpritesManager;
 import ScoreHandler;
 import AliensMovementHandler;
 import Presentation; 
 import CollisionDetectionHandler;
 import LevelManager;
+import Renderer; 
 
 export module Game;
 
@@ -25,21 +26,21 @@ export class SpaceInvaders : public olc::PixelGameEngine
 private:
 	//game units
 	LevelManager levelManager; 
-
-	std::unique_ptr <Credits> m_credits;
-	std::unique_ptr <Player> m_player;
-	std::unique_ptr <CollisionDetectionHandler> collisionDetector;
-
-	std::list<Bullet> m_bullets;
-	std::unique_ptr<ScoreHandler> scoreHandler;
+	Renderer renderer; 
+	std::shared_ptr <Player> m_player;
 	std::unique_ptr<AliensMovementHandler> aliensMovementHandler;
+	std::list<Bullet> m_bullets;
+	std::unique_ptr <CollisionDetectionHandler> collisionDetector;
+	std::unique_ptr<ScoreHandler> scoreHandler;
 	std::unique_ptr<Presentation> m_presentation;
 
 	//SpritesManager
-	std::unique_ptr<SpriteManager> spritesManager;
+	std::shared_ptr<SpriteManager> spritesManager;
 
 	//others
 	std::unique_ptr<FileHandler> outputScore;
+	std::unique_ptr <Credits> m_credits;
+
 
 	std::vector<char> player_name;
 
@@ -78,18 +79,11 @@ public:
 		m_presentation = std::make_unique<Presentation>(); //just for presentation in the lab
 
 		//game units
-		
-
-		m_player = std::make_unique<Player>(ScreenWidth(), ScreenHeight());
-
+		m_player = std::make_shared<Player>(ScreenWidth(), ScreenHeight());
 		m_credits = std::make_unique<Credits>(ScreenWidth(), ScreenHeight());
-
 		scoreHandler = std::make_unique<ScoreHandler>();
-
-		spritesManager = std::make_unique<SpriteManager>();
-
+		spritesManager = std::make_shared<SpriteManager>();
 		aliensMovementHandler = std::make_unique<AliensMovementHandler>();
-
 		collisionDetector = std::make_unique<CollisionDetectionHandler>();
 		return true;
 	}
@@ -105,30 +99,25 @@ public:
 
 		level.loadLevel(this, fElapsedTime);
 		
-		m_player->drawPlayer(this);
-
-		drawPlayerBullets();
-
-		drawScore();
+		//m_player->drawPlayer(this);
+	
+		renderer.drawLevel(level, m_bullets, current_score, spritesManager, m_player , this);
 
 		aliensMovementHandler->moveShips(fElapsedTime, current_level, level.get_Ships());
 
 		scoreHandler->increaseScoreWithTime(fElapsedTime);
 
-		drawShips(level);
-
 		shootAlienBullets(fElapsedTime, level);
 
-		drawAlienBullets(level);
 
 		//collision detection between a player's bullet and alien ship and killing in case of collision
-		collisionDetector->playerBulletVsAlien(fElapsedTime, level, m_player, scoreHandler,m_bullets, this);
+		collisionDetector->detectAllCollisions(fElapsedTime, level, m_player, scoreHandler,m_bullets);
 
-		//collision detection between player and aliens bullets 
-		collisionDetector->alienBulletVsPlayer(level, m_player, scoreHandler);
+		////collision detection between player and aliens bullets 
+		//collisionDetector->alienBulletVsPlayer(level, m_player, scoreHandler);
 
-		//collision detection between player and alien itself 
-		collisionDetector->alienShipVsPlayerShip(level, m_player, scoreHandler);
+		////collision detection between player and alien itself 
+		//collisionDetector->alienShipVsPlayerShip(level, m_player, scoreHandler);
 
 		//if player bullet goes out of screen
 		checkPlayerBulletsOutScreen();
@@ -164,7 +153,7 @@ public:
 		if (GetKey(olc::Key::SPACE).bPressed)
 		{
 			if (m_player->isExist())
-				m_bullets.emplace_back(this, m_player->getPos().x + (m_player->getWidth() / 2) -4, m_player->getPos().y);
+				m_bullets.emplace_back(m_player->getPos().x + (m_player->getWidth() / 2) -4, m_player->getPos().y);
 		}
 
 		if (GetKey(olc::Key::Q).bHeld)
@@ -174,64 +163,16 @@ public:
 			current_state = pause;
 	}
 	
-	void drawShips(Level& level) {
-		for (auto& shipsrow : level.get_Ships())
-			for (auto& ship : shipsrow)
-			{
-				if (ship.isExist())
-				{
-					if (ship.getHealth() == 1)
-						DrawSprite(ship.getPos().x, ship.getPos().y, spritesManager->entitySprite("alien_1").get());
-
-					else if (ship.getHealth() == 2)
-						DrawSprite(ship.getPos().x, ship.getPos().y, spritesManager->entitySprite("alien_2").get());
-
-					else if (ship.getHealth() == 3)
-						DrawSprite(ship.getPos().x, ship.getPos().y, spritesManager->entitySprite("alien_3").get());
-
-					else
-						DrawSprite(ship.getPos().x, ship.getPos().y, spritesManager->entitySprite("boss").get());
-				}
-			}
-	}
-	
 	void shootAlienBullets(float fElapsedTime, Level& level)
 	{
 		for (auto& shipsrow : level.get_Ships())
 		{
 			for (auto& ship : shipsrow)
 			{
-				ship.shoot(this);
-				ship.moveAlienBullet(fElapsedTime, this);
+				ship.shoot();
+				ship.moveAlienBullet(fElapsedTime);
 			}
 		}
-	}
-
-	void drawAlienBullets(Level& level) {
-		for (auto& shipsrow : level.get_Ships())
-		{
-			for (auto& ship : shipsrow)
-			{
-				if (ship.isExist())
-					for (auto& bullet : ship.getAlienBullets())
-						if (bullet.isExist())
-							DrawSprite(bullet.getPos().x, bullet.getPos().y, spritesManager->entitySprite("bullet").get());
-						//bullet.drawSelf(this);
-			}
-		}
-	}
-
-	void drawPlayerBullets()
-	{
-		for (auto& bullet : m_bullets)
-		{
-			if (bullet.isExist())
-				DrawSprite(bullet.getPos().x, bullet.getPos().y, spritesManager->entitySprite("bullet").get());
-		}
-	}
-
-	void drawScore() {
-		DrawString(ScreenWidth() - 200, 20, "Score:" + std::to_string(current_score), olc::WHITE, 2);
 	}
 
 	void checkPlayerBulletsOutScreen() {
@@ -520,9 +461,5 @@ public:
 };
 
 
-//improvements: 
-/* 
-* 1- level reading frpm a file 
-* bullet iterators (not the problem it seems) 
-*/
+
 

@@ -5,7 +5,6 @@ module;
 #include <list>
 
 import Level; 
-import LevelFour;
 import Bullet; 
 import Ship; 
 import Player; 
@@ -34,17 +33,16 @@ public:
 
 	void playerBulletVsAlien(float fElapsedTime, 
 								Level& level,
-								std::unique_ptr<Player>& m_player,
+								std::shared_ptr<Player>& m_player,
 								std::unique_ptr<ScoreHandler>& scoreHandler,
-								std::list<Bullet>& m_bullets, 
-								olc::PixelGameEngine* pge)
+								std::list<Bullet>& m_bullets)
 	{
 
 		auto Itr = m_bullets.begin();
 		//collision detection between a player's bullet and alien ship and killing in case of collision
 		for (auto& bullet : m_bullets)
 		{
-			bullet.movePlayerBullet(fElapsedTime, pge);
+			bullet.movePlayerBullet(fElapsedTime);
 			for (int i = 0; i < num_of_rows; i++)
 				for (int j = 0; j < num_of_cols; j++)
 				{
@@ -66,7 +64,7 @@ public:
 		}
 	}
 
-	void alienBulletVsPlayer(Level& level, std::unique_ptr<Player>& m_player, std::unique_ptr <ScoreHandler>& scoreHandler)
+	void alienBulletVsPlayer(Level& level, std::shared_ptr<Player>& m_player, std::unique_ptr <ScoreHandler>& scoreHandler)
 	{
 		//vector of bullets
 		//Vector<Bullet> bullets;
@@ -109,7 +107,7 @@ public:
 	}
 
 	void alienShipVsPlayerShip(Level& level,
-								std::unique_ptr<Player>& m_player, 
+								std::shared_ptr<Player>& m_player,
 								std::unique_ptr<ScoreHandler>& scoreHandler)
 	{
 		//collision detection between player and alien itself
@@ -127,5 +125,22 @@ public:
 					}
 			}
 		}
+	}
+
+
+	void detectAllCollisions(float fElapsedTime,
+		Level& level,
+		std::shared_ptr<Player>& m_player,
+		std::unique_ptr<ScoreHandler>& scoreHandler,
+		std::list<Bullet>& m_bullets)
+	{
+		//collision detection between a player's bullet and alien ship and killing in case of collision
+		playerBulletVsAlien(fElapsedTime, level, m_player, scoreHandler, m_bullets);
+
+		//collision detection between player and aliens bullets 
+		alienBulletVsPlayer(level, m_player, scoreHandler);
+
+		//collision detection between player and alien itself 
+		alienShipVsPlayerShip(level, m_player, scoreHandler);
 	}
 };

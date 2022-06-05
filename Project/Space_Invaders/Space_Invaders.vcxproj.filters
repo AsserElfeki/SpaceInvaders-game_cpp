@@ -63,6 +63,9 @@
     <ClCompile Include="LevelManager.ixx">
       <Filter>Modules</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer.ixx">
+      <Filter>Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="olcPixelGameEngine.h">

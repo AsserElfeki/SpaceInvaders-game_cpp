@@ -13,6 +13,7 @@ export module LevelManager;
 export class LevelManager {
 
 private:
+	std::string name;
 	int speed, health;
 	std::map<std::string, Level> levels; 
 	std::vector<std::vector<bool>> shipsPos;
@@ -137,7 +138,7 @@ public:
 
 	Level& createLevel(std::string level_name)
 	{
-		levels[level_name] = Level(getSpeed(level_name), getHealth(level_name), readAlienPos(level_name));
+		levels[level_name] = Level(level_name, getSpeed(level_name), getHealth(level_name), readAlienPos(level_name));
 		
 		return levels[level_name];
 	}
