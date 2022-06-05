@@ -41,9 +41,7 @@ public:
 		exist = _exist;
 	}
 
-	olc::vf2d getCenter() {
-		return { center_x, center_y };
-	}
+	
 
 	std::list<Bullet>& getAlienBullets() {
 		return m_alienBullets; 

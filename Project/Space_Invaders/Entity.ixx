@@ -35,6 +35,10 @@ public:
 
 	olc::vf2d  getPos() {return { pos_x, pos_y };}
 
+	olc::vf2d getCenter() {
+		return { center_x, center_y };
+	}
+
 	void gotHit()
 	{
 		health--;

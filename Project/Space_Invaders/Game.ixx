@@ -97,7 +97,7 @@ public:
 	{
 		std::future<void> thread1 = std::async(std::launch::async, &SpaceInvaders::handleUserInput, this, fElapsedTime);
 	
-		renderer.drawLevel(level, m_bullets, current_score, spritesManager, m_player , this);
+		renderer.renderGame(level, m_bullets, current_score, spritesManager, m_player , this);
 
 		aliensMovementHandler->moveShips(fElapsedTime, current_level, level.get_Ships());
 
@@ -188,7 +188,7 @@ public:
 		{
 			m_bullets.clear();
 			level.clearAlienBullets();
-			m_player->setPlayerPos(ScreenWidth(), ScreenHeight());
+			m_player->resetPos();
 			current_state = won;
 		}
 	}

@@ -105,7 +105,7 @@ public:
 		pge->DrawString(screenWidth - 200, 20, "Score:" + std::to_string(current_score), olc::WHITE, 2);
 	}
 
-	void drawLevel(Level& level, std::list<Bullet>& bullets, 
+	void renderGame(Level& level, std::list<Bullet>& bullets, 
 		int& current_score, std::shared_ptr<SpriteManager>& spritesManager, 
 		std::shared_ptr<Player> player, olc::PixelGameEngine* pge) {
 		
