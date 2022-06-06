@@ -20,9 +20,7 @@ public:
 
 	void decreaseScoreWhenHealthDecreased() { current_score -= 300; }
 	
-	void setLastLevelScore(int score) {
-		last_level_score = score;
-	}
+	void setLastLevelScore(int score) {last_level_score = score;}
 	
 	int lastLevelScore() { return last_level_score; }
 

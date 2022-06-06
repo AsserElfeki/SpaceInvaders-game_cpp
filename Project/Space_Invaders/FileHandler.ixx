@@ -24,7 +24,6 @@ public:
 		score = _score;
 	}
 	
-
 	void write() 
 	{
 		if (!writing_done)

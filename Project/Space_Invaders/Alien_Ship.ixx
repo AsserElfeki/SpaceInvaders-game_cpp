@@ -40,8 +40,6 @@ public:
 		exist = _exist;
 	}
 
-	
-
 	std::list<Bullet>& getAlienBullets() {
 		return m_alienBullets; 
 	}

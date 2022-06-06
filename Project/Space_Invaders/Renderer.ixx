@@ -12,7 +12,8 @@ private:
 	int32_t screenWidth = 1200;
 	int32_t screenHeight = 800;
 public: 
-	void drawSprite(std::string sprName, olc::PixelGameEngine* pge, std::shared_ptr<SpriteManager>& spritesManager) {
+	void drawSprite(std::string sprName, olc::PixelGameEngine* pge, 
+		std::shared_ptr<SpriteManager>& spritesManager) {
 		pge->DrawSprite(0, 0, spritesManager->screenSprite(sprName).get()); 
 	}
 
@@ -29,7 +30,8 @@ public:
 		pge->DrawString(10, 20, level.getName(), olc::WHITE, 2);
 	}
 
-	void drawPlayerAndHealth(std::shared_ptr<Player> player, std::shared_ptr<SpriteManager>& spritesManager, olc::PixelGameEngine* pge)
+	void drawPlayerAndHealth(std::shared_ptr<Player> player, 
+		std::shared_ptr<SpriteManager>& spritesManager, olc::PixelGameEngine* pge)
 	{
 		if (player->isExist())
 		{
@@ -93,7 +95,8 @@ public:
 		}
 	}
 
-	void drawPlayerBullets(std::list<Bullet>& bullets, std::shared_ptr<SpriteManager> spritesManager, olc::PixelGameEngine* pge)
+	void drawPlayerBullets(std::list<Bullet>& bullets, 
+		std::shared_ptr<SpriteManager> spritesManager, olc::PixelGameEngine* pge)
 	{
 		for (auto& bullet : bullets)
 		{

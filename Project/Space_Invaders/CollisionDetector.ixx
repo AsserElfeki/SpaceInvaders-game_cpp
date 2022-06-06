@@ -60,7 +60,8 @@ public:
 				for (int j = 0; j < num_of_cols; j++)
 				{
 
-					if (bullet.getPos().y > 0 && level.get_Ships()[i][j].isExist() && detectCircleCollision(level.get_Ships()[i][j], bullet))
+					if (bullet.getPos().y > 0 && level.get_Ships()[i][j].isExist() && 
+						detectCircleCollision(level.get_Ships()[i][j], bullet))
 					{
 						bullet.kill();
 						m_bullets.erase(Itr);
@@ -83,7 +84,8 @@ public:
 	//	else return false;
 	//}
 
-	void alienBulletVsPlayer(Level& level, std::shared_ptr<Player>& m_player, std::shared_ptr <ScoreHandler>& scoreHandler)
+	void alienBulletVsPlayer(Level& level, std::shared_ptr<Player>& m_player, 
+		std::shared_ptr <ScoreHandler>& scoreHandler)
 	{
 		for (auto& shipsrow : level.get_Ships())
 		{
