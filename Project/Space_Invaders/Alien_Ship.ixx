@@ -19,7 +19,6 @@ public:
 
 	Alien_Ship(olc::vi2d pos, bool _exist, float _speed, int _health) 
 	{
-		
 		health = _health;
 		if (_health > 3)
 		{

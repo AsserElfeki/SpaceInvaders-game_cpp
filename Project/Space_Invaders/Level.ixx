@@ -13,7 +13,7 @@ export class Level {
 	
 protected: 
 
-	int speed; 
+	int ships_speed; 
 	int ships_health; 
 	std::string level_name; 
 	int32_t screenWidth = 1200;
@@ -28,7 +28,7 @@ public:
 	Level(std::string name, int _speed, int _ships_health, std::vector<std::vector<bool>> _ships_positions)
 	{
 		level_name = name;
-		speed = _speed;
+		ships_speed = _speed;
 		ships_health = _ships_health;
 		ships_positions = _ships_positions; 
 		createShips();
@@ -58,7 +58,7 @@ public:
 			{
 				olc::vf2d tmp_pos = { (float) (j + 1) * (screenWidth / 5) ,
 					(float) (i + 1) * (screenHeight / 7) };
-				tmp.emplace_back(tmp_pos, ships_positions[i][j], speed, ships_health);
+				tmp.emplace_back(tmp_pos, ships_positions[i][j], ships_speed, ships_health);
 			}
 			ships.push_back(tmp);
 		}

@@ -20,6 +20,8 @@ private:
 		rightBorder = 3,
 		left_and_upBorder = 0
 	};
+	
+
 	const int num_of_rows = 5;
 	const int num_of_cols = 4;
 
@@ -45,7 +47,7 @@ public:
 	void playerBulletVsAlien(float fElapsedTime,
 		Level& level,
 		std::shared_ptr<Player>& m_player,
-		std::unique_ptr<ScoreHandler>& scoreHandler,
+		std::shared_ptr<ScoreHandler>& scoreHandler,
 		std::list<Bullet>& m_bullets)
 	{
 
@@ -81,17 +83,13 @@ public:
 	//	else return false;
 	//}
 
-	void alienBulletVsPlayer(Level& level, std::shared_ptr<Player>& m_player, std::unique_ptr <ScoreHandler>& scoreHandler)
+	void alienBulletVsPlayer(Level& level, std::shared_ptr<Player>& m_player, std::shared_ptr <ScoreHandler>& scoreHandler)
 	{
-
 		for (auto& shipsrow : level.get_Ships())
 		{
 			for (auto& ship : shipsrow)
 			{
 				auto Itr = ship.getAlienBullets().begin();
-
-
-
 				for (auto& A_bullet : ship.getAlienBullets())
 				{
 					//check hit
@@ -138,7 +136,7 @@ public:
 
 	void alienShipVsPlayerShip(Level& level,
 								std::shared_ptr<Player>& m_player,
-								std::unique_ptr<ScoreHandler>& scoreHandler)
+								std::shared_ptr<ScoreHandler>& scoreHandler)
 	{
 		//collision detection between player and alien itself
 		for (auto& shipsrow : level.get_Ships())
@@ -161,7 +159,7 @@ public:
 	void detectAllCollisions(float fElapsedTime,
 		Level& level,
 		std::shared_ptr<Player>& m_player,
-		std::unique_ptr<ScoreHandler>& scoreHandler,
+		std::shared_ptr<ScoreHandler>& scoreHandler,
 		std::list<Bullet>& m_bullets)
 	{
 		//collision detection between a player's bullet and alien ship and killing in case of collision

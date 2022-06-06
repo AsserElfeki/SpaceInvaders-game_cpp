@@ -2,6 +2,8 @@ module;
 
 #include <vector>
 #include <algorithm>
+#include <future>
+#include <thread>
 import Ship; 
 
 export module AliensMovementHandler;
@@ -27,11 +29,14 @@ public:
 
 	void moveShips(float& fElapsedTime, int level, std::vector<std::vector<Alien_Ship>>& ships)
 	{
-		MoveShips_h(fElapsedTime, level, ships);
-		MoveShips_v(fElapsedTime, level, ships);
+		//std::future<void> thread1 = std::async(std::launch::async, &AliensMovementHandler::MoveShips_horizontally, this, fElapsedTime, level, ships);
+		//std::future<void> thread2 = std::async(std::launch::async, &AliensMovementHandler::MoveShips_vertically, this, fElapsedTime, level, ships);
+
+		MoveShips_horizontally(fElapsedTime, level, ships);
+		MoveShips_vertically(fElapsedTime, level, ships);
 	}
 
-	void MoveShips_h(float& fElapsedTime, int level, std::vector<std::vector<Alien_Ship>>& ships )
+	void MoveShips_horizontally(float& fElapsedTime, int level, std::vector<std::vector<Alien_Ship>>& ships )
 	{
 		auto moveShipRight = [fElapsedTime](Alien_Ship& ship) {ship.moveRight(fElapsedTime); };
 		auto moveShipLeft = [fElapsedTime](Alien_Ship& ship) {ship.moveLeft(fElapsedTime); };
@@ -73,7 +78,7 @@ public:
 		}
 	}
 
-	void MoveShips_v(float fElapsedTime, int level, std::vector<std::vector<Alien_Ship>>& ships)
+	void MoveShips_vertically(float fElapsedTime, int level, std::vector<std::vector<Alien_Ship>>& ships)
 	{
 		auto moveShipUp = [fElapsedTime](Alien_Ship& ship) {ship.moveUp(fElapsedTime); };
 		auto moveShipDown = [fElapsedTime](Alien_Ship& ship) {ship.moveDown(fElapsedTime); };

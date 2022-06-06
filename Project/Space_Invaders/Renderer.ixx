@@ -12,6 +12,9 @@ private:
 	int32_t screenWidth = 1200;
 	int32_t screenHeight = 800;
 public: 
+	void drawSprite(std::string sprName, olc::PixelGameEngine* pge, std::shared_ptr<SpriteManager>& spritesManager) {
+		pge->DrawSprite(0, 0, spritesManager->screenSprite(sprName).get()); 
+	}
 
 	void drawLevelBoundary(Level& level, olc::PixelGameEngine* pge)
 	{

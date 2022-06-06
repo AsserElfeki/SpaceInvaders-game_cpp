@@ -4,3 +4,5 @@ HBJK :  470
 SD :  379
 C :  0
 ASD :  -162
+ASSER :  2172
+SDFDSF :  24

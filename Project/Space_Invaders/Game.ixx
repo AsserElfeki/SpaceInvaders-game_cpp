@@ -20,21 +20,25 @@ export module Game;
 export class SpaceInvaders : public olc::PixelGameEngine
 {
 private:
-	//game units
-	LevelManager levelManager; 
-	Renderer renderer; 
-	std::shared_ptr <Player> m_player;
-	std::unique_ptr<AliensMovementHandler> aliensMovementHandler;
-	std::list<Bullet> m_bullets;
-	std::unique_ptr <CollisionDetectionHandler> collisionDetector;
-	std::unique_ptr<ScoreHandler> scoreHandler;
-	std::unique_ptr<Presentation> m_presentation;
 
+	/*unique_ptr for objects that will not be passed to other classes\methods
+	shared_ptr for objects that will be passed */
+
+	//game units
+	std::unique_ptr<LevelManager> levelManager; 
+	std::unique_ptr <Renderer> renderer;
+	std::shared_ptr <Player> m_player;
+	std::shared_ptr<AliensMovementHandler> aliensMovementHandler;
+	std::list<Bullet> m_bullets;
+	std::shared_ptr <CollisionDetectionHandler> collisionDetector;
+	std::shared_ptr<ScoreHandler> scoreHandler;
+	std::unique_ptr<Presentation> m_presentation;
+	
 	//SpritesManager
 	std::shared_ptr<SpriteManager> spritesManager;
 
 	//others
-	std::unique_ptr<FileHandler> outputScore;
+	std::shared_ptr<FileHandler> outputScore;
 	std::unique_ptr <Credits> m_credits;
 
 
@@ -57,13 +61,13 @@ private:
 	int current_score = 0000;
 	gameState current_state = intro;
 	int current_level = 1;
-	bool score_was_set = false;
-	bool writing_score_done = false;
+	bool writing_score_done = false; //to not write score twice 
 
 public:
 	SpaceInvaders()
 	{
 		sAppName = "Space Invaders "" By: Asser Moustafa";
+		//appears on window bar of the game window (if not in full screen mode)
 	}
 
 	bool OnUserCreate() override
@@ -74,12 +78,14 @@ public:
 		m_presentation = std::make_unique<Presentation>(); //just for presentation in the lab
 
 		//game units
+		renderer = std::make_unique<Renderer>();
+		levelManager = std::make_unique<LevelManager>();
 		m_player = std::make_shared<Player>(ScreenWidth(), ScreenHeight());
 		m_credits = std::make_unique<Credits>(ScreenWidth(), ScreenHeight());
-		scoreHandler = std::make_unique<ScoreHandler>();
+		scoreHandler = std::make_shared<ScoreHandler>();
 		spritesManager = std::make_shared<SpriteManager>();
-		aliensMovementHandler = std::make_unique<AliensMovementHandler>();
-		collisionDetector = std::make_unique<CollisionDetectionHandler>();
+		aliensMovementHandler = std::make_shared<AliensMovementHandler>();
+		collisionDetector = std::make_shared<CollisionDetectionHandler>();
 		return true;
 	}
 
@@ -91,8 +97,9 @@ public:
 	void play(Level& level, float fElapsedTime)
 	{
 		std::future<void> thread1 = std::async(std::launch::async, &SpaceInvaders::handleUserInput, this, fElapsedTime);
+		//handling the user input in parallel while the game logic is in another thread
 	
-		renderer.renderGame(level, m_bullets, current_score, spritesManager, m_player , this);
+		renderer->renderGame(level, m_bullets, current_score, spritesManager, m_player , this);
 
 		aliensMovementHandler->moveShips(fElapsedTime, current_level, level.get_Ships());
 
@@ -161,7 +168,8 @@ public:
 	void checkPlayerBulletsOutScreen() {
 		for (auto& bullet : m_bullets)
 		{
-			if (bullet.getPos().y < 60)
+			if (bullet.getPos().y < 60) 
+				//60 because the upper line of game space is at 50 and bullet is 10px hight
 			{
 				bullet.kill();
 				m_bullets.pop_front();
@@ -172,8 +180,8 @@ public:
 	void didPlayerLose(Level& level) {
 		if (!m_player->isExist())
 		{
-			m_bullets.clear();
-			level.clearAlienBullets();
+			m_bullets.clear(); //clear player's bullets
+			level.clearAlienBullets(); 
 			current_state = lost;
 		}
 	}
@@ -192,8 +200,7 @@ public:
 		if (current_level == 1)
 		{
 			scoreHandler->resetScores();
-			score_was_set = true;
-			levelManager.getLevel("Level 1").createShips();
+			levelManager->getLevel("Level 1").createShips();
 			m_player->reload();
 			current_state = level;
 		}
@@ -201,8 +208,7 @@ public:
 		else if (current_level == 2)
 		{
 			scoreHandler->setScore(scoreHandler->lastLevelScore());
-			score_was_set = true;
-			levelManager.getLevel("Level 2").createShips();
+			levelManager->getLevel("Level 2").createShips();
 			m_player->reload();
 			current_state = level;
 		}
@@ -210,8 +216,7 @@ public:
 		else if (current_level == 3)
 		{
 			scoreHandler->setScore(scoreHandler->lastLevelScore());
-			score_was_set = true;
-			levelManager.getLevel("Level 3").createShips();
+			levelManager->getLevel("Level 3").createShips();
 			m_player->reload();
 			current_state = level;
 		}
@@ -219,14 +224,14 @@ public:
 		else
 		{
 			scoreHandler->setScore(scoreHandler->lastLevelScore());
-			score_was_set = true;
-			levelManager.getLevel("Level 4").createShips();
+			levelManager->getLevel("Level 4").createShips();
 			m_player->reload();
 			current_state = level;
 		}
 	}
 
 	void playAgainAfterFinished() {
+		writing_score_done = false; 
 		scoreHandler->resetScores();
 		reloadAllLevels();
 		m_player->reload();
@@ -236,11 +241,10 @@ public:
 	}
 
 	void reloadAllLevels() {
-		levelManager.getLevel("Level 1").createShips();
-		levelManager.getLevel("Level 2").createShips();
-		levelManager.getLevel("Level 3").createShips();
-		levelManager.getLevel("Level 4").createShips();
-
+		levelManager->getLevel("Level 1").createShips();
+		levelManager->getLevel("Level 2").createShips();
+		levelManager->getLevel("Level 3").createShips();
+		levelManager->getLevel("Level 4").createShips();
 	}
 
 
@@ -260,9 +264,10 @@ public:
 			player_name.pop_back();
 
 		DrawString(737, 445, std::string(player_name.data(), player_name.size()), olc::BLUE, 2);
+		//position is hard coded based on the screen dimensions 1200X800 
 	}
 
-	void changeGameState() {
+	void changeGameStateFromInstructions() { //used in intro state
 		if (GetKey(olc::Key::ENTER).bPressed)
 			current_state = level;
 
@@ -296,16 +301,16 @@ public:
 
 	void goToLevel(float fElapsedTime) {
 		if (current_level == 1)
-			play(levelManager.getLevel("Level 1"), fElapsedTime);
+			play(levelManager->getLevel("Level 1"), fElapsedTime);
 
 		else if (current_level == 2)
-			play(levelManager.getLevel("Level 2"), fElapsedTime);
+			play(levelManager->getLevel("Level 2"), fElapsedTime);
 
 		else if (current_level == 3)
-			play(levelManager.getLevel("Level 3"), fElapsedTime);
+			play(levelManager->getLevel("Level 3"), fElapsedTime);
 
 		else if (current_level == 4)
-			play(levelManager.getLevel("Level 4"), fElapsedTime);
+			play(levelManager->getLevel("Level 4"), fElapsedTime);
 	}
 
 
@@ -324,7 +329,7 @@ public:
 		if (current_state == intro)
 		{
 			Clear(olc::WHITE);
-			DrawSprite(0,0, spritesManager->screenSprite("intro").get());
+			renderer->drawSprite("intro", this, spritesManager);
 
 			if (GetKey(olc::Key::SPACE).bPressed || GetKey(olc::Key::ENTER).bPressed)
 				current_state = name;
@@ -336,7 +341,7 @@ public:
 		else if (current_state == name)
 		{
 			Clear(olc::WHITE);
-			DrawSprite(0, 0, spritesManager->screenSprite("name").get());
+			renderer->drawSprite("name", this, spritesManager);
 
 			inputPlayerName();
 
@@ -347,9 +352,8 @@ public:
 		else if (current_state == instructions)
 		{
 			Clear(olc::WHITE);
-			DrawSprite(0, 0, spritesManager->screenSprite("instructions").get());
-
-			changeGameState();
+			renderer->drawSprite("instructions", this, spritesManager);
+			changeGameStateFromInstructions();
 		}
 
 		else if (current_state == level)
@@ -360,7 +364,7 @@ public:
 			if (current_level < 4)
 			{
 				Clear(olc::WHITE);
-				DrawSprite(0, 0, spritesManager->screenSprite("won").get());
+				renderer->drawSprite("won", this, spritesManager);
 				scoreHandler->setLastLevelScore(scoreHandler->getScore());
 				if (GetKey(olc::Key::ENTER).bPressed)
 				{
@@ -376,7 +380,7 @@ public:
 		else if (current_state == lost)
 		{
 			Clear(olc::WHITE);
-			DrawSprite(0, 0, spritesManager->screenSprite("lost").get());
+			renderer->drawSprite("lost", this, spritesManager);
 			scoreHandler->setScore(scoreHandler->lastLevelScore());
 			if (GetKey(olc::Key::ENTER).bPressed)
 				playAgainAfterLoss();
@@ -408,7 +412,7 @@ public:
 		else if (current_state == pause)
 		{
 			SetPixelMode(olc::Pixel::ALPHA);
-			DrawSprite(0, 0, spritesManager->screenSprite("pause").get());
+			renderer->drawSprite("pause", this, spritesManager);
 			if (GetKey(olc::Key::SPACE).bPressed)
 			{
 				SetPixelMode(olc::Pixel::MASK);

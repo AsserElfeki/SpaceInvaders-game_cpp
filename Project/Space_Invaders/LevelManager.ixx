@@ -49,7 +49,6 @@ public:
 
 	void readAlienSpeed(std::string level_name)
 	{
-		//int speed;
 		std::fstream inFile;
 		inFile.open("levelInfo.csv", std::ios::in);
 
@@ -68,10 +67,7 @@ public:
 			if (row[0] == level_name)
 				speed = std::stoi(row[2]);
 		}
-
 		inFile.close();
-
-		//return speed;
 	}
 
 	int& getSpeed(std::string level_name) {
@@ -120,9 +116,7 @@ public:
 				}
 			}
 		}
-
 		inFile.close();
-
 		return shipsPos;
 	}
 

@@ -28,11 +28,11 @@ public:
 
 		Clear(olc::WHITE);
 
-		if (std::filesystem::exists(error_file))
+		if (std::filesystem::exists(error_file)) //if the error sprite exists draw it
 			DrawSprite(0, 0, message.get());
 		else
 		{
-			DrawLine(10, 10, ScreenWidth() - 10, 10, olc::BLACK); //upper HZ line
+			DrawLine(10, 10, ScreenWidth() - 10, 10, olc::BLACK); //upper HZ line the (-10 px) is just to add some padding
 			DrawLine(10, 10, 10, ScreenHeight() - 10, olc::BLACK); // left V line 
 			DrawLine(ScreenWidth() - 10, 10, ScreenWidth() - 10, ScreenHeight() - 10, olc::BLACK); // right V line
 			DrawLine(10, ScreenHeight() - 10, ScreenWidth() - 10, ScreenHeight() - 10, olc::BLACK); // bottom HZ line
@@ -49,6 +49,7 @@ public:
 
 	bool checkAllSpritesExist()
 	{
+		//game states sprites
 		fs::path intro = "./sprites/screens/intro.png";
 		fs::path instructions = "./sprites/screens/instructions.png";
 		fs::path lost = "./sprites/screens/lost.png";
@@ -56,6 +57,7 @@ public:
 		fs::path pause = "./sprites/screens/pause.png";
 		fs::path won = "./sprites/screens/won.png";
 
+		//game units sprites 
 		fs::path alien_1 = "./sprites/entity/alien_1.png";
 		fs::path alien_2 = "./sprites/entity/alien_2.png";
 		fs::path alien_3 = "./sprites/entity/alien_3.png";
@@ -68,6 +70,7 @@ public:
 		fs::path player_2 = "./sprites/entity/player_2.png";
 		fs::path player_3 = "./sprites/entity/player_3.png";
 
+		//credits sprites
 		fs::path background = "./sprites/credits/background.png";
 		fs::path credits = "./sprites/credits/credits.png";
 		fs::path credits_options = "./sprites/credits/credits_options.png";
