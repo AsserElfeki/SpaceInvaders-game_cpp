@@ -13,8 +13,7 @@ export module LevelManager;
 export class LevelManager {
 
 private:
-	std::string name;
-	int speed, health, last_level;
+	int current_level_speed, current_level_health;
 	std::map<std::string, Level> levels; 
 	std::vector<std::vector<bool>> shipsPos;
 
@@ -39,12 +38,11 @@ public:
 				row.push_back(word);
 			}
 			if (row[0] == level_name)
-				health = std::stoi(row[1]);
+				current_level_health = std::stoi(row[1]);
 		}
 
 		inFile.close();
 
-		//return health;
 	}
 
 	void readAlienSpeed(std::string level_name)
@@ -65,19 +63,19 @@ public:
 				row.push_back(word);
 			}
 			if (row[0] == level_name)
-				speed = std::stoi(row[2]);
+				current_level_speed = std::stoi(row[2]);
 		}
 		inFile.close();
 	}
 
 	int& getSpeed(std::string level_name) {
 		readAlienSpeed(level_name);
-		return speed;
+		return current_level_speed;
 	}
 
 	int& getHealth(std::string level_name) {
 		readAlienHealth(level_name);
-		return health;
+		return current_level_health;
 	}
 
 	std::vector<std::vector<bool>>& readAlienPos(std::string level_name)
@@ -137,7 +135,5 @@ public:
 		return levels[level_name];
 	}
 
-	bool checkLastLevel() {
-
-	}
+	
 };

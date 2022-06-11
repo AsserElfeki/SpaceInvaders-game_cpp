@@ -17,7 +17,7 @@ import Renderer;
 
 export module Game;
 
-export class SpaceInvaders : public olc::PixelGameEngine
+export class Game : public olc::PixelGameEngine
 {
 private:
 
@@ -61,10 +61,9 @@ private:
 	int current_score = 0000;
 	gameState current_state = intro;
 	int current_level = 1;
-	bool writing_score_done = false; //to not write score twice 
 
 public:
-	SpaceInvaders()
+	Game()
 	{
 		sAppName = "Space Invaders "" By: Asser Moustafa";
 		//appears on window bar of the game window (if not in full screen mode)
@@ -96,7 +95,7 @@ public:
 
 	void play(Level& level, float fElapsedTime)
 	{
-		std::future<void> thread1 = std::async(std::launch::async, &SpaceInvaders::handleUserInput, this, fElapsedTime);
+		std::future<void> thread1 = std::async(std::launch::async, &Game::handleUserInput, this, fElapsedTime);
 		//handling the user input in parallel while the game logic is in another thread
 	
 		renderer->renderGame(level, m_bullets, current_score, spritesManager, m_player , this);
@@ -110,7 +109,7 @@ public:
 		collisionDetector->detectAllCollisions(fElapsedTime, level, m_player, scoreHandler,m_bullets);
 
 		//if player bullet goes out of screen
-		std::future<void> thread2 = std::async(std::launch::async, &SpaceInvaders::checkPlayerBulletsOutScreen, this);
+		std::future<void> thread2 = std::async(std::launch::async, &Game::checkPlayerBulletsOutScreen, this);
 
 		//check player lost
 		didPlayerLose(level);
@@ -223,7 +222,6 @@ public:
 	}
 
 	void playAgainAfterFinished() {
-		writing_score_done = false; 
 		scoreHandler->resetScores();
 		reloadAllLevels();
 		m_player->reload();

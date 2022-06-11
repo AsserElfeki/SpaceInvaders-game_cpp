@@ -13,7 +13,7 @@ int main()
 		//check if all sprites used in the "game" exist
 		//if they exist, the game starts
 	{
-		SpaceInvaders demo;
+		Game spaceInvaders;
 		std::string answer;
 		bool choiceDone = false; 
 
@@ -30,14 +30,14 @@ int main()
 		if (answer == "y")
 		{
 			//demo.construct(window width, height, how many screen pixels for each pixel,, fullscreen?, vsync of the monitor?) 
-			if (demo.Construct(1200, 800, 1, 1, true, true))
-				demo.Start();
+			if (spaceInvaders.Construct(1200, 800, 1, 1, true, true))
+				spaceInvaders.Start();
 		}
 		else if (answer == "n")
 		{
 			//demo.construct(window width, height, how many screen pixels for each pixel,, fullscreen?, vsync of the monitor?) 
-			if (demo.Construct(1200, 800, 1, 1, false, true))
-				demo.Start();
+			if (spaceInvaders.Construct(1200, 800, 1, 1, false, true))
+				spaceInvaders.Start();
 		}
 		
 	}
