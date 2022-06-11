@@ -373,12 +373,9 @@ public:
 			Clear(olc::BLACK);
 			m_credits->runCredits(this, fElapsedTime);
 
-			if (!writing_score_done)
-			{
+			if (!outputScore)
 				outputScore = std::make_unique<FileHandler>(player_name, current_score);
-				outputScore->write();
-				writing_score_done = true;
-			}
+			outputScore->write();
 
 			if (GetKey(olc::Key::ENTER).bPressed)
 				playAgainAfterFinished();
@@ -404,12 +401,9 @@ public:
 
 		else if (current_state == quit)
 		{
-			if (!writing_score_done)
-			{
+			if (!outputScore)
 				outputScore = std::make_unique<FileHandler>(player_name, current_score);
-				outputScore->write();
-			}
-			
+			outputScore->write();
 			return false;
 		}
 
