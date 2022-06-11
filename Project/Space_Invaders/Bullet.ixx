@@ -8,8 +8,6 @@ export class Bullet : public Entity {
 
 private: 
 
-	
-
 public: 
 	Bullet() = delete; 
 

@@ -88,7 +88,6 @@ public:
 		return true;
 	}
 
-
 	/****************************************************************
 	*                      GamePlay Function
 	*****************************************************************/
@@ -100,7 +99,7 @@ public:
 	
 		renderer->renderGame(level, m_bullets, current_score, spritesManager, m_player , this);
 
-		aliensMovementHandler->moveShips(fElapsedTime, current_level, level.get_Ships());
+		aliensMovementHandler->moveAlienShips(fElapsedTime, current_level, level.get_Ships());
 
 		scoreHandler->increaseScoreWithTime(fElapsedTime);
 
@@ -119,7 +118,6 @@ public:
 
 		current_score = scoreHandler->getScore();
 	}
-
 
 	/****************************************************************
 	*                 Helper Functions used in Game
@@ -194,40 +192,13 @@ public:
 			current_state = won;
 		}
 	}
-	
-	void playAgainAfterLoss() {
-		if (current_level == 1)
-		{
-			//levelManager->getLevel("Level 1").createShips();
-			current_state = level;
-		}
-
-		else if (current_level == 2)
-		{
-			//levelManager->getLevel("Level 2").createShips();
-			current_state = level;
-		}
-
-		else if (current_level == 3)
-		{
-			//levelManager->getLevel("Level 3").createShips();
-			current_state = level;
-		}
-
-		else
-		{
-			//levelManager->getLevel("Level 4").createShips();
-			current_state = level;
-		}
-	}
 
 	void playAgainAfterFinished() {
 		scoreHandler->resetScores();
 		reloadAllLevels();
 		m_player->reload();
 		m_credits->reset();
-		current_level = 1;
-		current_state = level;
+		current_state = intro;
 	}
 
 	void reloadAllLevels() {
@@ -359,11 +330,10 @@ public:
 			Clear(olc::WHITE);
 			renderer->drawSprite("lost", this, spritesManager);
 			levelManager->getLevel("Level " + std::to_string(current_level)).createShips();
-
 			scoreHandler->setScore(scoreHandler->lastLevelScore());
 			m_player->reload(scoreHandler->getLastLevelHealth());
 			if (GetKey(olc::Key::ENTER).bPressed)
-				playAgainAfterLoss();
+				current_state = level;
 		}
 
 		else if (current_state == credits)

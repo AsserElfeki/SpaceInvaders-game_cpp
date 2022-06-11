@@ -87,7 +87,7 @@ public:
 	void alienBulletVsPlayer(Level& level, std::shared_ptr<Player>& m_player, 
 		std::shared_ptr <ScoreHandler>& scoreHandler)
 	{
-		for (auto& shipsrow : level.get_Ships())
+ 		for (auto& shipsrow : level.get_Ships())
 		{
 			for (auto& ship : shipsrow)
 			{
