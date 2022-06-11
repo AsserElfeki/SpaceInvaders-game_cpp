@@ -39,7 +39,7 @@ public:
 		return { center_x, center_y };
 	}
 
-	void gotHit()
+	virtual void gotHit()
 	{
 		health--;
 		if (health == 0)

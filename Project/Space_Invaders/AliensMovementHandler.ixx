@@ -49,7 +49,7 @@ public:
 		else
 			rows = level2_rows;
 
-		if (last_move_h)
+		if (last_move_h) //if the ships are on max left position
 		{
 			for (int i = 0; i < rows; i++)
 			{

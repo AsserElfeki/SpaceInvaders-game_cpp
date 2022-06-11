@@ -11,7 +11,7 @@ export module Player;
 export class Player : public Entity  {
 
 private:
-	clock_t time_of_last_hit;
+	clock_t time_of_last_hit= 0;
 
 public:
 
@@ -30,12 +30,20 @@ public:
 		center_y = (pos_y + element_Height / 2);
 	}
 
+	void reload(int h)
+	{
+		resetPos();
+		exist = true;
+		health = h;
+	}
+
 	void reload()
 	{
 		resetPos();
 		exist = true;
 		health = 3;
 	}
+
 	void resetPos() {
 		pos_x = screenWidth / 2 - element_Width / 2;
 		pos_y = screenHeight - 1.5 * element_Height;
@@ -45,9 +53,10 @@ public:
 
 	void maxPosRight() {pos_x = screenWidth - element_Width - 11;}
 		
-	void playerGotHit()
+	void gotHit() override
 	{
-		if ((clock() - time_of_last_hit) / CLOCKS_PER_SEC > 1)
+
+ 		if ((clock() - time_of_last_hit) / CLOCKS_PER_SEC > 1)
 		{
 			health--;
 			time_of_last_hit = clock();
@@ -55,4 +64,6 @@ public:
 		if (health == 0)
 			kill();
 	}
+
+	
 };

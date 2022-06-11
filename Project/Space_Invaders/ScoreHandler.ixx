@@ -7,6 +7,7 @@ export class ScoreHandler
 private: 
 	int current_score = 0;
 	int last_level_score= 0;
+	int last_level_health = 3; 
 
 public: 
 
@@ -28,4 +29,7 @@ public:
 		current_score = 0;
 		last_level_score = 0;
 	}
+
+	void setLastLevelHealth(int h) { last_level_health = h; }
+	int getLastLevelHealth() { return last_level_health; }
 };

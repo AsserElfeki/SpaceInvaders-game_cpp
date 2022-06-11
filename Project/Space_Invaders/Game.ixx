@@ -110,7 +110,7 @@ public:
 		collisionDetector->detectAllCollisions(fElapsedTime, level, m_player, scoreHandler,m_bullets);
 
 		//if player bullet goes out of screen
-		checkPlayerBulletsOutScreen();
+		std::future<void> thread2 = std::async(std::launch::async, &SpaceInvaders::checkPlayerBulletsOutScreen, this);
 
 		//check player lost
 		didPlayerLose(level);
@@ -199,33 +199,25 @@ public:
 	void playAgainAfterLoss() {
 		if (current_level == 1)
 		{
-			scoreHandler->resetScores();
-			levelManager->getLevel("Level 1").createShips();
-			m_player->reload();
+			//levelManager->getLevel("Level 1").createShips();
 			current_state = level;
 		}
 
 		else if (current_level == 2)
 		{
-			scoreHandler->setScore(scoreHandler->lastLevelScore());
-			levelManager->getLevel("Level 2").createShips();
-			m_player->reload();
+			//levelManager->getLevel("Level 2").createShips();
 			current_state = level;
 		}
 
 		else if (current_level == 3)
 		{
-			scoreHandler->setScore(scoreHandler->lastLevelScore());
-			levelManager->getLevel("Level 3").createShips();
-			m_player->reload();
+			//levelManager->getLevel("Level 3").createShips();
 			current_state = level;
 		}
 
 		else
 		{
-			scoreHandler->setScore(scoreHandler->lastLevelScore());
-			levelManager->getLevel("Level 4").createShips();
-			m_player->reload();
+			//levelManager->getLevel("Level 4").createShips();
 			current_state = level;
 		}
 	}
@@ -267,7 +259,7 @@ public:
 		//position is hard coded based on the screen dimensions 1200X800 
 	}
 
-	void changeGameStateFromInstructions() { //used in intro state
+	void changeGameStateFromInstructions() { 
 		if (GetKey(olc::Key::ENTER).bPressed)
 			current_state = level;
 
@@ -297,20 +289,6 @@ public:
 
 		if (GetKey(olc::Key::C).bPressed)
 			current_state = credits;
-	}
-
-	void goToLevel(float fElapsedTime) {
-		if (current_level == 1)
-			play(levelManager->getLevel("Level 1"), fElapsedTime);
-
-		else if (current_level == 2)
-			play(levelManager->getLevel("Level 2"), fElapsedTime);
-
-		else if (current_level == 3)
-			play(levelManager->getLevel("Level 3"), fElapsedTime);
-
-		else if (current_level == 4)
-			play(levelManager->getLevel("Level 4"), fElapsedTime);
 	}
 
 
@@ -357,7 +335,7 @@ public:
 		}
 
 		else if (current_state == level)
-			goToLevel(fElapsedTime);
+			play(levelManager->getLevel("Level " + std::to_string(current_level)), fElapsedTime);
 
 		else if (current_state == won)
 		{
@@ -365,6 +343,7 @@ public:
 			{
 				Clear(olc::WHITE);
 				renderer->drawSprite("won", this, spritesManager);
+				scoreHandler->setLastLevelHealth(m_player->getHealth());
 				scoreHandler->setLastLevelScore(scoreHandler->getScore());
 				if (GetKey(olc::Key::ENTER).bPressed)
 				{
@@ -381,7 +360,10 @@ public:
 		{
 			Clear(olc::WHITE);
 			renderer->drawSprite("lost", this, spritesManager);
+			levelManager->getLevel("Level " + std::to_string(current_level)).createShips();
+
 			scoreHandler->setScore(scoreHandler->lastLevelScore());
+			m_player->reload(scoreHandler->getLastLevelHealth());
 			if (GetKey(olc::Key::ENTER).bPressed)
 				playAgainAfterLoss();
 		}

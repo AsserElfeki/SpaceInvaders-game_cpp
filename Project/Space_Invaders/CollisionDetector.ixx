@@ -108,6 +108,7 @@ public:
 					//		A_bullet.kill();
 					//}
 
+					//box collision
 					if (A_bullet.getPos().y < ScreenHeight && A_bullet.getPos().y + 10 >= m_player->getPos().y) //chech if bullet in same vertical range
 					{
 						if (A_bullet.getPos().x >= m_player->getPos().x && A_bullet.getPos().x <= (m_player->getPos().x + m_player->getWidth()))
@@ -115,7 +116,7 @@ public:
 						{
 							A_bullet.kill();
 							ship.getAlienBullets().erase(Itr);
-							m_player->playerGotHit();
+							m_player->gotHit();
 							scoreHandler->decreaseScoreWhenHealthDecreased();
 
 							//check bullet outta screen
@@ -149,7 +150,7 @@ public:
 					if (ship.getPos().y + ship.getHeight() >= m_player->getPos().y && ship.getPos().y <= m_player->getPos().y + m_player->getHeight()
 						&& ship.getPos().x + ship.getWidth() >= m_player->getPos().x && ship.getPos().x <= m_player->getPos().x + m_player->getWidth())
 					{
-						m_player->playerGotHit();
+						m_player->gotHit();
 						ship.gotHit();
 						scoreHandler->decreaseScoreWhenHealthDecreased();
 					}

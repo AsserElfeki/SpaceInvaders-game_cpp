@@ -14,7 +14,7 @@ export class LevelManager {
 
 private:
 	std::string name;
-	int speed, health;
+	int speed, health, last_level;
 	std::map<std::string, Level> levels; 
 	std::vector<std::vector<bool>> shipsPos;
 
@@ -135,5 +135,9 @@ public:
 		levels[level_name] = Level(level_name, getSpeed(level_name), getHealth(level_name), readAlienPos(level_name));
 		
 		return levels[level_name];
+	}
+
+	bool checkLastLevel() {
+
 	}
 };

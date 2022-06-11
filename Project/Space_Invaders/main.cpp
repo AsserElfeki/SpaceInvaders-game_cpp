@@ -14,9 +14,32 @@ int main()
 		//if they exist, the game starts
 	{
 		SpaceInvaders demo;
-		//demo.construct(window width, height, how many screen pixels for each pixel,, fullscreen?, vsync of the monitor?) 
-		if (demo.Construct(1200, 800, 1, 1, true, true))
-			demo.Start();
+		std::string answer;
+		bool choiceDone = false; 
+
+		while (!choiceDone)
+		{
+			std::cout << "do you want to run the game in full screen? 'y' for yes and 'n' for no" << std::endl;
+			std::cin >> answer;
+			if (answer != "y" && answer != "n")
+				std::cout << "invalid choice, try again" << std::endl;
+			else
+				choiceDone = true; 
+		}
+		
+		if (answer == "y")
+		{
+			//demo.construct(window width, height, how many screen pixels for each pixel,, fullscreen?, vsync of the monitor?) 
+			if (demo.Construct(1200, 800, 1, 1, true, true))
+				demo.Start();
+		}
+		else if (answer == "n")
+		{
+			//demo.construct(window width, height, how many screen pixels for each pixel,, fullscreen?, vsync of the monitor?) 
+			if (demo.Construct(1200, 800, 1, 1, false, true))
+				demo.Start();
+		}
+		
 	}
 
 	//if at least one is not existing, an error window appears
