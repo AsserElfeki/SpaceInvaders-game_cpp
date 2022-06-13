@@ -22,7 +22,6 @@ public:
 
 	void readAlienHealth(std::string level_name)
 	{
-		//int health;
 		std::fstream inFile;
 		inFile.open("levelInfo.csv", std::ios::in);
 

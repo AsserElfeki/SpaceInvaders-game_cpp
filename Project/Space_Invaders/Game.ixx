@@ -5,6 +5,7 @@ module;
 #include <future>
 #include <thread>
 #include <chrono>
+#include "Constants.h"
 
 
 import FileHandler;
@@ -227,8 +228,8 @@ public:
 		if (GetKey(olc::Key::BACK).bPressed && !player_name.empty())
 			player_name.pop_back();
 
-		DrawString(737, 445, std::string(player_name.data(), player_name.size()), olc::BLUE, 2);
-		//position is hard coded based on the screen dimensions 1200X800 
+		DrawString(screenConsts::enteredName_hzPadding, screenConsts::enteredName_vrPadding, std::string(player_name.data(), player_name.size()), olc::BLUE, screenConsts::fontScale);
+		
 	}
 
 	void changeGameStateFromInstructions() { 

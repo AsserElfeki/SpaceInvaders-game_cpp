@@ -17,16 +17,7 @@ export class CollisionDetectionHandler {
 
 private: 
 
-	/*enum shipsOnBorder {
-		rightBorder = 3,
-		left_and_upBorder = 0
-	};*/
-	
-	
-
 public: 
-
-	
 
 	//ship vs player's bullet 
 	bool detectCircleCollision(Alien_Ship& ship, Bullet& bullet)

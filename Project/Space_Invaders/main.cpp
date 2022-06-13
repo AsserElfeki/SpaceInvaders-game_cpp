@@ -1,5 +1,6 @@
 #define OLC_PGE_APPLICATION
 #include "olcPixelGameEngine.h"
+#include "Constants.h"
 
 import Game;
 import ErrorHandler;
@@ -31,13 +32,13 @@ int main()
 		if (answer == "y")
 		{
 			//demo.construct(window width, height, how many screen pixels for each pixel,, fullscreen?, vsync of the monitor?) 
-			if (spaceInvaders.Construct(1200, 800, 1, 1, true, true))
+			if (spaceInvaders.Construct(screenConsts::ScreenWidth, screenConsts::ScreenHeight, screenConsts::pixelSizeOnScreen, screenConsts::pixelSizeOnScreen, true, true))
 				spaceInvaders.Start();
 		}
 		else if (answer == "n")
 		{
 			//demo.construct(window width, height, how many screen pixels for each pixel,, fullscreen?, vsync of the monitor?) 
-			if (spaceInvaders.Construct(1200, 800, 1, 1, false, true))
+			if (spaceInvaders.Construct(screenConsts::ScreenWidth, screenConsts::ScreenHeight, screenConsts::pixelSizeOnScreen, screenConsts::pixelSizeOnScreen, false, true))
 				spaceInvaders.Start();
 		}
 		
@@ -46,7 +47,7 @@ int main()
 	//if at least one is not existing, an error window appears
 	else
 	{ 
-		if (error.Construct(600, 200, 1, 1, false, true))
+		if (error.Construct(screenConsts::errorWindowWidth, screenConsts::errorWindowHeight, screenConsts::pixelSizeOnScreen, screenConsts::pixelSizeOnScreen, false, true))
 			error.Start();
 	}
 	

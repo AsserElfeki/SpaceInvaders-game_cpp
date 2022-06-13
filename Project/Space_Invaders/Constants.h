@@ -32,8 +32,15 @@ namespace screenConsts {
 	constexpr int healthText_hzPadding = 500;
 	constexpr int healthSpr_hzPadding = 620;
 	constexpr int scoreText_hzPadding = 1000;
+	constexpr int enteredName_hzPadding = 737;
+	constexpr int enteredName_vrPadding = 445;
 
-	constexpr int fontScale = 2; 
+	constexpr int fontScale = 2;
+
+	constexpr int pixelSizeOnScreen = 1;
+
+	constexpr int errorWindowWidth = 600;
+	constexpr int errorWindowHeight = 200;
 }
 
 namespace speedConsts {
