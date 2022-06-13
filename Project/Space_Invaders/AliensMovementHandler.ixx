@@ -4,6 +4,7 @@ module;
 #include <algorithm>
 #include <future>
 #include <thread>
+#include "Constants.h"
 import Ship; 
 
 export module AliensMovementHandler;
@@ -17,10 +18,6 @@ private:
 		level3_rows = 5
 	};
 
-	enum shipsOnBorder {
-		rightBorder = 3,
-		left_and_upBorder = 0
-	};
 
 	bool last_move_h = true;
 	bool last_move_v = true;
@@ -29,6 +26,7 @@ public:
 
 	void moveAlienShips(float& fElapsedTime, int level, std::vector<std::vector<Alien_Ship>>& ships)
 	{
+		//this is here because I wanna later make it work
 		//std::future<void> thread1 = std::async(std::launch::async, &AliensMovementHandler::MoveShips_horizontally, this, fElapsedTime, level, ships);
 		//std::future<void> thread2 = std::async(std::launch::async, &AliensMovementHandler::MoveShips_vertically, this, fElapsedTime, level, ships);
 
@@ -55,7 +53,7 @@ public:
 			{
 				std::ranges::for_each(ships[i], moveShipRight);
 
-				if (ships[i][rightBorder].getPos().x + ships[i][rightBorder].getWidth() >= 1200 - 20)
+				if (ships[i][shipsOnBorder::rightBorder].getPos().x + ships[i][shipsOnBorder::rightBorder].getWidth() >= screenConsts::rightBoundary)
 				{
 					last_move_h = false;
 					break;
@@ -69,7 +67,7 @@ public:
 			{
 				std::ranges::for_each(ships[i], moveShipLeft);
 
-				if (ships[i][left_and_upBorder].getPos().x <= 20)
+				if (ships[i][shipsOnBorder::left_and_upBorder].getPos().x <= screenConsts::leftBoundary)
 				{
 					last_move_h = true;
 					break;
@@ -98,7 +96,7 @@ public:
 			{
 				std::ranges::for_each(ships[i], moveShipDown);
 
-				if (ships[rows - 1][rightBorder].getPos().y + ships[rows - 1][rightBorder].getHeight() >= 800)
+				if (ships[rows - 1][shipsOnBorder::rightBorder].getPos().y + ships[rows - 1][shipsOnBorder::rightBorder].getHeight() >= screenConsts::bottomBoundary)
 				{
 					last_move_v = false;
 					break;
@@ -112,7 +110,7 @@ public:
 			{
 				std::ranges::for_each(ships[i], moveShipUp);
 
-					if (ships[left_and_upBorder][rightBorder].getPos().y <= 50)
+					if (ships[shipsOnBorder::left_and_upBorder][shipsOnBorder::rightBorder].getPos().y <= screenConsts::topBoundary)
 					{
 						last_move_v = true;
 						break;

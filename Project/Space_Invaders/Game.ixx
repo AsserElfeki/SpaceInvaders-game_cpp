@@ -57,7 +57,6 @@ private:
 		presentation
 	};
 
-	//int current_score = 0000;
 	gameState current_state = intro;
 	int current_level = 1;
 
@@ -118,6 +117,7 @@ public:
 		didPlayerWin(level);
 
 		//current_score = scoreHandler->getScore();
+
 	}
 
 	/****************************************************************
@@ -138,7 +138,7 @@ public:
 		if ((m_player->getPos().x + m_player->getWidth()) > (ScreenWidth() - 11))
 			m_player->maxPosRight();
 
-		if (GetKey(olc::Key::SPACE).bHeld)
+		if (GetKey(olc::Key::SPACE).bPressed)
 		{
 			if (m_player->isExist())
 				m_bullets.emplace_back(m_player->getPos().x + (m_player->getWidth() / 2) -4, m_player->getPos().y);

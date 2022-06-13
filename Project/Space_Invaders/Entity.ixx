@@ -1,7 +1,7 @@
 module;
 
 #include "olcPixelGameEngine.h"
-
+#include "Constants.h"
 
 export import SpritesManager;
 export module Entity;
@@ -12,8 +12,8 @@ protected:
 	int element_Width, element_Height,
 		speed, health;
 	float  pos_x, pos_y, center_x, center_y ;
-	int32_t screenWidth = 1200;
-	int32_t screenHeight = 800;
+	int screenWidth = screenConsts::ScreenWidth;
+	int screenHeight = screenConsts::ScreenHeight;
 	bool exist;
 
 public:
@@ -50,9 +50,7 @@ public:
 		exist = false;
 	}
 
-	bool& isExist() {
-		return exist;
-	}
+	bool& isExist() {return exist;}
 
 	int& getHealth() { return health; }
 };

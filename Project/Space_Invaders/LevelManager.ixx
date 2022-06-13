@@ -5,6 +5,7 @@ module;
 #include <vector>
 #include <iostream>
 #include <map>
+#include "Constants.h"
 
 import Level; 
 
@@ -99,14 +100,14 @@ public:
 			if (row[0] == level_name)
 			{
 				std::vector<bool> temprow;
-				for (int i = 3; i < row.size(); i++)
+				for (int i = otherConsts::shipsPosStartCellIndex; i < row.size(); i++)
 					temprow.emplace_back(std::stoi(row[i]));
 				//so now the whole row is in one vector
 
-				for (int i = 0; i < 5; i++)
+				for (int i = 0; i < shipsMatrixCount::rows; i++)
 				{
 					std::vector<bool> tmp;
-					for (int j = 0; j < 4; j++)
+					for (int j = 0; j < shipsMatrixCount::colomns; j++)
 					{
 						tmp.push_back(temprow[4 * i + j]);
 					}

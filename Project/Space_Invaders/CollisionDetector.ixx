@@ -3,6 +3,7 @@ module;
 #include "olcPixelGameEngine.h"
 #include <memory>
 #include <list>
+#include "Constants.h"
 
 export import Level; 
 export import Bullet; 
@@ -16,17 +17,12 @@ export class CollisionDetectionHandler {
 
 private: 
 
-	enum shipsOnBorder {
+	/*enum shipsOnBorder {
 		rightBorder = 3,
 		left_and_upBorder = 0
-	};
+	};*/
 	
-
-	const int num_of_rows = 5;
-	const int num_of_cols = 4;
-
-	float ScreenHeight = 800;
-	float ScreenWidth = 1200;
+	
 
 public: 
 
@@ -56,8 +52,8 @@ public:
 		for (auto& bullet : m_bullets)
 		{
 			bullet.movePlayerBullet(fElapsedTime);
-			for (int i = 0; i < num_of_rows; i++)
-				for (int j = 0; j < num_of_cols; j++)
+			for (int i = 0; i < shipsMatrixCount::rows; i++)
+				for (int j = 0; j < shipsMatrixCount::colomns; j++)
 				{
 
 					if (bullet.getPos().y > 0 && level.get_Ships()[i][j].isExist() && 
@@ -109,20 +105,26 @@ public:
 					//}
 
 					//box collision
-					if (A_bullet.getPos().y < ScreenHeight && A_bullet.getPos().y + 10 >= m_player->getPos().y) //chech if bullet in same vertical range
+					//ranges for filtering 
+					//extract the cond. in a sep. function
+					if (A_bullet.getPos().y < screenConsts::ScreenHeight 
+						&& A_bullet.getPos().y + A_bullet.getHeight() >= m_player->getPos().y) //chech if bullet in same vertical range
 					{
-						if (A_bullet.getPos().x >= m_player->getPos().x && A_bullet.getPos().x <= (m_player->getPos().x + m_player->getWidth()))
+						if (A_bullet.getPos().x >= m_player->getPos().x 
+							&& A_bullet.getPos().x <= (m_player->getPos().x + m_player->getWidth()))
 							//check if it's in same horizontal range
 						{
 							A_bullet.kill();
 							ship.getAlienBullets().erase(Itr);
 							m_player->gotHit();
 							scoreHandler->decreaseScoreWhenHealthDecreased();
+						}
 
-							//check bullet outta screen
-							if (A_bullet.getPos().y + 10 >= ScreenHeight)
-								A_bullet.kill();
-
+						//check bullet outta screen
+						else if (A_bullet.getPos().y + A_bullet.getHeight() >= screenConsts::bottomBoundary)
+						{
+							A_bullet.kill();
+							ship.getAlienBullets().erase(Itr);
 						}
 					}
 					Itr++;
@@ -147,8 +149,10 @@ public:
 			for (auto& ship : shipsrow)
 			{
 				if (ship.isExist())
-					if (ship.getPos().y + ship.getHeight() >= m_player->getPos().y && ship.getPos().y <= m_player->getPos().y + m_player->getHeight()
-						&& ship.getPos().x + ship.getWidth() >= m_player->getPos().x && ship.getPos().x <= m_player->getPos().x + m_player->getWidth())
+					if (ship.getPos().y + ship.getHeight() >= m_player->getPos().y && ship.getPos().y <= 
+						m_player->getPos().y + m_player->getHeight()
+						&& ship.getPos().x + ship.getWidth() >= m_player->getPos().x 
+						&& ship.getPos().x <= m_player->getPos().x + m_player->getWidth())
 					{
 						m_player->gotHit();
 						ship.gotHit();

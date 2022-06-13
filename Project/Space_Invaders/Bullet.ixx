@@ -1,5 +1,8 @@
 module;
+
 #include "olcPixelGameEngine.h"
+#include "Constants.h"
+
 import Entity; 
 
 export module Bullet;
@@ -14,11 +17,11 @@ public:
 	Bullet(float posx, float posy)
 	{
 		exist = true;
-		health = 1;
+		health = healthConsts::bulletHealth;
 		pos_x = posx;
 		pos_y = posy;
-		element_Height = 10;
-		speed = 500.0f;
+		element_Height = screenConsts::bulletHeight;
+		speed = speedConsts::bulletSpeed;
 	}
 
 	~Bullet(){}

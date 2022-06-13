@@ -2,6 +2,7 @@ module;
 #include "olcPixelGameEngine.h"
 #include <chrono>
 #include <time.h>
+#include "Constants.h"
 
 import Bullet;
 import Entity;
@@ -20,12 +21,12 @@ public:
 
 	Player(int32_t w, int32_t h) 
 	{
-		element_Width = 50;
-		element_Height = 70; 
+		element_Width = screenConsts::playerWidth;
+		element_Height = screenConsts::playerHeight;
 		resetPos();
-		speed = 500.0f;
+		speed = speedConsts::playerSpeed;
 		exist = true;
-		health = 3;	
+		health = healthConsts::playerInitHealth;
 		center_x = (pos_x + element_Width / 2);
 		center_y = (pos_y + element_Height / 2);
 	}
@@ -41,17 +42,17 @@ public:
 	{
 		resetPos();
 		exist = true;
-		health = 3;
+		health = healthConsts::playerInitHealth;
 	}
 
 	void resetPos() {
 		pos_x = screenWidth / 2 - element_Width / 2;
-		pos_y = screenHeight - 1.5 * element_Height;
+		pos_y = screenConsts::playerPos_y; 
 	}
 
-	void maxPosLeft() {pos_x = 11;}
+	void maxPosLeft() {pos_x = screenConsts::maxLeftPlayerPos;}
 
-	void maxPosRight() {pos_x = screenWidth - element_Width - 11;}
+	void maxPosRight() {pos_x = screenConsts::maxRightPlayerPos;}
 		
 	void gotHit() override
 	{

@@ -3,6 +3,7 @@ module;
 #include "olcPixelGameEngine.h"
 #include <random>
 #include <chrono> 
+#include "Constants.h"
 
 import Entity; 
 import Bullet; 
@@ -20,14 +21,14 @@ public:
 	Alien_Ship(olc::vi2d pos, bool _exist, float _speed, int _health) 
 	{
 		health = _health;
-		if (_health > 3)
+		if (_health == healthConsts::bossInitHealth)
 		{
-			element_Width = 100;
-			element_Height = 100;
+			element_Width = screenConsts::bossWidth;
+			element_Height = screenConsts::bossHeight;
 		}
 		else {
-			element_Width = 60;
-			element_Height = 50;
+			element_Width = screenConsts::alienWidth;
+			element_Height = screenConsts::alienWidth;
 		}
 		
 		speed = _speed;
@@ -35,7 +36,8 @@ public:
 		pos_y = pos.y;
 		
 		center_x = (pos_x + element_Width / 2);
-		center_y = (pos_y + element_Height / 2);
+		center_y = (pos_y + element_Height / 2); 
+		//these are not magic numbers, it's just getting half of the width and height so I get the center
 
 		exist = _exist;
 	}
@@ -50,7 +52,7 @@ public:
 		{
 			unsigned int seed = std::chrono::system_clock::now().time_since_epoch().count();
 			std::mt19937 generator(seed); 
-			if (generator() < generator.min()+ (50000 * speed) )
+			if (generator() < generator.min()+ (otherConsts::randGenSeed * speed) )
 				m_alienBullets.emplace_back(this->getPos().x + this->getWidth()/2, this->getPos().y + this->getHeight());
 		}
 	}
@@ -60,19 +62,19 @@ public:
 		for (auto& bullet : m_alienBullets)
 		{
 			bullet.moveAlienBullet(time);
-			if (bullet.getPos().y >= screenHeight - 20)
+			if (bullet.getPos().y >= screenConsts::bottomBoundary)
 				m_alienBullets.pop_front();
 		}
 	}
 
 	void moveDown(float ElapsedTime) {
-		pos_y += (ElapsedTime * speed) / 10;
-		center_y += (ElapsedTime * speed) / 10;
+		pos_y += (ElapsedTime * speed) / screenConsts::verticalMovementFactor;
+		center_y += (ElapsedTime * speed) / screenConsts::verticalMovementFactor;
 	}
 
 	void moveUp(float ElapsedTime) {
-		pos_y -= (ElapsedTime * speed) / 10;
-		center_y -= (ElapsedTime * speed) / 10;
+		pos_y -= (ElapsedTime * speed) / screenConsts::verticalMovementFactor;
+		center_y -= (ElapsedTime * speed) / screenConsts::verticalMovementFactor;
 	}
 
 };

@@ -1,5 +1,6 @@
 module;
 #include "olcPixelGameEngine.h"
+#include "Constants.h"
 
 export import Level; 
 export import SpritesManager;
@@ -9,8 +10,9 @@ export module Renderer;
 export class Renderer {
 
 private: 
-	int32_t screenWidth = 1200;
-	int32_t screenHeight = 800;
+	/*int screenWidth = screenConsts::ScreenWidth;
+	int screenHeight = screenConsts::ScreenHeight;*/
+
 public: 
 	void drawSprite(std::string sprName, olc::PixelGameEngine* pge, 
 		std::shared_ptr<SpriteManager>& spritesManager) {
@@ -23,11 +25,11 @@ public:
 		pge->Clear(olc::BLACK);
 
 		/*Boundaries*/
-		pge->DrawLine(10, 50, screenWidth - 10, 50, olc::BLUE); //upper HZ line
-		pge->DrawLine(10, 50, 10, screenHeight - 10, olc::BLUE); // left V line 
-		pge->DrawLine(screenWidth - 10, 50, screenWidth - 10, screenHeight - 10, olc::BLUE); // right V line 		
+		pge->DrawLine(screenConsts::playAreaBorder_hzPadding, screenConsts::playAreaBorder_vrPadding, screenConsts::ScreenWidth - screenConsts::playAreaBorder_hzPadding, screenConsts::playAreaBorder_vrPadding, olc::BLUE); //upper HZ line
+		pge->DrawLine(screenConsts::playAreaBorder_hzPadding, screenConsts::playAreaBorder_vrPadding, screenConsts::playAreaBorder_hzPadding, screenConsts::ScreenHeight - screenConsts::playAreaBorder_hzPadding, olc::BLUE); // left V line 
+		pge->DrawLine(screenConsts::ScreenWidth - screenConsts::playAreaBorder_hzPadding, screenConsts::playAreaBorder_vrPadding, screenConsts::ScreenWidth - screenConsts::playAreaBorder_hzPadding, screenConsts::ScreenHeight - screenConsts::playAreaBorder_hzPadding, olc::BLUE); // right V line 		
 
-		pge->DrawString(10, 20, level.getName(), olc::WHITE, 2);
+		pge->DrawString(screenConsts::playAreaBorder_hzPadding, screenConsts::levelInfo_vrPadding, level.getName(), olc::WHITE, screenConsts::fontScale);
 	}
 
 	void drawPlayerAndHealth(std::shared_ptr<Player> player, 
@@ -35,27 +37,27 @@ public:
 	{
 		if (player->isExist())
 		{
-			pge->DrawString(500, 20, "Health:", olc::WHITE, 2);
+			pge->DrawString(screenConsts::healthText_hzPadding, screenConsts::levelInfo_vrPadding, "Health:", olc::WHITE, screenConsts::fontScale);
 
 			//total 200 pixels
-			if (player->getHealth() == 3)
+			if (player->getHealth() == healthConsts::playerInitHealth)
 			{
 				pge->DrawSprite(player->getPos().x, player->getPos().y, spritesManager->entitySprite("player_3").get());
-				pge->DrawSprite(620, 20, spritesManager->entitySprite("health_3").get());
+				pge->DrawSprite(screenConsts::healthSpr_hzPadding, screenConsts::levelInfo_vrPadding, spritesManager->entitySprite("health_3").get());
 			}
 
 			//150
-			else if (player->getHealth() == 2)
+			else if (player->getHealth() == healthConsts::playerHealthTwo)
 			{
 				pge->DrawSprite(player->getPos().x, player->getPos().y, spritesManager->entitySprite("player_2").get());
-				pge->DrawSprite(620, 20, spritesManager->entitySprite("health_2").get());
+				pge->DrawSprite(screenConsts::healthSpr_hzPadding, screenConsts::levelInfo_vrPadding, spritesManager->entitySprite("health_2").get());
 			}
 
 			//120
-			else if (player->getHealth() == 1)
+			else if (player->getHealth() == healthConsts::playerHealthOne)
 			{
 				pge->DrawSprite(player->getPos().x, player->getPos().y, spritesManager->entitySprite("player_1").get());
-				pge->DrawSprite(620, 20, spritesManager->entitySprite("health_1").get());
+				pge->DrawSprite(screenConsts::healthSpr_hzPadding, screenConsts::levelInfo_vrPadding, spritesManager->entitySprite("health_1").get());
 			}
 		}
 	}
@@ -66,13 +68,13 @@ public:
 			{
 				if (ship.isExist())
 				{
-					if (ship.getHealth() == 1)
+					if (ship.getHealth() == healthConsts::alien1InitHealth)
 						pge->DrawSprite(ship.getPos().x, ship.getPos().y, spritesManager->entitySprite("alien_1").get());
 
-					else if (ship.getHealth() == 2)
+					else if (ship.getHealth() == healthConsts::alien2InitHealth)
 						pge->DrawSprite(ship.getPos().x, ship.getPos().y, spritesManager->entitySprite("alien_2").get());
 
-					else if (ship.getHealth() == 3)
+					else if (ship.getHealth() == healthConsts::alien3InitHealth)
 						pge->DrawSprite(ship.getPos().x, ship.getPos().y, spritesManager->entitySprite("alien_3").get());
 
 					else
@@ -90,7 +92,6 @@ public:
 					for (auto& bullet : ship.getAlienBullets())
 						if (bullet.isExist())
 							pge->DrawSprite(bullet.getPos().x, bullet.getPos().y, spritesManager->entitySprite("bullet").get());
-				//bullet.drawSelf(this);
 			}
 		}
 	}
@@ -106,7 +107,7 @@ public:
 	}
 
 	void drawScore(int& current_score, olc::PixelGameEngine* pge) {
-		pge->DrawString(screenWidth - 200, 20, "Score:" + std::to_string(current_score), olc::WHITE, 2);
+		pge->DrawString(screenConsts::scoreText_hzPadding, screenConsts::levelInfo_vrPadding, "Score:" + std::to_string(current_score), olc::WHITE, 2);
 	}
 
 	void renderGame(Level& level, std::list<Bullet>& bullets, 

@@ -166,6 +166,7 @@
     <ClCompile Include="SpritesManager.ixx" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Constants.h" />
     <ClInclude Include="olcPixelGameEngine.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
