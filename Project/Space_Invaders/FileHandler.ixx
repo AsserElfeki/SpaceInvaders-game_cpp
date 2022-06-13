@@ -11,20 +11,13 @@ export class FileHandler
 {
 private : 
 	bool writing_done = false;
-	std::string player_name;
-	int score;
 	std::filesystem::path scoresFile_path = "./scores.txt";
 
 public:
 	FileHandler(){}
 
-	FileHandler(std::vector<char> name, int _score)
-	{
-		player_name = std::string(name.data(), name.size());
-		score = _score;
-	}
 	
-	void write() 
+	void write(std::string player_name, int& score) 
 	{
 		if (!writing_done)
 		{
@@ -38,4 +31,7 @@ public:
 		writing_done = true;
 	}
 
+	void reset() {
+		writing_done = false; 
+	}
 };

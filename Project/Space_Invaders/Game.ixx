@@ -32,7 +32,6 @@ private:
 	std::list<Bullet> m_bullets;
 	std::shared_ptr <CollisionDetectionHandler> collisionDetector;
 	std::shared_ptr<ScoreHandler> scoreHandler;
-	std::unique_ptr<Presentation> m_presentation;
 	
 	//SpritesManager
 	std::shared_ptr<SpriteManager> spritesManager;
@@ -40,7 +39,7 @@ private:
 	//others
 	std::shared_ptr<FileHandler> outputScore;
 	std::unique_ptr <Credits> m_credits;
-
+	std::unique_ptr<Presentation> m_presentation; //just for presentation purposes
 
 	std::vector<char> player_name;
 
@@ -58,7 +57,7 @@ private:
 		presentation
 	};
 
-	int current_score = 0000;
+	//int current_score = 0000;
 	gameState current_state = intro;
 	int current_level = 1;
 
@@ -85,6 +84,8 @@ public:
 		spritesManager = std::make_shared<SpriteManager>();
 		aliensMovementHandler = std::make_shared<AliensMovementHandler>();
 		collisionDetector = std::make_shared<CollisionDetectionHandler>();
+		outputScore = std::make_unique<FileHandler>();
+
 		return true;
 	}
 
@@ -97,7 +98,7 @@ public:
 		std::future<void> thread1 = std::async(std::launch::async, &Game::handleUserInput, this, fElapsedTime);
 		//handling the user input in parallel while the game logic is in another thread
 	
-		renderer->renderGame(level, m_bullets, current_score, spritesManager, m_player , this);
+		renderer->renderGame(level, m_bullets, scoreHandler->getScore(), spritesManager, m_player , this);
 
 		aliensMovementHandler->moveAlienShips(fElapsedTime, current_level, level.get_Ships());
 
@@ -116,7 +117,7 @@ public:
 		//if all aliens are dead : go to next level
 		didPlayerWin(level);
 
-		current_score = scoreHandler->getScore();
+		//current_score = scoreHandler->getScore();
 	}
 
 	/****************************************************************
@@ -137,7 +138,7 @@ public:
 		if ((m_player->getPos().x + m_player->getWidth()) > (ScreenWidth() - 11))
 			m_player->maxPosRight();
 
-		if (GetKey(olc::Key::SPACE).bPressed)
+		if (GetKey(olc::Key::SPACE).bHeld)
 		{
 			if (m_player->isExist())
 				m_bullets.emplace_back(m_player->getPos().x + (m_player->getWidth() / 2) -4, m_player->getPos().y);
@@ -198,6 +199,8 @@ public:
 		reloadAllLevels();
 		m_player->reload();
 		m_credits->reset();
+		outputScore->reset();
+		current_level = 1;
 		current_state = intro;
 	}
 
@@ -260,6 +263,14 @@ public:
 			current_state = credits;
 	}
 
+	std::string& parseName(std::vector<char>& p_name) {
+		std::string name;
+		for (char c : p_name)
+			name += c; 
+
+		return name;
+	}
+
 
 	/****************************************************************
 	*                          Game Loop
@@ -277,6 +288,7 @@ public:
 		{
 			Clear(olc::WHITE);
 			renderer->drawSprite("intro", this, spritesManager);
+			player_name.clear();
 
 			if (GetKey(olc::Key::SPACE).bPressed || GetKey(olc::Key::ENTER).bPressed)
 				current_state = name;
@@ -289,7 +301,6 @@ public:
 		{
 			Clear(olc::WHITE);
 			renderer->drawSprite("name", this, spritesManager);
-
 			inputPlayerName();
 
 			if (GetKey(olc::Key::ENTER).bPressed)
@@ -340,10 +351,8 @@ public:
 		{
 			Clear(olc::BLACK);
 			m_credits->runCredits(this, fElapsedTime);
-
-			if (!outputScore)
-				outputScore = std::make_unique<FileHandler>(player_name, current_score);
-			outputScore->write();
+			
+			outputScore->write(parseName(player_name), scoreHandler->getScore());
 
 			if (GetKey(olc::Key::ENTER).bPressed)
 				playAgainAfterFinished();
@@ -369,9 +378,8 @@ public:
 
 		else if (current_state == quit)
 		{
-			if (!outputScore)
-				outputScore = std::make_unique<FileHandler>(player_name, current_score);
-			outputScore->write();
+
+			outputScore->write(parseName(player_name), scoreHandler->getScore());
 			return false;
 		}
 

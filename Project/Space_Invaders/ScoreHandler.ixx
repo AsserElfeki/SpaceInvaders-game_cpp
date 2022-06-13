@@ -13,7 +13,7 @@ public:
 
 	void setScore(int _score) { current_score = _score; }
 	
-	int getScore() { return current_score; }
+	int& getScore() { return current_score; }
 
 	void increaseScoreWithTime(float time) { current_score += (time * 60); }
 
