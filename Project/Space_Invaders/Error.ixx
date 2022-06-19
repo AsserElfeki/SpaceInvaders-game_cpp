@@ -2,6 +2,7 @@ module;
 
 #include "olcPixelGameEngine.h"
 #include <filesystem>
+#include "Constants.h"
 
 namespace fs = std::filesystem;
 
@@ -32,13 +33,13 @@ public:
 			DrawSprite(0, 0, message.get());
 		else
 		{
-			DrawLine(10, 10, ScreenWidth() - 10, 10, olc::BLACK); //upper HZ line the (-10 px) is just to add some padding
-			DrawLine(10, 10, 10, ScreenHeight() - 10, olc::BLACK); // left V line 
-			DrawLine(ScreenWidth() - 10, 10, ScreenWidth() - 10, ScreenHeight() - 10, olc::BLACK); // right V line
-			DrawLine(10, ScreenHeight() - 10, ScreenWidth() - 10, ScreenHeight() - 10, olc::BLACK); // bottom HZ line
+			DrawLine(errorWindow::errorWindowPadding, errorWindow::errorWindowPadding, ScreenWidth() - errorWindow::errorWindowPadding, errorWindow::errorWindowPadding, olc::BLACK); //upper HZ line the (-10 px) is just to add some padding
+			DrawLine(errorWindow::errorWindowPadding, errorWindow::errorWindowPadding, errorWindow::errorWindowPadding, ScreenHeight() - errorWindow::errorWindowPadding, olc::BLACK); // left V line 
+			DrawLine(ScreenWidth() - errorWindow::errorWindowPadding, errorWindow::errorWindowPadding, ScreenWidth() - errorWindow::errorWindowPadding, ScreenHeight() - errorWindow::errorWindowPadding, olc::BLACK); // right V line
+			DrawLine(errorWindow::errorWindowPadding, ScreenHeight() - errorWindow::errorWindowPadding, ScreenWidth() - errorWindow::errorWindowPadding, ScreenHeight() - errorWindow::errorWindowPadding, olc::BLACK); // bottom HZ line
 
-			DrawString(120, 50, "Error loading gfx files.", olc::RED,2);
-			DrawString(150, 120, "Press Enter to quit.", olc::RED,2);
+			DrawString(errorWindow::text1H_pos, errorWindow::text1V_pos, "Error loading gfx files.", olc::RED,2);
+			DrawString(errorWindow::text2H_pos, errorWindow::text2H_pos, "Press Enter to quit.", olc::RED,2);
 		}
 
 		if (GetKey(olc::Key::ENTER).bHeld)

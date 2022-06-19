@@ -47,7 +47,7 @@ int main()
 	//if at least one is not existing, an error window appears
 	else
 	{ 
-		if (error.Construct(screenConsts::errorWindowWidth, screenConsts::errorWindowHeight, screenConsts::pixelSizeOnScreen, screenConsts::pixelSizeOnScreen, false, true))
+		if (error.Construct(errorWindow::errorWindowWidth, errorWindow::errorWindowHeight, screenConsts::pixelSizeOnScreen, screenConsts::pixelSizeOnScreen, false, true))
 			error.Start();
 	}
 	

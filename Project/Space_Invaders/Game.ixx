@@ -34,7 +34,6 @@ private:
 	std::list<Bullet> m_bullets;
 	std::shared_ptr <CollisionDetectionHandler> collisionDetector;
 	std::shared_ptr<ScoreHandler> scoreHandler;
-	std::shared_ptr <Save_LoadManager> save_LoadManager; 
 	
 	//SpritesManager
 	std::shared_ptr<SpriteManager> spritesManager;
@@ -49,7 +48,6 @@ private:
 	enum gameState
 	{
 		intro = 1,
-		loadsavedgame,
 		instructions,
 		name,
 		level,
@@ -88,7 +86,6 @@ public:
 		aliensMovementHandler = std::make_shared<AliensMovementHandler>();
 		collisionDetector = std::make_shared<CollisionDetectionHandler>();
 		outputScore = std::make_unique<FileHandler>();
-		save_LoadManager = std::make_shared<Save_LoadManager>(this);
 
 		return true;
 	}
@@ -299,18 +296,12 @@ public:
 			player_name.clear();
 
 			if (GetKey(olc::Key::SPACE).bPressed || GetKey(olc::Key::ENTER).bPressed)
-				current_state = loadsavedgame;
+				current_state = name;
 
 			if (GetKey(olc::Key::P).bPressed)
 				current_state = presentation;
 		}
 
-		else if (current_state == loadsavedgame)
-		{
-			save_LoadManager->load();
-			if (GetKey(olc::Key::ENTER).bPressed)
-				current_state = name;
-		}
 
 		else if (current_state == name)
 		{

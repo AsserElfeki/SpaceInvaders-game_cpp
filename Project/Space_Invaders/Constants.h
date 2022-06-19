@@ -38,9 +38,6 @@ namespace screenConsts {
 	constexpr int fontScale = 2;
 
 	constexpr int pixelSizeOnScreen = 1;
-
-	constexpr int errorWindowWidth = 600;
-	constexpr int errorWindowHeight = 200;
 }
 
 namespace speedConsts {
@@ -74,3 +71,16 @@ namespace shipsOnBorder {
 	constexpr int rightBorder = 3;
 	constexpr int left_and_upBorder = 0;
 };
+
+namespace errorWindow {
+
+	constexpr int errorWindowWidth = 600;
+	constexpr int errorWindowHeight = 200;
+
+	constexpr int errorWindowPadding = 10;
+
+	constexpr int text1H_pos = 120;
+	constexpr int text1V_pos = 50;
+	constexpr int text2H_pos = 150;
+	constexpr int text2V_pos = 120;
+}
