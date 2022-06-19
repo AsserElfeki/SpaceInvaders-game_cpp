@@ -15,6 +15,7 @@ import AliensMovementHandler;
 import CollisionDetectionHandler;
 import LevelManager;
 import Renderer; 
+import Save_LoadManager; 
 
 export module Game;
 
@@ -33,6 +34,7 @@ private:
 	std::list<Bullet> m_bullets;
 	std::shared_ptr <CollisionDetectionHandler> collisionDetector;
 	std::shared_ptr<ScoreHandler> scoreHandler;
+	std::shared_ptr <Save_LoadManager> save_LoadManager; 
 	
 	//SpritesManager
 	std::shared_ptr<SpriteManager> spritesManager;
@@ -47,6 +49,7 @@ private:
 	enum gameState
 	{
 		intro = 1,
+		loadsavedgame,
 		instructions,
 		name,
 		level,
@@ -85,6 +88,7 @@ public:
 		aliensMovementHandler = std::make_shared<AliensMovementHandler>();
 		collisionDetector = std::make_shared<CollisionDetectionHandler>();
 		outputScore = std::make_unique<FileHandler>();
+		save_LoadManager = std::make_shared<Save_LoadManager>(this);
 
 		return true;
 	}
@@ -285,17 +289,27 @@ public:
 		*                  Checking Game State              *
 		****************************************************/
 
-		if (current_state == intro)
+		if (current_state == level)
+			play(levelManager->getLevel("Level " + std::to_string(current_level)), fElapsedTime);
+
+		else if (current_state == intro)
 		{
 			Clear(olc::WHITE);
 			renderer->drawSprite("intro", this, spritesManager);
 			player_name.clear();
 
 			if (GetKey(olc::Key::SPACE).bPressed || GetKey(olc::Key::ENTER).bPressed)
-				current_state = name;
+				current_state = loadsavedgame;
 
 			if (GetKey(olc::Key::P).bPressed)
 				current_state = presentation;
+		}
+
+		else if (current_state == loadsavedgame)
+		{
+			save_LoadManager->load();
+			if (GetKey(olc::Key::ENTER).bPressed)
+				current_state = name;
 		}
 
 		else if (current_state == name)
@@ -314,9 +328,6 @@ public:
 			renderer->drawSprite("instructions", this, spritesManager);
 			changeGameStateFromInstructions();
 		}
-
-		else if (current_state == level)
-			play(levelManager->getLevel("Level " + std::to_string(current_level)), fElapsedTime);
 
 		else if (current_state == won)
 		{

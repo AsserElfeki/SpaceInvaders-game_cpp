@@ -161,6 +161,7 @@
     <ClCompile Include="Credits.ixx" />
     <ClCompile Include="Presentation.ixx" />
     <ClCompile Include="Renderer.ixx" />
+    <ClCompile Include="Save_LoadManager.ixx" />
     <ClCompile Include="ScoreHandler.ixx" />
     <ClCompile Include="Alien_Ship.ixx" />
     <ClCompile Include="SpritesManager.ixx" />

@@ -66,6 +66,9 @@
     <ClCompile Include="Renderer.ixx">
       <Filter>Modules</Filter>
     </ClCompile>
+    <ClCompile Include="Save_LoadManager.ixx">
+      <Filter>Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="olcPixelGameEngine.h">
