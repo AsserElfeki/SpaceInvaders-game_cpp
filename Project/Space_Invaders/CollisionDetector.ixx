@@ -3,6 +3,7 @@ module;
 #include "olcPixelGameEngine.h"
 #include <memory>
 #include <list>
+#include <ranges>
 #include "Constants.h"
 
 export import Level; 
@@ -31,6 +32,15 @@ public:
 		else return false; 
 	}
 
+	void collision(Bullet& bullet, std::list<Bullet> m_bullets, Level& level, 
+		std::shared_ptr<ScoreHandler>& scoreHandler, Alien_Ship& ship, std::list<Bullet>::iterator & Itr) {
+		//auto Itr = m_bullets.begin();
+		bullet.kill();
+		m_bullets.erase(Itr);
+		ship.gotHit();
+		scoreHandler->increaseScoreWhenHitAlien();
+	}
+
 	void playerBulletVsAlien(float fElapsedTime,
 		Level& level,
 		std::shared_ptr<Player>& m_player,
@@ -43,16 +53,16 @@ public:
 		for (auto& bullet : m_bullets)
 		{
 			bullet.movePlayerBullet(fElapsedTime);
+
 			for (int i = 0; i < shipsMatrixCount::rows; i++)
 				for (int j = 0; j < shipsMatrixCount::colomns; j++)
 				{
-
-					if (bullet.getPos().y > 0 && level.get_Ships()[i][j].isExist() && 
-						detectCircleCollision(level.get_Ships()[i][j], bullet))
+					if (bullet.getPos().y > 0 && level.getShips()[i][j].isExist() && 
+						detectCircleCollision(level.getShips()[i][j], bullet))
 					{
 						bullet.kill();
 						m_bullets.erase(Itr);
-						level.get_Ships()[i][j].gotHit();
+						level.getShips()[i][j].gotHit();
 						scoreHandler->increaseScoreWhenHitAlien();
 					}
 				}
@@ -61,43 +71,16 @@ public:
 	}
 
 
-	////ship's bullet vs player
-	//bool detectCircleCollision(Bullet& bullet, std::shared_ptr<Player>& m_player)
-	//{
-	//	if (((m_player->getCenter().x - bullet.getPos().x) * (m_player->getCenter().x - bullet.getPos().x)) +
-	//		((m_player->getCenter().y - bullet.getPos().y) * (m_player->getCenter().y - bullet.getPos().y)) <=
-	//		( (m_player->getHeight() / 2) * (m_player->getHeight() / 2) ) )
-	//		return true;
-	//	else return false;
-	//}
-
 	void alienBulletVsPlayer(Level& level, std::shared_ptr<Player>& m_player, 
 		std::shared_ptr <ScoreHandler>& scoreHandler)
 	{
- 		for (auto& shipsrow : level.get_Ships())
+ 		for (auto& shipsrow : level.getShips())
 		{
 			for (auto& ship : shipsrow)
 			{
 				auto Itr = ship.getAlienBullets().begin();
 				for (auto& A_bullet : ship.getAlienBullets())
 				{
-					//check hit
-
-					//if (detectCircleCollision(A_bullet, m_player))
-					//{
-					//	A_bullet.kill();
-					//	ship.getAlienBullets().erase(Itr);
-					//	m_player->playerGotHit();
-					//	scoreHandler->decreaseScoreWhenHealthDecreased();
-
-					//	//check bullet outta screen
-					//	if (A_bullet.getPos().y + 10 >= ScreenHeight)
-					//		A_bullet.kill();
-					//}
-
-					//box collision
-					//ranges for filtering 
-					//extract the cond. in a sep. function
 					if (A_bullet.getPos().y < screenConsts::ScreenHeight 
 						&& A_bullet.getPos().y + A_bullet.getHeight() >= m_player->getPos().y) //chech if bullet in same vertical range
 					{
@@ -125,17 +108,12 @@ public:
 	}
 
 
-	//ship vs player
-	/*bool detectCircleCollision() {
-
-	}*/
-
 	void alienShipVsPlayerShip(Level& level,
 								std::shared_ptr<Player>& m_player,
 								std::shared_ptr<ScoreHandler>& scoreHandler)
 	{
 		//collision detection between player and alien itself
-		for (auto& shipsrow : level.get_Ships())
+		for (auto& shipsrow : level.getShips())
 		{
 			for (auto& ship : shipsrow)
 			{

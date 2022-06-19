@@ -63,7 +63,7 @@ public:
 	}
 
 	void drawShips(Level& level, std::shared_ptr<SpriteManager> spritesManager, olc::PixelGameEngine* pge) {
-		for (auto& shipsrow : level.get_Ships())
+		for (auto& shipsrow : level.getShips())
 			for (auto& ship : shipsrow)
 			{
 				if (ship.isExist())
@@ -84,7 +84,7 @@ public:
 	}
 
 	void drawAlienBullets(Level& level, std::shared_ptr<SpriteManager> spritesManager,olc::PixelGameEngine* pge) {
-		for (auto& shipsrow : level.get_Ships())
+		for (auto& shipsrow : level.getShips())
 		{
 			for (auto& ship : shipsrow)
 			{

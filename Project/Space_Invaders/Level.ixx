@@ -70,7 +70,7 @@ public:
 				ship.getAlienBullets().clear(); 
 	}
 
-	std::vector<std::vector<Alien_Ship>>& get_Ships() {return ships;}
+	std::vector<std::vector<Alien_Ship>>& getShips() {return ships;}
 
 	std::string getName() { return level_name; }
 };

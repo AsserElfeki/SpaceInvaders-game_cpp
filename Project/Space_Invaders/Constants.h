@@ -46,7 +46,6 @@ namespace screenConsts {
 namespace speedConsts {
 	constexpr float playerSpeed = 500.0f;
 	constexpr float bulletSpeed = 500.0f;
-
 }
 
 

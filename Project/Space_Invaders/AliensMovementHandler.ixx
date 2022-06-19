@@ -26,9 +26,9 @@ public:
 
 	void moveAlienShips(float& fElapsedTime, int level, std::vector<std::vector<Alien_Ship>>& ships)
 	{
-		//this is here because I wanna later make it work
-		//std::future<void> thread1 = std::async(std::launch::async, &AliensMovementHandler::MoveShips_horizontally, this, fElapsedTime, level, ships);
-		//std::future<void> thread2 = std::async(std::launch::async, &AliensMovementHandler::MoveShips_vertically, this, fElapsedTime, level, ships);
+		/*this is here because I wanna later make it work
+		std::future<void> thread1 = std::async(std::launch::async, &AliensMovementHandler::MoveShips_horizontally, this, fElapsedTime, level, ships);
+		std::future<void> thread2 = std::async(std::launch::async, &AliensMovementHandler::MoveShips_vertically, this, fElapsedTime, level, ships);*/
 
 		MoveShips_horizontally(fElapsedTime, level, ships);
 		MoveShips_vertically(fElapsedTime, level, ships);

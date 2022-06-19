@@ -100,7 +100,7 @@ public:
 	
 		renderer->renderGame(level, m_bullets, scoreHandler->getScore(), spritesManager, m_player , this);
 
-		aliensMovementHandler->moveAlienShips(fElapsedTime, current_level, level.get_Ships());
+		aliensMovementHandler->moveAlienShips(fElapsedTime, current_level, level.getShips());
 
 		scoreHandler->increaseScoreWithTime(fElapsedTime);
 
@@ -154,7 +154,7 @@ public:
 	
 	void shootAlienBullets(float fElapsedTime, Level& level)
 	{
-		for (auto& shipsrow : level.get_Ships())
+		for (auto& shipsrow : level.getShips())
 		{
 			for (auto& ship : shipsrow)
 			{
